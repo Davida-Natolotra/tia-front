@@ -1,12 +1,11 @@
 import { Link as ScrollLink } from 'react-scroll';
 import { useLocation, Outlet } from 'react-router-dom';
 // material
-import { Box, Link, Container, Typography } from '@material-ui/core';
+import { Box, Container, Typography } from '@material-ui/core';
 // components
 import Logo from '../../components/Logo';
 //
 import MainNavbar from './MainNavbar';
-import MainFooter from './MainFooter';
 
 // ----------------------------------------------------------------------
 
@@ -21,9 +20,7 @@ export default function MainLayout() {
         <Outlet />
       </div>
 
-      {!isHome ? (
-        <MainFooter />
-      ) : (
+      {isHome && (
         <Box
           sx={{
             py: 5,
@@ -39,8 +36,7 @@ export default function MainLayout() {
 
             <Typography variant="caption" component="p">
               © All rights reserved
-              <br /> made by &nbsp;
-              <Link href="https://minimals.cc/">minimals.cc</Link>
+              <br /> MTZ SARL
             </Typography>
           </Container>
         </Box>

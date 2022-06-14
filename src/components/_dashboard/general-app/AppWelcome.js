@@ -37,17 +37,20 @@ export default function AppWelcome({ displayName }) {
         }}
       >
         <Typography gutterBottom variant="h4">
-          Welcome back,
+          Bonjour,
           <br /> {!displayName ? '...' : displayName}!
         </Typography>
-
         <Typography variant="body2" sx={{ pb: { xs: 3, xl: 5 }, maxWidth: 480, mx: 'auto' }}>
-          If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything
+          <b>Code couleur de fond de ligne sur chaque produit:</b>
         </Typography>
-
-        <Button variant="contained" to="#" component={RouterLink}>
-          Go Now
-        </Button>
+        <Typography variant="body1">
+          <ul>
+            <br />
+            <li> Fond bleue: le produit est vendu et a une facture</li>
+            <br />
+            <li> Fond orange: le produit est vendu et a un BL</li>
+          </ul>
+        </Typography>
       </CardContent>
 
       <SeoIllustration

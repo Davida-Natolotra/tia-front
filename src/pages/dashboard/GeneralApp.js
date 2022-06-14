@@ -1,26 +1,19 @@
 // material
-import { Container, Grid, Stack } from '@material-ui/core';
+import { Container, Grid } from '@material-ui/core';
 // hooks
 import useAuth from '../../hooks/useAuth';
 import useSettings from '../../hooks/useSettings';
 // components
 import Page from '../../components/Page';
-import {
-  AppWelcome,
-  AppWidgets1,
-  AppWidgets2,
-  AppFeatured,
-  AppNewInvoice,
-  AppTopAuthors,
-  AppTopRelated,
-  AppAreaInstalled,
-  AppTotalDownloads,
-  AppTotalInstalled,
-  AppCurrentDownload,
-  AppTotalActiveUsers,
-  AppTopInstalledCountries
-} from '../../components/_dashboard/general-app';
+import { AppWelcome, AppNewInvoice } from '../../components/_dashboard/general-app';
 
+import {
+  AnalyticsNewUsers,
+  AnalyticsBugReports,
+  AnalyticsItemOrders,
+  AnalyticsWeeklySales,
+  AnalyticsWebsiteVisits
+} from '../../components/_dashboard/general-analytics';
 // ----------------------------------------------------------------------
 
 export default function GeneralApp() {
@@ -28,58 +21,33 @@ export default function GeneralApp() {
   const { user } = useAuth();
 
   return (
-    <Page title="General: App | Minimal-UI">
+    <Page title="Moto Dashboard">
       <Container maxWidth={themeStretch ? false : 'xl'}>
         <Grid container spacing={3}>
-          <Grid item xs={12} md={8}>
+          <Grid item xs={12} md={12}>
             <AppWelcome displayName={user.displayName} />
           </Grid>
 
-          <Grid item xs={12} md={4}>
-            <AppFeatured />
+          <Grid item xs={12} sm={6} md={3}>
+            <AnalyticsWeeklySales />
           </Grid>
-
-          <Grid item xs={12} md={4}>
-            <AppTotalActiveUsers />
+          <Grid item xs={12} sm={6} md={3}>
+            <AnalyticsNewUsers />
           </Grid>
-
-          <Grid item xs={12} md={4}>
-            <AppTotalInstalled />
+          <Grid item xs={12} sm={6} md={3}>
+            <AnalyticsItemOrders />
           </Grid>
-
-          <Grid item xs={12} md={4}>
-            <AppTotalDownloads />
+          <Grid item xs={12} sm={6} md={3}>
+            <AnalyticsBugReports />
           </Grid>
-
-          <Grid item xs={12} md={6} lg={4}>
-            <AppCurrentDownload />
+          <Grid item xs={12} md={6} lg={6}>
+            <AnalyticsWebsiteVisits />
           </Grid>
-
-          <Grid item xs={12} md={6} lg={8}>
-            <AppAreaInstalled />
+          <Grid item xs={12} md={6} lg={6}>
+            <AnalyticsWebsiteVisits />
           </Grid>
-
-          <Grid item xs={12} lg={8}>
+          <Grid item xs={12} lg={12}>
             <AppNewInvoice />
-          </Grid>
-
-          <Grid item xs={12} md={6} lg={4}>
-            <AppTopRelated />
-          </Grid>
-
-          <Grid item xs={12} md={6} lg={4}>
-            <AppTopInstalledCountries />
-          </Grid>
-
-          <Grid item xs={12} md={6} lg={4}>
-            <AppTopAuthors />
-          </Grid>
-
-          <Grid item xs={12} md={6} lg={4}>
-            <Stack spacing={3}>
-              <AppWidgets1 />
-              <AppWidgets2 />
-            </Stack>
           </Grid>
         </Grid>
       </Container>
