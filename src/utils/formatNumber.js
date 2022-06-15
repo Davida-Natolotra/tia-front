@@ -1,5 +1,6 @@
 import { replace } from 'lodash';
 import numeral from 'numeral';
+import { formatNumber } from 'accounting-js';
 
 // ----------------------------------------------------------------------
 
@@ -12,8 +13,14 @@ export function fPercent(number) {
 }
 
 export function fNumber(number) {
-  return numeral(number).format();
+  return formatNumber(number, {
+    precision: 0,
+    thousand: ' '
+  });
 }
+// export function fNumber(number) {
+//   return numeral(number).format();
+// }
 
 export function fShortenNumber(number) {
   return replace(numeral(number).format('0.00a'), '.00', '');

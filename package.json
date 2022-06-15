@@ -63,6 +63,8 @@
     "@testing-library/react": "^12.0.0",
     "@testing-library/user-event": "^13.2.1",
     "@turf/bbox": "^6.5.0",
+    "@unicef/material-ui-currency-textfield": "^0.8.6",
+    "accounting-js": "^1.1.1",
     "amazon-cognito-identity-js": "^5.0.6",
     "apexcharts": "^3.27.3",
     "autosuggest-highlight": "^3.1.1",
