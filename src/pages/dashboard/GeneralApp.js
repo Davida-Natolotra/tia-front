@@ -1,11 +1,12 @@
 // material
-import { Container, Grid } from '@material-ui/core';
+import { Container, Grid, Stack } from '@material-ui/core';
 // hooks
+import useCheckMobile from '../../hooks/useCheckMobile';
 import useAuth from '../../hooks/useAuth';
 import useSettings from '../../hooks/useSettings';
 // components
 import Page from '../../components/Page';
-import { AppWelcome, AppNewInvoice } from '../../components/_dashboard/general-app';
+import { AppWelcome, AppNewInvoice, AppWidgets1, AppWidgets2 } from '../../components/_dashboard/general-app';
 
 import {
   AnalyticsNewUsers,
@@ -14,11 +15,13 @@ import {
   AnalyticsWeeklySales,
   AnalyticsWebsiteVisits
 } from '../../components/_dashboard/general-analytics';
+
 // ----------------------------------------------------------------------
 
 export default function GeneralApp() {
   const { themeStretch } = useSettings();
   const { user } = useAuth();
+  const isMobile = useCheckMobile();
 
   return (
     <Page title="Moto Dashboard">
@@ -47,7 +50,14 @@ export default function GeneralApp() {
             <AnalyticsWebsiteVisits />
           </Grid>
           <Grid item xs={12} lg={12}>
-            <AppNewInvoice />
+            {isMobile ? (
+              <Stack spacing={3}>
+                <AppWidgets1 />
+                <AppWidgets2 />
+              </Stack>
+            ) : (
+              <AppNewInvoice />
+            )}
           </Grid>
         </Grid>
       </Container>
