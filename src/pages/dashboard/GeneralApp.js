@@ -6,7 +6,13 @@ import useAuth from '../../hooks/useAuth';
 import useSettings from '../../hooks/useSettings';
 // components
 import Page from '../../components/Page';
-import { AppWelcome, AppNewInvoice, AppWidgets1, AppWidgets2 } from '../../components/_dashboard/general-app';
+import {
+  AppWelcome,
+  AppNewInvoice,
+  AppWidgets1,
+  AppWidgets2,
+  AppStockState
+} from '../../components/_dashboard/general-app';
 
 import {
   AnalyticsNewUsers,
@@ -31,8 +37,8 @@ export default function GeneralApp() {
             <AppWelcome displayName={user.displayName} />
           </Grid>
 
-          <Grid item xs={12} sm={6} md={3}>
-            <AnalyticsWeeklySales />
+          <Grid item xs={12} sm={4} md={3}>
+            <AppStockState />
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
             <AnalyticsNewUsers />
