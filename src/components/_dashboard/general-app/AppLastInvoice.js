@@ -13,7 +13,8 @@ const RootStyle = styled(Card)(({ theme }) => ({
   position: 'relative',
   alignItems: 'center',
   padding: theme.spacing(3),
-  backgroundColor: theme.palette.primary.darker
+  color: theme.palette.info.darker,
+  backgroundColor: theme.palette.info.lighter
 }));
 
 const IconStyle = styled(Icon)(({ theme }) => ({
@@ -22,20 +23,20 @@ const IconStyle = styled(Icon)(({ theme }) => ({
   opacity: 0.12,
   position: 'absolute',
   right: theme.spacing(-3),
-  color: theme.palette.common.white
+  color: theme.palette.common.info
 }));
 
 // ----------------------------------------------------------------------
 
 const TOTAL = 38566;
 
-export default function AppStockState() {
+export default function AppLastInvoice() {
   return (
     <RootStyle>
-      <Box sx={{ ml: 3, color: 'common.white' }}>
+      <Box sx={{ ml: 3 }}>
         <Typography variant="h4"> {fNumber(TOTAL)}</Typography>
         <Typography variant="body2" sx={{ opacity: 0.72 }}>
-          Stock disponible
+          Dernier facture
         </Typography>
       </Box>
       <IconStyle icon={personFill} />

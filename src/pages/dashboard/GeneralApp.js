@@ -11,7 +11,9 @@ import {
   AppNewInvoice,
   AppWidgets1,
   AppWidgets2,
-  AppStockState
+  AppStockState,
+  AppLastInvoice,
+  AppLastBL
 } from '../../components/_dashboard/general-app';
 
 import {
@@ -37,24 +39,23 @@ export default function GeneralApp() {
             <AppWelcome displayName={user.displayName} />
           </Grid>
 
-          <Grid item xs={12} sm={4} md={3}>
+          <Grid item xs={12} sm={4} md={4}>
             <AppStockState />
           </Grid>
-          <Grid item xs={12} sm={6} md={3}>
-            <AnalyticsNewUsers />
+          <Grid item xs={12} sm={4} md={4}>
+            <AppLastInvoice />
           </Grid>
-          <Grid item xs={12} sm={6} md={3}>
-            <AnalyticsItemOrders />
+          <Grid item xs={12} sm={4} md={4}>
+            <AppLastBL />
           </Grid>
-          <Grid item xs={12} sm={6} md={3}>
-            <AnalyticsBugReports />
-          </Grid>
+
           <Grid item xs={12} md={6} lg={6}>
             <AnalyticsWebsiteVisits />
           </Grid>
           <Grid item xs={12} md={6} lg={6}>
             <AnalyticsWebsiteVisits />
           </Grid>
+          {/* Add here the recap */}
           <Grid item xs={12} lg={12}>
             {isMobile ? (
               <Stack spacing={3}>
