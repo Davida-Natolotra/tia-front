@@ -8,7 +8,7 @@ import useSettings from '../../hooks/useSettings';
 import Page from '../../components/Page';
 import {
   AppWelcome,
-  AppNewInvoice,
+  AppMotoTable,
   AppWidgets1,
   AppWidgets2,
   AppStockState,
@@ -65,7 +65,7 @@ export default function GeneralApp() {
                 <AppWidgets2 />
               </Stack>
             ) : (
-              <AppNewInvoice />
+              <AppMotoTable />
             )}
           </Grid>
           <Grid item xs={12} lg={12}>

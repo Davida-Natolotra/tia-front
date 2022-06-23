@@ -14,3 +14,4 @@ export { default as AppWidgets2 } from './AppWidgets2';
 export { default as AppStockState } from './AppStockState';
 export { default as AppLastBL } from './AppLastBL';
 export { default as AppLastInvoice } from './AppLastInvoice';
+export { default as AppMotoTable } from './AppMotoTable';
