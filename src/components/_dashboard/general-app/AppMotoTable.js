@@ -17,6 +17,7 @@ import printerFill from '@iconify/icons-eva/printer-fill';
 import archiveFill from '@iconify/icons-eva/archive-fill';
 import downloadFill from '@iconify/icons-eva/download-fill';
 import trash2Outline from '@iconify/icons-eva/trash-2-outline';
+import pen from '@iconify/icons-eva/edit-2-outline';
 import { MIconButton } from '../../@material-extend';
 import mockData from '../../../utils/mock-data';
 // ----------------------------------------------------------------------
@@ -128,27 +129,16 @@ function MoreMenuButton({ id }) {
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
         <MenuItem onClick={() => console.log(`Download id ${id}`)}>
-          <Icon icon={downloadFill} width={20} height={20} />
+          <Icon icon={pen} width={20} height={20} />
           <Typography variant="body2" sx={{ ml: 2 }}>
-            Download
+            Editer
           </Typography>
         </MenuItem>
-        <MenuItem>
-          <Icon icon={printerFill} width={20} height={20} />
-          <Typography variant="body2" sx={{ ml: 2 }}>
-            Print
-          </Typography>
-        </MenuItem>
-        <MenuItem>
-          <Icon icon={shareFill} width={20} height={20} />
-          <Typography variant="body2" sx={{ ml: 2 }}>
-            Share
-          </Typography>
-        </MenuItem>
+
         <MenuItem>
           <Icon icon={archiveFill} width={20} height={20} />
           <Typography variant="body2" sx={{ ml: 2 }}>
-            Archive
+            Archiver
           </Typography>
         </MenuItem>
 
@@ -156,7 +146,7 @@ function MoreMenuButton({ id }) {
         <MenuItem sx={{ color: 'error.main' }}>
           <Icon icon={trash2Outline} width={20} height={20} />
           <Typography variant="body2" sx={{ ml: 2 }}>
-            Delete
+            Supprimer
           </Typography>
         </MenuItem>
       </Menu>
