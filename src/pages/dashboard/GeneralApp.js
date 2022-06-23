@@ -24,6 +24,8 @@ import {
   AnalyticsWebsiteVisits
 } from '../../components/_dashboard/general-analytics';
 
+import Datagrid from '../components-overview/material-ui/data-grid';
+
 // ----------------------------------------------------------------------
 
 export default function GeneralApp() {
@@ -65,6 +67,9 @@ export default function GeneralApp() {
             ) : (
               <AppNewInvoice />
             )}
+          </Grid>
+          <Grid item xs={12} lg={12}>
+            <Datagrid />
           </Grid>
         </Grid>
       </Container>
