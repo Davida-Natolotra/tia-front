@@ -83,6 +83,8 @@ const rows = [...Array(30)].map((_, index) => ({
 export default function AppMotoTable() {
   return (
     <DataGrid
+      checkboxSelection
+      disableSelectionOnClick
       columns={columns}
       rows={rows}
       autoHeight
