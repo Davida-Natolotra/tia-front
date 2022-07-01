@@ -13,7 +13,8 @@ import {
   AppWidgets2,
   AppStockState,
   AppLastInvoice,
-  AppLastBL
+  AppLastBL,
+  AppFetch
 } from '../../components/_dashboard/general-app';
 
 import {
@@ -71,6 +72,9 @@ export default function GeneralApp() {
           <Grid item xs={12} lg={12}>
             <Datagrid />
           </Grid>
+        </Grid>
+        <Grid item xs={12} lg={12}>
+          <AppFetch />
         </Grid>
       </Container>
     </Page>

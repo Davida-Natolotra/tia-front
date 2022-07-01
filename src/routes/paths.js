@@ -78,6 +78,12 @@ export const PATH_DASHBOARD = {
     post: path(ROOTS_DASHBOARD, '/blog/post/:title'),
     postById: path(ROOTS_DASHBOARD, '/blog/post/apply-these-7-secret-techniques-to-improve-event'),
     newPost: path(ROOTS_DASHBOARD, '/blog/new-post')
+  },
+  moto: {
+    root: path(ROOTS_DASHBOARD, '/moto'),
+    list: path(ROOTS_DASHBOARD, '/moto/list'),
+    newMoto: path(ROOTS_DASHBOARD, '/moto/new'),
+    editById: path(ROOTS_DASHBOARD, '/moto/moto-1/edit')
   }
 };
 

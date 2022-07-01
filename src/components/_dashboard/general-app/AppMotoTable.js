@@ -10,7 +10,8 @@ import {
 import { Pagination, Menu, Divider, MenuItem, Typography } from '@material-ui/core';
 
 // utils
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
+import { Link as RouterLink } from 'react-router-dom';
 // components
 import shareFill from '@iconify/icons-eva/share-fill';
 import printerFill from '@iconify/icons-eva/printer-fill';
@@ -20,43 +21,29 @@ import trash2Outline from '@iconify/icons-eva/trash-2-outline';
 import pen from '@iconify/icons-eva/edit-2-outline';
 import { MIconButton } from '../../@material-extend';
 import mockData from '../../../utils/mock-data';
+import dataMotos from '../../../_apis_/motos.json';
+import { PATH_DASHBOARD } from '../../../routes/paths';
 // ----------------------------------------------------------------------
 
 const columns = [
   {
-    field: 'id',
+    field: 'ID_Moto',
     headerName: 'ID',
     width: 120
   },
   {
-    field: 'firstName',
-    headerName: 'First name',
+    field: 'nom_moto',
+    headerName: 'Modèle',
     width: 160,
     editable: true
   },
   {
-    field: 'lastName',
-    headerName: 'Last name',
+    field: 'num_moteur',
+    headerName: 'Num moteur',
     width: 160,
     editable: true
   },
-  {
-    field: 'age',
-    headerName: 'Age',
-    type: 'number',
-    width: 120,
-    editable: true,
-    align: 'center',
-    headerAlign: 'center'
-  },
-  {
-    field: 'fullName',
-    headerName: 'Full name',
-    description: 'This column has a value getter and is not sortable.',
-    flex: 1,
-    valueGetter: (params) =>
-      `${params.getValue(params.id, 'firstName') || ''} ${params.getValue(params.id, 'lastName') || ''}`
-  },
+
   {
     field: 'action',
     headerName: ' ',
@@ -81,6 +68,21 @@ const rows = [...Array(30)].map((_, index) => ({
 }));
 
 export default function AppMotoTable() {
+  const [motos, setMotos] = useState([]);
+  useEffect(() => {
+    fetch('../../../_apis_/motos.json', {
+      headers: {
+        'Content-type': 'application/json',
+        Accept: 'application/json'
+      }
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(`data: ${data}`);
+        return setMotos(data);
+      })
+      .catch((err) => console.log(err));
+  }, []);
   return (
     <DataGrid
       checkboxSelection
@@ -130,7 +132,11 @@ function MoreMenuButton({ id }) {
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
-        <MenuItem onClick={() => console.log(`Download id ${id}`)}>
+        <MenuItem
+          component={RouterLink}
+          to={`${PATH_DASHBOARD.eCommerce.root}/product/${id}/edit`}
+          sx={{ color: 'text.secondary' }}
+        >
           <Icon icon={pen} width={20} height={20} />
           <Typography variant="body2" sx={{ ml: 2 }}>
             Editer
@@ -155,6 +161,11 @@ function MoreMenuButton({ id }) {
     </>
   );
 }
+
+const onEdit = (id) => {
+  console.log(`edit ${id}`);
+};
+
 function CustomPagination() {
   const { state, apiRef } = useGridSlotComponentProps();
 

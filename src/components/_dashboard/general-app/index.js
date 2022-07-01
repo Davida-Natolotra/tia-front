@@ -15,3 +15,4 @@ export { default as AppStockState } from './AppStockState';
 export { default as AppLastBL } from './AppLastBL';
 export { default as AppLastInvoice } from './AppLastInvoice';
 export { default as AppMotoTable } from './AppMotoTable';
+export { default as AppFetch } from './AppFetch';
