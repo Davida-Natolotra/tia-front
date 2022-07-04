@@ -88,7 +88,6 @@ function MoreMenuButton({ id }) {
   const handleClose = () => {
     setOpen(false);
   };
-  console.log(`id ${id}`);
 
   return (
     <>
