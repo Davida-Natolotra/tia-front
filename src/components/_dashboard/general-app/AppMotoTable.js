@@ -3,6 +3,7 @@ import moreVerticalFill from '@iconify/icons-eva/more-vertical-fill';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import CancelIcon from '@mui/icons-material/Cancel';
 import axios from 'axios';
+import moment from 'moment';
 // material
 import { DataGrid, GridToolbar, GridToolbarContainer, GridToolbarExport } from '@material-ui/data-grid';
 import {
@@ -47,7 +48,7 @@ const columns = [
     field: 'ID_Moto',
     headerName: 'ID',
     width: 120,
-    flex: 0.5
+    flex: 0.7
   },
   {
     field: 'nom_moto',
@@ -61,6 +62,19 @@ const columns = [
     width: 200,
     flex: 1.5,
     hide: true
+  },
+  {
+    field: 'date_entree',
+    headerName: "Date d'entrée",
+    width: 200,
+    flex: 1.5,
+    sortable: false,
+    valueFormatter: (params) =>
+      new Date(params?.value).toLocaleDateString('fr-fr', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      })
   },
 
   {
