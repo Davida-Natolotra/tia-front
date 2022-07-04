@@ -59,7 +59,8 @@ const columns = [
     field: 'num_moteur',
     headerName: 'Num moteur',
     width: 200,
-    flex: 1.5
+    flex: 1.5,
+    hide: true
   },
 
   {
@@ -111,6 +112,10 @@ export default function AppMotoTable() {
         break;
       case 3:
         newData = allMotos.filter((moto) => moto.num_sur_facture !== null);
+        setMotos(newData);
+        break;
+      case 4:
+        newData = allMotos.filter((moto) => moto.num_BL === null && moto.num_sur_facture === null);
         setMotos(newData);
         break;
     }
@@ -227,14 +232,6 @@ function setColor(params) {
   return a;
 }
 
-function CustomToolbar() {
-  return (
-    <GridToolbarContainer>
-      <GridToolbarExport />
-    </GridToolbarContainer>
-  );
-}
-
 const FiltreDate = ({ changeDisplay, motos, setMotos, motosOr }) => {
   const [dateDebut, setDateDebut] = useState(new Date());
   const [dateFin, setDateFin] = useState(new Date());
@@ -277,6 +274,10 @@ const FiltreDate = ({ changeDisplay, motos, setMotos, motosOr }) => {
     <Grid container spacing={3}>
       <Grid item xs={12} md={6}>
         <Stack direction="column" alignItems="left" spacing={2}>
+          <Box>
+            <Typography variant="overline">Filtre par date de vente</Typography>
+            <hr />
+          </Box>
           <Stack direction="row" spacing={2} alignItems="center">
             <LocalizationProvider dateAdapter={AdapterDateFns}>
               <MobileDatePicker
@@ -323,22 +324,30 @@ const FiltreDate = ({ changeDisplay, motos, setMotos, motosOr }) => {
         </Stack>
       </Grid>
       <Grid item xs={12} md={4}>
-        <Stack direction="row" spacing={2} alignItems="center">
-          <FormControl>
-            <InputLabel id="demo-simple-select-label">Afficher</InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={display}
-              label="Afficher"
-              onChange={(e) => setDisplay(e.target.value)}
-            >
-              <MenuItem value={1}>Tout</MenuItem>
-              <MenuItem value={2}>Vendus avec BL</MenuItem>
-              <MenuItem value={3}>Vendus avec facture</MenuItem>
-            </Select>
-          </FormControl>
-          <Typography variant="subheader">{motos.length} résultats </Typography>
+        <Stack direction="column" spacing={2}>
+          <Box>
+            <Typography variant="overline">Affichage</Typography>
+            <hr />
+          </Box>
+
+          <Stack direction="row" spacing={2} alignItems="center">
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label">Afficher</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={display}
+                label="Afficher"
+                onChange={(e) => setDisplay(e.target.value)}
+              >
+                <MenuItem value={1}>Tout</MenuItem>
+                <MenuItem value={2}>Vendus avec BL</MenuItem>
+                <MenuItem value={3}>Vendus avec facture</MenuItem>
+                <MenuItem value={4}>Invendus</MenuItem>
+              </Select>
+            </FormControl>
+            <Typography variant="subheader">{motos.length} résultats </Typography>
+          </Stack>
         </Stack>
       </Grid>
     </Grid>
