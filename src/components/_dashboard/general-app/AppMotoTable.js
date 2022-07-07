@@ -31,7 +31,7 @@ import Select from '@mui/material/Select';
 
 import { darken, lighten } from '@mui/material/styles';
 // utils
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect, useMemo } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 // components
 import archiveFill from '@iconify/icons-eva/archive-fill';
@@ -96,49 +96,24 @@ const getHoverBackgroundColor = (color, mode) => (mode === 'dark' ? darken(color
 export default function AppMotoTable() {
   const [motos, setMotos] = useState([]);
   const [pageSize, setPageSize] = useState(10);
-  const [motosOr, setMotosOr] = useState([]);
+  const [motosFiltre, setMotosFiltre] = useState([]);
+
   useEffect(() => {
     fetch('http://localhost:8000/api/')
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
-        setMotosOr(data);
+
         return setMotos(data);
       })
       .catch((err) => console.log(err));
   }, []);
 
-  function changeDisplay(display) {
-    const allMotos = motosOr;
-    let newData;
-    switch (display) {
-      default:
-        newData = allMotos;
-        setMotos(newData);
-        break;
-      case 1:
-        newData = allMotos;
-        setMotos(newData);
-        break;
-      case 2:
-        newData = allMotos.filter((moto) => moto.num_BL !== null && moto.num_sur_facture === null);
-        setMotos(newData);
-        break;
-      case 3:
-        newData = allMotos.filter((moto) => moto.num_sur_facture !== null);
-        setMotos(newData);
-        break;
-      case 4:
-        newData = allMotos.filter((moto) => moto.num_BL === null && moto.num_sur_facture === null);
-        setMotos(newData);
-        break;
-    }
-  }
   return (
     <Card>
       <CardHeader title="Liste des motos" sx={{ mb: 2 }} />
       <Box sx={{ p: 3, backgroundColor: '#f4f6f8' }}>
-        <FiltreDate changeDisplay={changeDisplay} motos={motos} setMotos={setMotos} motosOr={motosOr} />
+        <FiltreDate motos={motos} setMotos={setMotos} />
       </Box>
       <Box
         sx={{
@@ -246,14 +221,29 @@ function setColor(params) {
   return a;
 }
 
-const FiltreDate = ({ changeDisplay, motos, setMotos, motosOr }) => {
+const FiltreDate = ({ motos, setMotosFiltre }) => {
   const [dateDebut, setDateDebut] = useState(new Date());
   const [dateFin, setDateFin] = useState(new Date());
   const [display, setDisplay] = useState(1);
 
-  useEffect(() => {
-    changeDisplay(display);
-  }, [display]);
+  setMotosFiltre(
+    useMemo(() => {
+      switch (display) {
+        default:
+          return motos;
+        case 1:
+          return motos;
+        case 2:
+          return motos.filter((moto) => moto.num_BL !== null && moto.num_sur_facture === null);
+
+        case 3:
+          return motos.filter((moto) => moto.num_sur_facture !== null);
+
+        case 4:
+          return motos.filter((moto) => moto.num_BL === null && moto.num_sur_facture === null);
+      }
+    }, [display])
+  );
 
   function formatDate(date) {
     let today = new Date(date);
