@@ -2,12 +2,9 @@ import { Icon } from '@iconify/react';
 import moreVerticalFill from '@iconify/icons-eva/more-vertical-fill';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import CancelIcon from '@mui/icons-material/Cancel';
-import axios from 'axios';
-import moment from 'moment';
 // material
-import { DataGrid, GridToolbar, GridToolbarContainer, GridToolbarExport } from '@material-ui/data-grid';
+import { DataGrid, GridToolbar } from '@material-ui/data-grid';
 import {
-  Pagination,
   Menu,
   Divider,
   MenuItem,
@@ -39,10 +36,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import archiveFill from '@iconify/icons-eva/archive-fill';
 import trash2Outline from '@iconify/icons-eva/trash-2-outline';
 import pen from '@iconify/icons-eva/edit-2-outline';
-import { Filter } from '@material-ui/icons';
-import { getMotos, getMotosByDate } from '../../../redux/slices/moto';
+import { filterDisplay, getMotos, getMotosByDate } from '../../../redux/slices/moto';
 import { MIconButton } from '../../@material-extend';
-import mockData from '../../../utils/mock-data';
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // ----------------------------------------------------------------------
 
@@ -99,23 +94,36 @@ const getHoverBackgroundColor = (color, mode) => (mode === 'dark' ? darken(color
 export default function AppMotoTable() {
   const motos = useSelector((state) => state.motos?.products);
   const [pageSize, setPageSize] = useState(10);
-  const [motosFiltre, setMotosFiltre] = useState(motos);
-
+  const display = useSelector((state) => state.motos?.display);
+  const loading = useSelector((state) => state.motos?.isLoading);
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(getMotos());
   }, []);
 
-  useEffect(() => {
-    setMotosFiltre(motos);
-  }, [motos]);
+  const motosFiltre = useMemo(() => {
+    switch (display) {
+      default:
+        return motos;
+      case 1:
+        return motos;
+      case 2:
+        return motos.filter((moto) => moto.num_BL !== null && moto.num_sur_facture === null);
+
+      case 3:
+        return motos.filter((moto) => moto.num_sur_facture !== null);
+
+      case 4:
+        return motos.filter((moto) => moto.num_BL === null && moto.num_sur_facture === null);
+    }
+  }, [display]);
 
   return (
     <Card>
       <CardHeader title="Liste des motos" sx={{ mb: 2 }} />
       <Box sx={{ p: 3, backgroundColor: '#f4f6f8' }}>
-        <FiltreDate motos={motos} setMotosFiltre={setMotosFiltre} dispatch={dispatch} motosFiltre={motosFiltre} />
+        <FiltreDate motosFiltre={motosFiltre} />
       </Box>
       <Box
         sx={{
@@ -140,6 +148,7 @@ export default function AppMotoTable() {
         <DataGrid
           checkboxSelection
           disableSelectionOnClick
+          loading={loading}
           pageSize={pageSize}
           onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
           rowsPerPageOptions={[5, 10, 50]}
@@ -223,29 +232,11 @@ function setColor(params) {
   return a;
 }
 
-const FiltreDate = ({ motos, setMotosFiltre, dispatch, motosFiltre }) => {
+const FiltreDate = ({ motosFiltre }) => {
   const [dateDebut, setDateDebut] = useState(new Date());
   const [dateFin, setDateFin] = useState(new Date());
-  const [display, setDisplay] = useState(1);
-
-  setMotosFiltre(
-    useMemo(() => {
-      switch (display) {
-        default:
-          return motos;
-        case 1:
-          return motos;
-        case 2:
-          return motos.filter((moto) => moto.num_BL !== null && moto.num_sur_facture === null);
-
-        case 3:
-          return motos.filter((moto) => moto.num_sur_facture !== null);
-
-        case 4:
-          return motos.filter((moto) => moto.num_BL === null && moto.num_sur_facture === null);
-      }
-    }, [display])
-  );
+  const dispatch = useDispatch();
+  const display = useSelector((state) => state.motos?.display);
 
   function formatDate(date) {
     let today = new Date(date);
@@ -338,7 +329,7 @@ const FiltreDate = ({ motos, setMotosFiltre, dispatch, motosFiltre }) => {
                 id="demo-simple-select"
                 value={display}
                 label="Afficher"
-                onChange={(e) => setDisplay(e.target.value)}
+                onChange={(e) => dispatch(filterDisplay(e.target.value))}
               >
                 <MenuItem value={1}>Tout</MenuItem>
                 <MenuItem value={2}>Vendus avec BL</MenuItem>

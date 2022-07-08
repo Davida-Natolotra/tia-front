@@ -9,7 +9,8 @@ const initialState = {
   isLoading: false,
   error: false,
   products: [],
-  product: null
+  product: null,
+  display: 1
 };
 
 const slice = createSlice({
@@ -57,6 +58,9 @@ const slice = createSlice({
       state.filters.rating = action.payload.rating;
     },
 
+    filterDisplay(state, action) {
+      state.display = action.payload;
+    },
     // CHECKOUT
     getCart(state, action) {
       const cart = action.payload;
@@ -191,7 +195,8 @@ export const {
   filterProducts,
   sortByProducts,
   increaseQuantity,
-  decreaseQuantity
+  decreaseQuantity,
+  filterDisplay
 } = slice.actions;
 
 // ----------------------------------------------------------------------
