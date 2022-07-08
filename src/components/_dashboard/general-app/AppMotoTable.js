@@ -33,11 +33,14 @@ import { darken, lighten } from '@mui/material/styles';
 // utils
 import { useRef, useState, useEffect, useMemo } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+
 // components
 import archiveFill from '@iconify/icons-eva/archive-fill';
 import trash2Outline from '@iconify/icons-eva/trash-2-outline';
 import pen from '@iconify/icons-eva/edit-2-outline';
 import { Filter } from '@material-ui/icons';
+import { getMotos, getMotosByDate } from '../../../redux/slices/moto';
 import { MIconButton } from '../../@material-extend';
 import mockData from '../../../utils/mock-data';
 import { PATH_DASHBOARD } from '../../../routes/paths';
@@ -94,26 +97,25 @@ const getBackgroundColor = (color, mode) => (mode === 'dark' ? darken(color, 0.6
 const getHoverBackgroundColor = (color, mode) => (mode === 'dark' ? darken(color, 0.5) : lighten(color, 0.5));
 
 export default function AppMotoTable() {
-  const [motos, setMotos] = useState([]);
+  const motos = useSelector((state) => state.motos?.products);
   const [pageSize, setPageSize] = useState(10);
-  const [motosFiltre, setMotosFiltre] = useState([]);
+  const [motosFiltre, setMotosFiltre] = useState(motos);
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    fetch('http://localhost:8000/api/')
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
-
-        return setMotos(data);
-      })
-      .catch((err) => console.log(err));
+    dispatch(getMotos());
   }, []);
+
+  useEffect(() => {
+    setMotosFiltre(motos);
+  }, [motos]);
 
   return (
     <Card>
       <CardHeader title="Liste des motos" sx={{ mb: 2 }} />
       <Box sx={{ p: 3, backgroundColor: '#f4f6f8' }}>
-        <FiltreDate motos={motos} setMotos={setMotos} />
+        <FiltreDate motos={motos} setMotosFiltre={setMotosFiltre} dispatch={dispatch} motosFiltre={motosFiltre} />
       </Box>
       <Box
         sx={{
@@ -144,7 +146,7 @@ export default function AppMotoTable() {
           pagination
           autoHeight
           columns={columns}
-          rows={motos}
+          rows={motosFiltre}
           components={{
             Toolbar: GridToolbar
           }}
@@ -221,7 +223,7 @@ function setColor(params) {
   return a;
 }
 
-const FiltreDate = ({ motos, setMotosFiltre }) => {
+const FiltreDate = ({ motos, setMotosFiltre, dispatch, motosFiltre }) => {
   const [dateDebut, setDateDebut] = useState(new Date());
   const [dateFin, setDateFin] = useState(new Date());
   const [display, setDisplay] = useState(1);
@@ -257,21 +259,12 @@ const FiltreDate = ({ motos, setMotosFiltre }) => {
   function Filter(dateDebut, dateFin) {
     const newDateDebut = formatDate(dateDebut);
     const newDateFin = formatDate(dateFin);
-    axios({
-      method: 'get',
-      url: 'http://localhost:8000/api/motos',
-      responseType: 'stream',
-      params: {
-        dateEntree: newDateDebut,
-        dateFin: newDateFin
-      }
-    }).then((response) => setMotos(response.data));
+    dispatch(getMotosByDate(newDateDebut, newDateFin));
   }
 
   function CancelFilter() {
     setDateDebut(new Date());
     setDateFin(new Date());
-    setMotos(motosOr);
   }
 
   return (
@@ -317,7 +310,10 @@ const FiltreDate = ({ motos, setMotosFiltre }) => {
             <Button
               variant="outlined"
               color="primary"
-              onClick={() => CancelFilter()}
+              onClick={() => {
+                CancelFilter();
+                dispatch(getMotos());
+              }}
               sx={{ textTransform: 'none' }}
               startIcon={<CancelIcon />}
               size="small"
@@ -350,7 +346,7 @@ const FiltreDate = ({ motos, setMotosFiltre }) => {
                 <MenuItem value={4}>Invendus</MenuItem>
               </Select>
             </FormControl>
-            <Typography variant="subheader">{motos.length} résultats </Typography>
+            <Typography variant="subheader">{motosFiltre.length} résultats </Typography>
           </Stack>
         </Stack>
       </Grid>
