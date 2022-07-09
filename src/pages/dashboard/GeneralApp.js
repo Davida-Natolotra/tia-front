@@ -1,5 +1,5 @@
 // material
-import { Container, Grid, Stack } from '@material-ui/core';
+import { Container, Grid, Typography } from '@material-ui/core';
 // hooks
 import useCheckMobile from '../../hooks/useCheckMobile';
 import useAuth from '../../hooks/useAuth';
@@ -25,8 +25,6 @@ import {
   AnalyticsWebsiteVisits
 } from '../../components/_dashboard/general-analytics';
 
-import Datagrid from '../components-overview/material-ui/data-grid';
-
 // ----------------------------------------------------------------------
 
 export default function GeneralApp() {
@@ -39,7 +37,13 @@ export default function GeneralApp() {
       <Container maxWidth={themeStretch ? false : 'xl'}>
         <Grid container spacing={3}>
           <Grid item xs={12} md={12}>
-            <AppWelcome displayName={user.displayName} />
+            {!isMobile ? (
+              <AppWelcome displayName={user.displayName} />
+            ) : (
+              <Typography variant="heading" color="primary">
+                Bonjour {user.displayName}
+              </Typography>
+            )}
           </Grid>
 
           <Grid item xs={12} sm={4} md={4}>

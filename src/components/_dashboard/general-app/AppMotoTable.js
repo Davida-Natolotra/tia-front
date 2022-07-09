@@ -16,12 +16,13 @@ import {
   Button,
   Stack,
   Grid,
-  ButtonGroup
+  ButtonGroup,
+  Tooltip
 } from '@material-ui/core';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-
+import plusFill from '@iconify/icons-eva/plus-fill';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
@@ -31,61 +32,15 @@ import { darken, lighten } from '@mui/material/styles';
 import { useRef, useState, useEffect, useMemo } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-
 // components
 import archiveFill from '@iconify/icons-eva/archive-fill';
 import trash2Outline from '@iconify/icons-eva/trash-2-outline';
 import pen from '@iconify/icons-eva/edit-2-outline';
+import useCheckMobile from '../../../hooks/useCheckMobile';
 import { filterDisplay, getMotos, getMotosByDate } from '../../../redux/slices/moto';
 import { MIconButton } from '../../@material-extend';
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // ----------------------------------------------------------------------
-
-const columns = [
-  {
-    field: 'ID_Moto',
-    headerName: 'ID',
-    width: 120,
-    flex: 0.7
-  },
-  {
-    field: 'nom_moto',
-    headerName: 'Modèle',
-    width: 200,
-    flex: 1.5
-  },
-  {
-    field: 'num_moteur',
-    headerName: 'Num moteur',
-    width: 200,
-    flex: 1.5,
-    hide: true
-  },
-  {
-    field: 'date_entree',
-    headerName: "Date d'entrée",
-    width: 200,
-    flex: 1.5,
-    sortable: false,
-    valueFormatter: (params) =>
-      new Date(params?.value).toLocaleDateString('fr-fr', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-      })
-  },
-
-  {
-    field: 'action',
-    headerName: ' ',
-    width: 80,
-    align: 'right',
-    sortable: false,
-    disableColumnMenu: true,
-    flex: 0.5,
-    renderCell: (params) => <MoreMenuButton id={params.id} />
-  }
-];
 
 const getBackgroundColor = (color, mode) => (mode === 'dark' ? darken(color, 0.6) : lighten(color, 0.6));
 
@@ -94,13 +49,74 @@ const getHoverBackgroundColor = (color, mode) => (mode === 'dark' ? darken(color
 export default function AppMotoTable() {
   const motos = useSelector((state) => state.motos?.products);
   const [pageSize, setPageSize] = useState(10);
+  const [contextMenu, setContextMenu] = useState(null);
+  const [selectedRow, setSelectedRow] = useState();
   const display = useSelector((state) => state.motos?.display);
   const loading = useSelector((state) => state.motos?.isLoading);
   const dispatch = useDispatch();
+  const isMobile = useCheckMobile();
 
   useEffect(() => {
     dispatch(getMotos());
   }, []);
+
+  const columns = [
+    {
+      field: 'ID_Moto',
+      headerName: 'ID',
+      minWidth: 50,
+      flex: 0.7
+    },
+    {
+      field: 'nom_moto',
+      headerName: 'Modèle',
+      minWidth: 180,
+      flex: 2
+    },
+    {
+      field: 'num_moteur',
+      headerName: 'Num moteur',
+      width: 200,
+      flex: 2,
+      hide: true
+    },
+    {
+      field: 'date_entree',
+      headerName: "Date d'entrée",
+      minWidth: 150,
+      flex: 2,
+      sortable: true,
+      hide: isMobile,
+      valueFormatter: (params) =>
+        new Date(params?.value).toLocaleDateString('fr-fr', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        })
+    },
+
+    {
+      field: 'action',
+      headerName: ' ',
+      width: 80,
+      align: 'right',
+      sortable: false,
+      disableColumnMenu: true,
+      flex: 0.5,
+      renderCell: (params) => <MoreMenuButton id={params.id} />
+    }
+  ];
+
+  const handleContextMenu = (event) => {
+    // event.preventDefault();
+    console.log(event.currentTarget);
+    setSelectedRow(Number(event.currentTarget.getAttribute('data-id')));
+    setContextMenu(contextMenu === null ? { mouseX: event.clientX - 2, mouseY: event.clientY - 4 } : null);
+  };
+
+  const handleClose = () => {
+    setContextMenu(null);
+  };
 
   const motosFiltre = useMemo(() => {
     switch (display) {
@@ -117,17 +133,26 @@ export default function AppMotoTable() {
       case 4:
         return motos.filter((moto) => moto.num_BL === null && moto.num_sur_facture === null);
     }
-  }, [display]);
+  }, [display, motos]);
 
   return (
     <Card>
-      <CardHeader title="Liste des motos" sx={{ mb: 2 }} />
+      <CardHeader
+        title="Liste des motos"
+        subheader={`Vous avez ${motos?.length} motos enregistrés`}
+        action={
+          <Tooltip title="Nouvelle entrée">
+            <MIconButton color="primary" size="large">
+              <Icon icon={plusFill} width={20} height={20} />
+            </MIconButton>
+          </Tooltip>
+        }
+      />
       <Box sx={{ p: 3, backgroundColor: '#f4f6f8' }}>
         <FiltreDate motosFiltre={motosFiltre} />
       </Box>
       <Box
         sx={{
-          height: 'auto',
           width: '100%',
           flexGrow: 1,
           '& .super--Invoice': {
@@ -156,11 +181,53 @@ export default function AppMotoTable() {
           autoHeight
           columns={columns}
           rows={motosFiltre}
+          componentsProps={{
+            row: {
+              onContextMenu: handleContextMenu,
+              style: { cursor: 'context-menu' }
+            }
+          }}
           components={{
             Toolbar: GridToolbar
           }}
           getRowClassName={(params) => setColor(params)}
         />
+        <Menu
+          open={contextMenu !== null}
+          onClose={handleClose}
+          anchorReference="anchorPosition"
+          anchorPosition={contextMenu !== null ? { top: contextMenu.mouseY, left: contextMenu.mouseX } : undefined}
+          componentsProps={{
+            root: {
+              onContextMenu: (e) => {
+                e.preventDefault();
+                handleClose();
+              }
+            }
+          }}
+        >
+          <MenuItem component={RouterLink} to={`${PATH_DASHBOARD.eCommerce.root}/product/${selectedRow}/edit`}>
+            <Icon icon={pen} width={20} height={20} />
+            <Typography variant="body2" sx={{ ml: 2 }}>
+              Editer
+            </Typography>
+          </MenuItem>
+
+          <MenuItem>
+            <Icon icon={archiveFill} width={20} height={20} />
+            <Typography variant="body2" sx={{ ml: 2 }}>
+              Archiver
+            </Typography>
+          </MenuItem>
+
+          <Divider />
+          <MenuItem sx={{ color: 'error.main' }}>
+            <Icon icon={trash2Outline} width={20} height={20} />
+            <Typography variant="body2" sx={{ ml: 2 }}>
+              Supprimer
+            </Typography>
+          </MenuItem>
+        </Menu>
       </Box>
     </Card>
   );
