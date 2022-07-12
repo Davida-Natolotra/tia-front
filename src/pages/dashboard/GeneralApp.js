@@ -1,5 +1,5 @@
 // material
-import { Container, Grid, Typography } from '@material-ui/core';
+import { Container, Grid, Typography, Stack } from '@material-ui/core';
 // hooks
 import useCheckMobile from '../../hooks/useCheckMobile';
 import useAuth from '../../hooks/useAuth';
@@ -18,12 +18,18 @@ import {
 } from '../../components/_dashboard/general-app';
 
 import {
-  AnalyticsNewUsers,
-  AnalyticsBugReports,
-  AnalyticsItemOrders,
-  AnalyticsWeeklySales,
-  AnalyticsWebsiteVisits
-} from '../../components/_dashboard/general-analytics';
+  BankingIncome,
+  BankingExpenses,
+  BankingContacts,
+  BankingInviteFriends,
+  BankingQuickTransfer,
+  BankingCurrentBalance,
+  BankingBalanceStatistics,
+  BankingRecentTransitions,
+  BankingExpensesCategories
+} from '../../components/_dashboard/general-banking';
+
+import VenteDetails from '../../components/_dashboard/moto-app/motoDashboardDetails';
 
 // ----------------------------------------------------------------------
 
@@ -56,11 +62,16 @@ export default function GeneralApp() {
             <AppLastBL />
           </Grid>
 
-          <Grid item xs={12} md={6} lg={6}>
-            <AnalyticsWebsiteVisits />
+          <Grid item xs={12} md={6}>
+            <Stack spacing={3}>
+              <BankingBalanceStatistics />
+            </Stack>
           </Grid>
-          <Grid item xs={12} md={6} lg={6}>
-            <AnalyticsWebsiteVisits />
+
+          <Grid item xs={12} md={6}>
+            <Stack spacing={3}>
+              <VenteDetails />
+            </Stack>
           </Grid>
           {/* Add here the recap */}
           <Grid item xs={12} lg={12}>
