@@ -3,7 +3,8 @@ import moreVerticalFill from '@iconify/icons-eva/more-vertical-fill';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import CancelIcon from '@mui/icons-material/Cancel';
 // material
-import { DataGrid, GridToolbar } from '@material-ui/data-grid';
+
+import { DataGrid, GridToolbar, frFR } from '@mui/x-data-grid';
 import {
   Menu,
   Divider,
@@ -20,14 +21,17 @@ import {
   Tooltip
 } from '@material-ui/core';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
+import frLocale from 'date-fns/locale/fr';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { frFR as calFR } from '@mui/x-date-pickers';
 import plusFill from '@iconify/icons-eva/plus-fill';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 
 import { darken, lighten } from '@mui/material/styles';
+
 // utils
 import { useRef, useState, useEffect, useMemo } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
@@ -108,8 +112,7 @@ export default function AppMotoTable() {
   ];
 
   const handleContextMenu = (event) => {
-    // event.preventDefault();
-    console.log(event.currentTarget);
+    event.preventDefault();
     setSelectedRow(Number(event.currentTarget.getAttribute('data-id')));
     setContextMenu(contextMenu === null ? { mouseX: event.clientX - 2, mouseY: event.clientY - 4 } : null);
   };
@@ -179,13 +182,15 @@ export default function AppMotoTable() {
           rowsPerPageOptions={[5, 10, 50]}
           pagination
           autoHeight
+          localeText={frFR.components.MuiDataGrid.defaultProps.localeText}
           columns={columns}
           rows={motosFiltre}
           componentsProps={{
             row: {
               onContextMenu: handleContextMenu,
               style: { cursor: 'context-menu' }
-            }
+            },
+            toolbar: { printOptions: { disableToolbarButton: true } }
           }}
           components={{
             Toolbar: GridToolbar
@@ -334,10 +339,17 @@ const FiltreDate = ({ motosFiltre }) => {
             <hr />
           </Box>
           <Stack direction="row" spacing={2} alignItems="center">
-            <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <LocalizationProvider
+              dateAdapter={AdapterDateFns}
+              adapterLocale={frLocale}
+              localeText={calFR.components.MuiLocalizationProvider.defaultProps.localeText}
+            >
               <MobileDatePicker
                 label="Date début"
                 inputFormat="dd/MM/yyyy"
+                openTo="month"
+                views={['year', 'month', 'day']}
+                disableFuture
                 value={dateDebut}
                 onChange={(newValue) => {
                   setDateDebut(newValue);
@@ -347,6 +359,9 @@ const FiltreDate = ({ motosFiltre }) => {
               <MobileDatePicker
                 label="Date fin"
                 inputFormat="dd/MM/yyyy"
+                openTo="month"
+                views={['year', 'month', 'day']}
+                disableFuture
                 value={dateFin}
                 onChange={(newValue) => {
                   setDateFin(newValue);

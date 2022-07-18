@@ -9,28 +9,13 @@ import Page from '../../components/Page';
 import {
   AppWelcome,
   AppMotoTable,
-  AppWidgets1,
-  AppWidgets2,
   AppStockState,
   AppLastInvoice,
-  AppLastBL,
-  AppFetch
+  AppLastBL
 } from '../../components/_dashboard/general-app';
 
-import {
-  BankingIncome,
-  BankingExpenses,
-  BankingContacts,
-  BankingInviteFriends,
-  BankingQuickTransfer,
-  BankingCurrentBalance,
-  BankingBalanceStatistics,
-  BankingRecentTransitions,
-  BankingExpensesCategories
-} from '../../components/_dashboard/general-banking';
-
 import VenteDetails from '../../components/_dashboard/moto-app/motoDashboardDetails';
-
+import MotoChartHebdo from '../../components/_dashboard/moto-app/motoDashboardJourn';
 // ----------------------------------------------------------------------
 
 export default function GeneralApp() {
@@ -64,7 +49,7 @@ export default function GeneralApp() {
 
           <Grid item xs={12} md={6}>
             <Stack spacing={3}>
-              <BankingBalanceStatistics />
+              <MotoChartHebdo />
             </Stack>
           </Grid>
 

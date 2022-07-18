@@ -4,6 +4,9 @@ import { useMemo } from 'react';
 // material
 import { CssBaseline } from '@material-ui/core';
 import { createTheme, ThemeProvider, StyledEngineProvider } from '@material-ui/core/styles';
+import { frFR as pickersBgBG } from '@mui/x-date-pickers';
+import { frFR as coreBgBG } from '@mui/material/locale';
+import { frFR } from '@mui/x-data-grid';
 // hooks
 import useSettings from '../hooks/useSettings';
 //
