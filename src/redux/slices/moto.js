@@ -43,6 +43,9 @@ const slice = createSlice({
     getProductSuccess(state, action) {
       state.isLoading = false;
       state.product = action.payload;
+    },
+    filterDisplay(state, action) {
+      state.display = action.payload;
     }
   }
 });
@@ -51,24 +54,7 @@ const slice = createSlice({
 export default slice.reducer;
 
 // Actions
-export const {
-  getCart,
-  addCart,
-  resetCart,
-  onGotoStep,
-  onBackStep,
-  onNextStep,
-  deleteCart,
-  deleteProduct,
-  createBilling,
-  applyShipping,
-  applyDiscount,
-  filterProducts,
-  sortByProducts,
-  increaseQuantity,
-  decreaseQuantity,
-  filterDisplay
-} = slice.actions;
+export const { filterDisplay } = slice.actions;
 
 // ----------------------------------------------------------------------
 
