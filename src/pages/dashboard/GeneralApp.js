@@ -26,7 +26,7 @@ export default function GeneralApp() {
   return (
     <Page title="Moto Dashboard">
       <Container maxWidth={themeStretch ? false : 'xl'}>
-        <Grid container spacing={3}>
+        <Grid container spacing={3} alignItems="stretch">
           <Grid item xs={12} md={12}>
             {!isMobile ? (
               <AppWelcome displayName={user.displayName} />
@@ -47,16 +47,12 @@ export default function GeneralApp() {
             <AppLastBL />
           </Grid>
 
-          <Grid item xs={12} md={6}>
-            <Stack spacing={3}>
-              <MotoChartHebdo />
-            </Stack>
+          <Grid item xs={12} md={8}>
+            <MotoChartHebdo />
           </Grid>
 
-          <Grid item xs={12} md={6}>
-            <Stack spacing={3}>
-              <VenteDetails />
-            </Stack>
+          <Grid item xs={12} md={4}>
+            <VenteDetails />
           </Grid>
           {/* Add here the recap */}
           <Grid item xs={12} lg={12}>

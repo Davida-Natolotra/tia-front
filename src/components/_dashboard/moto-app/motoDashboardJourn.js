@@ -2,7 +2,7 @@ import { merge } from 'lodash';
 import { useState, useEffect } from 'react';
 import ReactApexChart from 'react-apexcharts';
 // material
-import { Card, CardHeader, Box, TextField, Stack } from '@material-ui/core';
+import { Card, CardHeader, Box, TextField, Stack, CardContent } from '@material-ui/core';
 //
 import { useSelector, useDispatch } from 'react-redux';
 import endOfWeek from 'date-fns/endOfWeek';
@@ -10,6 +10,7 @@ import startOfWeek from 'date-fns/startOfWeek';
 import { BaseOptionChart } from '../../charts';
 import JournPick from './motoJournPick';
 import { getMotosHebdo, setChartSelect, getMotosMonthly } from '../../../redux/slices/moto';
+import { styles } from './styles';
 // ----------------------------------------------------------------------
 
 export default function MotoDashboardJourn() {
@@ -127,14 +128,13 @@ export default function MotoDashboardJourn() {
           </Stack>
         }
       />
-
-      {CHART_DATA.map((item) => (
-        <Box key={item.year} sx={{ mt: 3, mx: 3 }} dir="ltr">
-          {item.year === seriesData && (
-            <ReactApexChart type="bar" series={item.data} options={chartOptions} height={364} />
-          )}
-        </Box>
-      ))}
+      <CardContent sx={{ maxHeight: '60vh' }}>
+        {CHART_DATA.map((item) => (
+          <Box key={item.year} sx={{ mt: 3, mx: 3 }} dir="ltr">
+            {item.year === seriesData && <ReactApexChart type="bar" series={item.data} options={chartOptions} />}
+          </Box>
+        ))}
+      </CardContent>
     </Card>
   );
 }

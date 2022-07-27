@@ -1,4 +1,3 @@
-import { sum, map, filter, uniqBy, reject } from 'lodash';
 import { createSlice } from '@reduxjs/toolkit';
 // utils
 import axios from 'axios';
@@ -13,7 +12,8 @@ const initialState = {
   display: 1,
   motosHebdo: { date: [], data: [], nb: [] },
   motosMonth: { date: [], data: [], nb: [] },
-  chartSelect: 'Hebdomadaire'
+  chartSelect: 'Hebdomadaire',
+  stock: 0
 };
 
 const slice = createSlice({
@@ -71,6 +71,11 @@ const slice = createSlice({
     },
     setChartSelect(state, action) {
       state.chartSelect = action.payload;
+    },
+
+    getStockSuccess(state, action) {
+      state.isLoading = false;
+      state.stock = action.payload;
     }
   }
 });
@@ -163,6 +168,21 @@ export function getMotosMonthly(date) {
         }
       });
       dispatch(slice.actions.getMotosMonthSuccess(response.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+export function getStock() {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios({
+        method: 'get',
+        url: 'http://localhost:8000/api/motos/StockLevel_APIs',
+        responseType: 'stream'
+      });
+      dispatch(slice.actions.getStockSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }

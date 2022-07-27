@@ -1,5 +1,4 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 import Collapse from '@mui/material/Collapse';
 import IconButton from '@mui/material/IconButton';
@@ -13,24 +12,11 @@ import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import {
-  Card,
-  Link,
-  Stack,
-  Input,
-  Button,
-  Avatar,
-  Dialog,
-  Tooltip,
-  TextField,
-  CardHeader,
-  DialogTitle,
-  DialogActions,
-  CardContent,
-  Slider as MuiSlider
-} from '@material-ui/core';
+import { Card, CardHeader, CardContent } from '@material-ui/core';
 
 import { useSelector } from 'react-redux';
+
+import { styles } from './styles';
 
 function createData(nomMoto, numMoteur, data) {
   return {
@@ -148,8 +134,8 @@ export default function CollapsibleTable() {
     <Card>
       <CardHeader title="Détails de vente" />
       <CardContent>
-        <TableContainer component={Paper}>
-          <Table aria-label="collapsible table" sx={{ width: '100%' }}>
+        <TableContainer component={Paper} sx={{ maxHeight: '60vh' }}>
+          <Table aria-label="collapsible table" stickyHeader sx={{ width: '100%' }}>
             <TableHead>
               <TableRow>
                 <TableCell />
