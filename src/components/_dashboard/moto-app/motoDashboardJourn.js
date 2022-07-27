@@ -9,18 +9,17 @@ import endOfWeek from 'date-fns/endOfWeek';
 import startOfWeek from 'date-fns/startOfWeek';
 import { BaseOptionChart } from '../../charts';
 import JournPick from './motoJournPick';
-import { getMotosHebdo } from '../../../redux/slices/moto';
+import { getMotosHebdo, setChartSelect, getMotosMonthly } from '../../../redux/slices/moto';
 // ----------------------------------------------------------------------
 
 export default function MotoDashboardJourn() {
   const [seriesData, setSeriesData] = useState('Year');
-  const [select, setSelect] = useState('Hebdomadaire');
-
+  const select = useSelector((state) => state.motos?.chartSelect || 'Mensuel');
+  const start = startOfWeek(new Date(), { weekStartsOn: 1 });
+  const end = endOfWeek(new Date(), { weekStartsOn: 1 });
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const start = startOfWeek(new Date(), { weekStartsOn: 1 });
-    const end = endOfWeek(new Date(), { weekStartsOn: 1 });
     dispatch(
       getMotosHebdo(
         start.toLocaleDateString('ja-JP', {
@@ -37,22 +36,48 @@ export default function MotoDashboardJourn() {
     );
   }, []);
 
+  useEffect(() => {
+    if (select === 'Hebdomadaire') {
+      dispatch(
+        getMotosHebdo(
+          start.toLocaleDateString('ja-JP', {
+            year: 'numeric',
+            month: 'numeric',
+            day: 'numeric'
+          }),
+          end.toLocaleDateString('ja-JP', {
+            year: 'numeric',
+            month: 'numeric',
+            day: 'numeric'
+          })
+        )
+      );
+    } else {
+      dispatch(getMotosMonthly(new Date()));
+    }
+  }, [select]);
+
   const motosHebdo = useSelector((state) => state.motos.motosHebdo);
+  const motosMonth = useSelector((state) => state.motos.motosMonth);
   console.log(`motosHebdo`, motosHebdo);
+  const total =
+    select === 'Hebdomadaire'
+      ? motosHebdo.nb.reduce((partialSum, a) => partialSum + a, 0)
+      : motosMonth.nb.reduce((partialSum, a) => partialSum + a, 0);
 
   const handleChangeSeriesData = (event) => {
     setSeriesData(event.target.value);
-    setSelect(event.target.value);
+    dispatch(setChartSelect(event.target.value));
   };
 
   const CHART_DATA = [
     {
       year: 'Hebdomadaire',
-      data: { name: 'Nombre', data: motosHebdo.nb }
+      data: [{ name: 'Nombre', data: [...motosHebdo.nb] }]
     },
     {
-      year: 'Mensuelle',
-      data: { name: 'Nombre', data: [148, 91, 69, 62, 49, 51, 35, 41, 10] }
+      year: 'Mensuel',
+      data: [{ name: 'Nombre', data: [...motosMonth.nb] }]
     }
   ];
 
@@ -63,19 +88,11 @@ export default function MotoDashboardJourn() {
       colors: ['transparent']
     },
     xaxis: {
-      categories:
-        select === 'Hebdomadaire' &&
-        motosHebdo.date.forEach((date) =>
-          new Date(date).toLocaleDateString('fr-fr', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-          })
-        )
+      categories: select === 'Hebdomadaire' ? motosHebdo.date : motosMonth.date
     },
     tooltip: {
       y: {
-        formatter: (val) => `$${val}`
+        formatter: (val) => `${val} ${val <= 1 ? 'vendu' : 'vendus'}`
       }
     }
   });
@@ -84,7 +101,7 @@ export default function MotoDashboardJourn() {
     <Card>
       <CardHeader
         title="Vente journalière"
-        subheader="En cours..."
+        subheader={`Total: ${total.toString()} vendus`}
         action={
           <Stack spacing={1} direction="row" alignItems="center">
             <JournPick select={select} />

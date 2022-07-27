@@ -11,7 +11,9 @@ const initialState = {
   products: [],
   product: null,
   display: 1,
-  motosHebdo: { date: [], data: [], nb: [] }
+  motosHebdo: { date: [], data: [], nb: [] },
+  motosMonth: { date: [], data: [], nb: [] },
+  chartSelect: 'Hebdomadaire'
 };
 
 const slice = createSlice({
@@ -37,6 +39,26 @@ const slice = createSlice({
     getMotosHebdoSuccess(state, action) {
       state.isLoading = false;
       state.motosHebdo = action.payload;
+      state.motosHebdo.date = action.payload.date.map((date) =>
+        new Date(date).toLocaleDateString('fr-fr', {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric'
+        })
+      );
+      console.log(`dates: ${state.motosHebdo.date}`);
+    },
+    getMotosMonthSuccess(state, action) {
+      state.isLoading = false;
+      state.motosMonth = action.payload;
+      state.motosMonth.date = action.payload.date.map((date) =>
+        new Date(date).toLocaleDateString('fr-fr', {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric'
+        })
+      );
+      console.log(`dates: ${state.motosMonth.date}`);
     },
 
     // GET PRODUCT
@@ -46,6 +68,9 @@ const slice = createSlice({
     },
     filterDisplay(state, action) {
       state.display = action.payload;
+    },
+    setChartSelect(state, action) {
+      state.chartSelect = action.payload;
     }
   }
 });
@@ -54,7 +79,7 @@ const slice = createSlice({
 export default slice.reducer;
 
 // Actions
-export const { filterDisplay } = slice.actions;
+export const { filterDisplay, setChartSelect } = slice.actions;
 
 // ----------------------------------------------------------------------
 
@@ -120,6 +145,24 @@ export function getMotosHebdo(newDateDebut, newDateFin) {
         }
       });
       dispatch(slice.actions.getMotosHebdoSuccess(response.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+export function getMotosMonthly(date) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios({
+        method: 'get',
+        url: 'http://localhost:8000/api/motos/chart_monthly_api',
+        responseType: 'stream',
+        params: {
+          month: date
+        }
+      });
+      dispatch(slice.actions.getMotosMonthSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }

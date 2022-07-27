@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { styled } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
@@ -19,7 +19,7 @@ import { MonthPicker } from '@mui/x-date-pickers/MonthPicker';
 import { YearPicker } from '@mui/x-date-pickers/YearPicker';
 import { Grid, Tooltip, Card, CardHeader, CardContent } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import { getMotosHebdo } from '../../../redux/slices/moto';
+import { getMotosHebdo, getMotosMonthly } from '../../../redux/slices/moto';
 
 const CustomPickersDay = styled(PickersDay, {
   shouldForwardProp: (prop) => prop !== 'dayIsBetween' && prop !== 'isFirstDay' && prop !== 'isLastDay'
@@ -45,13 +45,24 @@ const CustomPickersDay = styled(PickersDay, {
 const minDate = new Date('2020-01-01T00:00:00.000');
 const maxDate = new Date('2030-01-01T00:00:00.000');
 
-export default function CustomDay({ select }) {
+export default function CustomDay() {
   const [value, setValue] = useState(new Date());
   const [anchorEl, setAnchorEl] = useState(null);
-  const [range, setRange] = useState('');
+  const [range, setRange] = useState([
+    new Date(startOfWeek(value, { weekStartsOn: 1 })).toLocaleDateString('ja-JP', {
+      year: 'numeric',
+      month: 'numeric',
+      day: 'numeric'
+    }),
+    new Date(endOfWeek(value, { weekStartsOn: 1 })).toLocaleDateString('ja-JP', {
+      year: 'numeric',
+      month: 'numeric',
+      day: 'numeric'
+    })
+  ]);
   const [date, setDate] = useState(new Date());
-
   const dispatch = useDispatch();
+  const select = useSelector((state) => state.motos?.chartSelect || 'month');
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -68,6 +79,13 @@ export default function CustomDay({ select }) {
       dispatch(getMotosHebdo(range[0], range[1]));
     }
   }, [range]);
+  useEffect(() => {
+    if (isFirstRun.current) {
+      isFirstRun.current = false;
+    } else {
+      dispatch(getMotosMonthly(date));
+    }
+  }, [date]);
 
   const open = Boolean(anchorEl);
   const id = open ? 'simple-popover' : undefined;

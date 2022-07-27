@@ -30,26 +30,13 @@ import {
   Slider as MuiSlider
 } from '@material-ui/core';
 
-function createData(name, calories, fat, carbs, protein, price) {
+import { useSelector } from 'react-redux';
+
+function createData(nomMoto, numMoteur, data) {
   return {
-    name,
-    calories,
-    fat,
-    carbs,
-    protein,
-    price,
-    history: [
-      {
-        date: '2020-01-05',
-        customerId: '11091700',
-        amount: 3
-      },
-      {
-        date: '2020-01-02',
-        customerId: 'Anonymous',
-        amount: 1
-      }
-    ]
+    nomMoto,
+    numMoteur,
+    data
   };
 }
 
@@ -66,38 +53,33 @@ function Row(props) {
           </IconButton>
         </TableCell>
         <TableCell component="th" scope="row">
-          {row.name}
+          {row.nomMoto}
         </TableCell>
-        <TableCell align="right">{row.calories}</TableCell>
-        <TableCell align="right">{row.fat}</TableCell>
-        <TableCell align="right">{row.carbs}</TableCell>
-        <TableCell align="right">{row.protein}</TableCell>
+        <TableCell align="right">{row.numMoteur}</TableCell>
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box sx={{ margin: 1 }}>
               <Typography variant="h6" gutterBottom component="div">
-                History
+                Liste
               </Typography>
               <Table size="small" aria-label="purchases">
                 <TableHead>
                   <TableRow>
-                    <TableCell>Date</TableCell>
-                    <TableCell>Customer</TableCell>
-                    <TableCell align="right">Amount</TableCell>
-                    <TableCell align="right">Total price ($)</TableCell>
+                    <TableCell>Nom moto</TableCell>
+                    <TableCell>Num moteur</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {row.history.map((historyRow) => (
+                  {row.data.map((historyRow) => (
                     <TableRow key={historyRow.date}>
                       <TableCell component="th" scope="row">
-                        {historyRow.date}
+                        {historyRow.nom_moto}
                       </TableCell>
-                      <TableCell>{historyRow.customerId}</TableCell>
-                      <TableCell align="right">{historyRow.amount}</TableCell>
-                      <TableCell align="right">{Math.round(historyRow.amount * row.price * 100) / 100}</TableCell>
+                      <TableCell component="th" scope="row">
+                        {historyRow.num_moteur}
+                      </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -109,48 +91,70 @@ function Row(props) {
     </>
   );
 }
-
-Row.propTypes = {
-  row: PropTypes.shape({
-    calories: PropTypes.number.isRequired,
-    carbs: PropTypes.number.isRequired,
-    fat: PropTypes.number.isRequired,
-    history: PropTypes.arrayOf(
-      PropTypes.shape({
-        amount: PropTypes.number.isRequired,
-        customerId: PropTypes.string.isRequired,
-        date: PropTypes.string.isRequired
-      })
-    ).isRequired,
-    name: PropTypes.string.isRequired,
-    price: PropTypes.number.isRequired,
-    protein: PropTypes.number.isRequired
-  }).isRequired
-};
-
-const rows = [
-  createData('Frozen yoghurt', 159, 6.0, 24, 4.0, 3.99),
-  createData('Ice cream sandwich', 237, 9.0, 37, 4.3, 4.99),
-  createData('Eclair', 262, 16.0, 24, 6.0, 3.79),
-  createData('Cupcake', 305, 3.7, 67, 4.3, 2.5),
-  createData('Gingerbread', 356, 16.0, 49, 3.9, 1.5)
-];
+// Row.propTypes = {
+//   row: PropTypes.shape({
+//     calories: PropTypes.number.isRequired,
+//     carbs: PropTypes.number.isRequired,
+//     fat: PropTypes.number.isRequired,
+//     history: PropTypes.arrayOf(
+//       PropTypes.shape({
+//         amount: PropTypes.number.isRequired,
+//         customerId: PropTypes.string.isRequired,
+//         date: PropTypes.string.isRequired
+//       })
+//     ).isRequired,
+//     name: PropTypes.string.isRequired,
+//     price: PropTypes.number.isRequired,
+//     protein: PropTypes.number.isRequired
+//   }).isRequired
+// };
 
 export default function CollapsibleTable() {
+  const select = useSelector((state) => state.motos.chartSelect);
+  const dataH = useSelector((state) => state.motos.motosHebdo.data);
+  const dateH = useSelector((state) => state.motos.motosHebdo.date);
+  const nbH = useSelector((state) => state.motos.motosHebdo.nb);
+  const dataM = useSelector((state) => state.motos.motosMonth.data);
+  const dateM = useSelector((state) => state.motos.motosMonth.date);
+  const nbM = useSelector((state) => state.motos.motosMonth.nb);
+  let data;
+  let date;
+  let nb;
+  if (select === 'Hebdomadaire') {
+    data = dataH;
+    date = dateH;
+    nb = nbH;
+  } else {
+    data = dataM;
+    date = dateM;
+    nb = nbM;
+  }
+  const rows = date.map((di, index) => createData(di, nb[index], data[index]));
+  //   () => {
+  //   const globRow = [];
+  //   // eslint-disable-next-line no-plusplus
+  //   for (let i = 0; i < data.length(); i++) {
+  //     globRow.push(
+  //       createData(
+  //         date[i],
+  //         nb[i].reduce((partialSum, a) => partialSum + a, 0)
+  //       )
+  //     );
+  //   }
+  //   return globRow;
+  // };
+
   return (
     <Card>
-      <CardHeader title="Quick Transfer" />
+      <CardHeader title="Détails de vente" />
       <CardContent>
         <TableContainer component={Paper}>
-          <Table aria-label="collapsible table">
+          <Table aria-label="collapsible table" sx={{ width: '100%' }}>
             <TableHead>
               <TableRow>
                 <TableCell />
-                <TableCell>Dessert (100g serving)</TableCell>
-                <TableCell align="right">Calories</TableCell>
-                <TableCell align="right">Fat&nbsp;(g)</TableCell>
-                <TableCell align="right">Carbs&nbsp;(g)</TableCell>
-                <TableCell align="right">Protein&nbsp;(g)</TableCell>
+                <TableCell>Date</TableCell>
+                <TableCell align="right">Nombre de vente</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
