@@ -47,11 +47,11 @@ export default function GeneralApp() {
             <AppLastBL />
           </Grid>
 
-          <Grid item xs={12} md={8}>
+          <Grid item xs={12} md={6}>
             <MotoChartHebdo />
           </Grid>
 
-          <Grid item xs={12} md={4}>
+          <Grid item xs={12} md={6}>
             <VenteDetails />
           </Grid>
           {/* Add here the recap */}

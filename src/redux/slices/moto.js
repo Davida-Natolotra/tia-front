@@ -13,7 +13,10 @@ const initialState = {
   motosHebdo: { date: [], data: [], nb: [] },
   motosMonth: { date: [], data: [], nb: [] },
   chartSelect: 'Hebdomadaire',
-  stock: 0
+  stock: 0,
+  lastFacture: 0,
+  lastBL: 0,
+  lastID: 0
 };
 
 const slice = createSlice({
@@ -76,6 +79,18 @@ const slice = createSlice({
     getStockSuccess(state, action) {
       state.isLoading = false;
       state.stock = action.payload;
+    },
+    getLastFactureSuccess(state, action) {
+      state.isLoading = false;
+      state.lastFacture = action.payload;
+    },
+    getLastBLSuccess(state, action) {
+      state.isLoading = false;
+      state.lastBL = action.payload;
+    },
+    getLastIDSuccess(state, action) {
+      state.isLoading = false;
+      state.lastID = action.payload;
     }
   }
 });
@@ -179,10 +194,55 @@ export function getStock() {
     try {
       const response = await axios({
         method: 'get',
-        url: 'http://localhost:8000/api/motos/StockLevel_APIs',
+        url: 'http://localhost:8000/api/motos/stock_level_api',
         responseType: 'stream'
       });
       dispatch(slice.actions.getStockSuccess(response.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+export function getLastFacture() {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios({
+        method: 'get',
+        url: 'http://localhost:8000/api/motos/last_facture_api',
+        responseType: 'stream'
+      });
+      dispatch(slice.actions.getLastFactureSuccess(response.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+export function getLastBL() {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios({
+        method: 'get',
+        url: 'http://localhost:8000/api/motos/last_BL_api',
+        responseType: 'stream'
+      });
+      dispatch(slice.actions.getLastBLSuccess(response.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+export function getLastID() {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios({
+        method: 'get',
+        url: 'http://localhost:8000/api/motos/ID_Last_API',
+        responseType: 'stream'
+      });
+      dispatch(slice.actions.getLastIDSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }

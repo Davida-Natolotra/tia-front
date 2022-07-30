@@ -142,9 +142,9 @@ export default function Router() {
         {
           path: 'moto',
           children: [
-            { path: '/', element: <Navigate to="/dashboard/moto/dashboard" replace /> },
-            { path: 'moto/edit/:id', element: <MotoEdit /> },
-            { path: 'moto/new', element: <MotoCreate /> }
+            { path: '/', element: <Navigate to="/dashboard/app" replace /> },
+            { path: ':id/edit', element: <MotoCreate /> },
+            { path: 'new', element: <MotoCreate /> }
           ]
         }
       ]
@@ -266,7 +266,6 @@ const Calendar = Loadable(lazy(() => import('../pages/dashboard/Calendar')));
 const Kanban = Loadable(lazy(() => import('../pages/dashboard/Kanban')));
 
 const MotoCreate = Loadable(lazy(() => import('../pages/dashboard/MotoCreate')));
-const MotoEdit = Loadable(lazy(() => import('../pages/dashboard/MotoEdit')));
 // Main
 const LandingPage = Loadable(lazy(() => import('../pages/LandingPage')));
 const About = Loadable(lazy(() => import('../pages/About')));

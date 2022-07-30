@@ -98,6 +98,27 @@ export default function AppMotoTable() {
           day: 'numeric'
         })
     },
+    {
+      field: 'date_arrivee',
+      headerName: "Date d'arrivée",
+      minWidth: 150,
+      flex: 2,
+      sortable: true,
+      hide: true,
+      valueFormatter: (params) =>
+        new Date(params?.value).toLocaleDateString('fr-fr', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        })
+    },
+    {
+      field: 'commercial',
+      headerName: 'Commercial',
+      width: 200,
+      flex: 2,
+      hide: true
+    },
 
     {
       field: 'action',
@@ -145,7 +166,7 @@ export default function AppMotoTable() {
         subheader={`Vous avez ${motos?.length} motos enregistrés`}
         action={
           <Tooltip title="Nouvelle entrée">
-            <MIconButton color="primary" size="large">
+            <MIconButton color="primary" size="large" component={RouterLink} to={`${PATH_DASHBOARD.moto.root}/new`}>
               <Icon icon={plusFill} width={20} height={20} />
             </MIconButton>
           </Tooltip>
@@ -211,7 +232,7 @@ export default function AppMotoTable() {
             }
           }}
         >
-          <MenuItem component={RouterLink} to={`${PATH_DASHBOARD.eCommerce.root}/product/${selectedRow}/edit`}>
+          <MenuItem component={RouterLink} to={`${PATH_DASHBOARD.moto.root}/${selectedRow}/edit`}>
             <Icon icon={pen} width={20} height={20} />
             <Typography variant="body2" sx={{ ml: 2 }}>
               Editer
@@ -268,7 +289,7 @@ function MoreMenuButton({ id }) {
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
-        <MenuItem component={RouterLink} to={`${PATH_DASHBOARD.eCommerce.root}/product/${id}/edit`}>
+        <MenuItem component={RouterLink} to={`${PATH_DASHBOARD.moto.root}/${id}/edit`}>
           <Icon icon={pen} width={20} height={20} />
           <Typography variant="body2" sx={{ ml: 2 }}>
             Editer

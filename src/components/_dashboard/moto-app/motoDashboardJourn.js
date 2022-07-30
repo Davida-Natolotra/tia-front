@@ -15,7 +15,7 @@ import { styles } from './styles';
 
 export default function MotoDashboardJourn() {
   const [seriesData, setSeriesData] = useState('Year');
-  const select = useSelector((state) => state.motos?.chartSelect || 'Mensuel');
+  const select = useSelector((state) => state.motos?.chartSelect || 'Mensuelle');
   const start = startOfWeek(new Date(), { weekStartsOn: 1 });
   const end = endOfWeek(new Date(), { weekStartsOn: 1 });
   const dispatch = useDispatch();
@@ -77,16 +77,14 @@ export default function MotoDashboardJourn() {
       data: [{ name: 'Nombre', data: [...motosHebdo.nb] }]
     },
     {
-      year: 'Mensuel',
+      year: 'Mensuelle',
       data: [{ name: 'Nombre', data: [...motosMonth.nb] }]
     }
   ];
 
   const chartOptions = merge(BaseOptionChart(), {
-    stroke: {
-      show: true,
-      width: 2,
-      colors: ['transparent']
+    plotOptions: {
+      bar: { horizontal: true, barHeight: '28%', borderRadius: 2 }
     },
     xaxis: {
       categories: select === 'Hebdomadaire' ? motosHebdo.date : motosMonth.date
@@ -128,10 +126,17 @@ export default function MotoDashboardJourn() {
           </Stack>
         }
       />
-      <CardContent sx={{ maxHeight: '60vh' }}>
+      <CardContent>
         {CHART_DATA.map((item) => (
           <Box key={item.year} sx={{ mt: 3, mx: 3 }} dir="ltr">
-            {item.year === seriesData && <ReactApexChart type="bar" series={item.data} options={chartOptions} />}
+            {item.year === seriesData && (
+              <ReactApexChart
+                type="bar"
+                series={item.data}
+                options={chartOptions}
+                height={select === 'Hebdomadaire' ? '200%' : 600}
+              />
+            )}
           </Box>
         ))}
       </CardContent>
