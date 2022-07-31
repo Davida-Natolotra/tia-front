@@ -25,7 +25,7 @@ export const fileChangedHandler = (event, setState) => {
         200,
         200
       );
-      console.log('img: ', typeof img);
+      //   console.log('img: ', typeof img);
     } catch (err) {
       console.log(err);
     }
