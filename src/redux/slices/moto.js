@@ -49,7 +49,6 @@ const slice = createSlice({
           day: 'numeric'
         })
       );
-      console.log(`dates: ${state.motosHebdo.date}`);
     },
     getMotosMonthSuccess(state, action) {
       state.isLoading = false;
@@ -61,7 +60,6 @@ const slice = createSlice({
           day: 'numeric'
         })
       );
-      console.log(`dates: ${state.motosMonth.date}`);
     },
 
     // GET PRODUCT

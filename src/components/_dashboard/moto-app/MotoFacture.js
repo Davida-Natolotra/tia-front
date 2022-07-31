@@ -9,7 +9,9 @@ import CurrencyTextField from '@unicef/material-ui-currency-textfield';
 // material
 import { LoadingButton } from '@material-ui/lab';
 import { Card, Grid, Stack, Button, ButtonGroup, Box, TextField } from '@material-ui/core';
-import { Autocomplete, Typography, Divider } from '@mui/material';
+import { Typography, Divider, Accordion, AccordionSummary, AccordionDetails } from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
 // utils
 
 //
@@ -19,10 +21,12 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { frFR as calFR } from '@mui/x-date-pickers';
 import { useDispatch, useSelector } from 'react-redux';
+import { fileChangedHandler } from '../../../utils/imageCompress';
 import { getLastID } from '../../../redux/slices/moto';
 import { fNumber } from '../../../utils/formatNumber';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
+import CarouselProductDetails from '../../carousel/CarouselProductDetails';
 // ----------------------------------------------------------------------
 
 // ----------------------------------------------------------------------
@@ -36,6 +40,8 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const [value, setValue] = useState(null);
+  const [CINRecto, setCINRecto] = useState('https://via.placeholder.com/500');
+  const [CINVerso, setCINVerso] = useState('https://via.placeholder.com/500');
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getLastID());
@@ -88,7 +94,6 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
         resetForm();
         setSubmitting(false);
         enqueueSnackbar(!isEdit ? 'Create success' : 'Update success', { variant: 'success' });
-        navigate(`${PATH_DASHBOARD.moto.root}/${values.ID_Moto}/edit`);
       } catch (error) {
         console.error(error);
         setSubmitting(false);
@@ -121,136 +126,177 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
         <Grid container spacing={3}>
           <Grid item xs={12} md={6}>
             <Card sx={{ p: 3 }}>
-              <Stack spacing={3} direction="column">
-                <Box>
+              <Accordion>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
                   <Typography variant="overline">moto</Typography>
-                  <Divider />
-                </Box>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <Stack spacing={3} direction="column">
+                    <Typography variant="body2">ID Moto: {values.ID_Moto} </Typography>
 
-                <Typography variant="subheading">ID Moto: {values.ID_Moto} </Typography>
+                    <Typography variant="body2">Nom Moto: {values.nomMoto} </Typography>
+                    <Typography variant="body2">Numéro moteur: {values.numMoteur} </Typography>
+                    <Typography variant="body2">Volume moteur: {values.volumeMoteur} </Typography>
+                  </Stack>
+                </AccordionDetails>
+              </Accordion>
 
-                <Typography variant="subheading">Nom Moto: {values.nomMoto} </Typography>
-                <Typography variant="subheading">Numéro moteur: {values.numMoteur} </Typography>
-                <Typography variant="subheading">Volume moteur: {values.volumeMoteur} </Typography>
-
-                <Box sx={{ pt: 3 }}>
+              <Accordion>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
                   <Typography variant="overline">Client</Typography>
-                  <Divider sx={{ borderColor: 'primary' }} />
-                </Box>
-                <TextField
-                  fullWidth
-                  label="Nom du client"
-                  name="nomClient"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  {...getFieldProps('nomClient')}
-                  error={Boolean(touched.nomClient && errors.nomClient)}
-                  helperText={touched.renomClientf && errors.nomClient}
-                />
-                <TextField
-                  fullWidth
-                  label="Adresse du client"
-                  name="adresseClient"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  {...getFieldProps('adresseClient')}
-                  error={Boolean(touched.adresseClient && errors.adresseClient)}
-                  helperText={touched.adresseClient && errors.adresseClient}
-                />
-                <TextField
-                  fullWidth
-                  label="Numéro CIN du client"
-                  name="CIN"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  {...getFieldProps('CIN')}
-                  error={Boolean(touched.CIN && errors.CIN)}
-                  helperText={touched.CIN && errors.CIN}
-                />
-                <TextField
-                  fullWidth
-                  label="Adresse du client"
-                  name="adresseClient"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  {...getFieldProps('adresseClient')}
-                  error={Boolean(touched.adresseClient && errors.adresseClient)}
-                  helperText={touched.adresseClient && errors.adresseClient}
-                />
+                </AccordionSummary>
+                <AccordionDetails>
+                  <Stack spacing={3} direction="column">
+                    <TextField
+                      fullWidth
+                      label="Nom du client"
+                      name="nomClient"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      {...getFieldProps('nomClient')}
+                      error={Boolean(touched.nomClient && errors.nomClient)}
+                      helperText={touched.renomClientf && errors.nomClient}
+                    />
+                    <TextField
+                      fullWidth
+                      label="Adresse du client"
+                      name="adresseClient"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      {...getFieldProps('adresseClient')}
+                      error={Boolean(touched.adresseClient && errors.adresseClient)}
+                      helperText={touched.adresseClient && errors.adresseClient}
+                    />
+                    <TextField
+                      fullWidth
+                      label="Numéro CIN du client"
+                      name="CIN"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      {...getFieldProps('CIN')}
+                      error={Boolean(touched.CIN && errors.CIN)}
+                      helperText={touched.CIN && errors.CIN}
+                    />
+                    <TextField
+                      fullWidth
+                      label="Adresse du client"
+                      name="adresseClient"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      {...getFieldProps('adresseClient')}
+                      error={Boolean(touched.adresseClient && errors.adresseClient)}
+                      helperText={touched.adresseClient && errors.adresseClient}
+                    />
+                    <Box>
+                      <Typography variant="caption">Pièces jointe</Typography>
+                      <Divider />
+                    </Box>
+                    <Stack spacing={3} direction="row">
+                      <label htmlFor="CINRecto">
+                        <input
+                          type="file"
+                          style={{ display: 'none' }}
+                          id="CINRecto"
+                          onChange={(event) => fileChangedHandler(event, setCINRecto)}
+                        />
+                        <Button variant="outlined" component="span" startIcon={<PhotoCameraIcon />}>
+                          CIN Recto
+                        </Button>
+                      </label>
+                      <label htmlFor="CINVerso">
+                        <input
+                          type="file"
+                          style={{ display: 'none' }}
+                          id="CINVerso"
+                          onChange={(event) => fileChangedHandler(event, setCINVerso)}
+                        />
+                        <Button variant="outlined" component="span" startIcon={<PhotoCameraIcon />}>
+                          CIN Verso
+                        </Button>
+                      </label>
+                    </Stack>
+                    <CarouselProductDetails images={[CINRecto, CINVerso]} />
+                  </Stack>
+                </AccordionDetails>
+              </Accordion>
 
-                <Box sx={{ pt: 3 }}>
+              <Accordion>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
                   <Typography variant="overline">Facture</Typography>
-                  <Divider />
-                </Box>
-                <Typography variant="subheading">Numéro facture: {values.numFacture} </Typography>
-                <LocalizationProvider
-                  dateAdapter={AdapterDateFns}
-                  adapterLocale={frLocale}
-                  localeText={calFR.components.MuiLocalizationProvider.defaultProps.localeText}
-                >
-                  <DatePicker
-                    label="Date Facture"
-                    value={values.dateFacture}
-                    name="dateFacture"
-                    onChange={(value) => setFieldValue('dateFacture', value)}
-                    onBlur={handleBlur}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        error={Boolean(touched.dateFacture && errors.dateFacture)}
-                        helperText={touched.dateFacture && errors.dateFacture}
+                </AccordionSummary>
+                <AccordionDetails>
+                  <Stack spacing={3} direction="column">
+                    <Typography variant="subheading">Numéro facture: {values.numFacture} </Typography>
+                    <LocalizationProvider
+                      dateAdapter={AdapterDateFns}
+                      adapterLocale={frLocale}
+                      localeText={calFR.components.MuiLocalizationProvider.defaultProps.localeText}
+                    >
+                      <DatePicker
+                        label="Date Facture"
+                        value={values.dateFacture}
+                        name="dateFacture"
+                        onChange={(value) => setFieldValue('dateFacture', value)}
+                        onBlur={handleBlur}
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            error={Boolean(touched.dateFacture && errors.dateFacture)}
+                            helperText={touched.dateFacture && errors.dateFacture}
+                          />
+                        )}
+                        disableFuture
+                        variant="standard"
                       />
-                    )}
-                    disableFuture
-                    variant="standard"
-                  />
-                </LocalizationProvider>
-                <TextField
-                  fullWidth
-                  label="Ref"
-                  name="ref"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  {...getFieldProps('ref')}
-                  error={Boolean(touched.ref && errors.ref)}
-                  helperText={touched.ref && errors.ref}
-                />
-                <CurrencyTextField
-                  label="Prix de vente"
-                  name="PV"
-                  variant="outlined"
-                  value={values.PV}
-                  currencySymbol="Ar"
-                  placeholder="PV"
-                  outputFormat="number"
-                  decimalCharacter=","
-                  digitGroupSeparator=" "
-                  decimalPlaces={0}
-                  onChange={(event, value) => setFieldValue('PV', value)}
-                  error={Boolean(touched.PV && errors.PV)}
-                  helperText={touched.PV && errors.PV}
-                />
-                <Typography variant="subheading">
-                  Prix de vente en lettre: {values.montantLettre.toUpperCase()} ARIARY
-                </Typography>
-                <Typography variant="subheading">TVA: {fNumber(values.TVA)} Ar</Typography>
-                <Typography variant="subheading">Prix hors taxe: {fNumber(values.PUHT)} Ar</Typography>
+                    </LocalizationProvider>
+                    <TextField
+                      fullWidth
+                      label="Ref"
+                      name="ref"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      {...getFieldProps('ref')}
+                      error={Boolean(touched.ref && errors.ref)}
+                      helperText={touched.ref && errors.ref}
+                    />
+                    <CurrencyTextField
+                      label="Prix de vente"
+                      name="PV"
+                      variant="outlined"
+                      value={values.PV}
+                      currencySymbol="Ar"
+                      placeholder="PV"
+                      outputFormat="number"
+                      decimalCharacter=","
+                      digitGroupSeparator=" "
+                      decimalPlaces={0}
+                      onChange={(event, value) => setFieldValue('PV', value)}
+                      error={Boolean(touched.PV && errors.PV)}
+                      helperText={touched.PV && errors.PV}
+                    />
+                    <Typography variant="subheading">
+                      Prix de vente en lettre: {values.montantLettre.toUpperCase()} ARIARY
+                    </Typography>
+                    <Typography variant="subheading">TVA: {fNumber(values.TVA)} Ar</Typography>
+                    <Typography variant="subheading">Prix hors taxe: {fNumber(values.PUHT)} Ar</Typography>
+                  </Stack>
+                </AccordionDetails>
+              </Accordion>
 
-                <ButtonGroup>
-                  <LoadingButton type="submit" fullWidth variant="contained" size="large" loading={isSubmitting}>
-                    Enregistrer
-                  </LoadingButton>
-                  {isEdit && (
-                    <Button variant="outlined" component={RouterLink} to={`${PATH_DASHBOARD.moto.root}/new`}>
-                      Nouvelle entrée
-                    </Button>
-                  )}
-
-                  <Button type="button" fullWidth variant="outlined" onClick={() => resetForm()}>
-                    Annuler
+              <ButtonGroup sx={{ mt: 3 }}>
+                <LoadingButton type="submit" fullWidth variant="contained" size="large" loading={isSubmitting}>
+                  Enregistrer
+                </LoadingButton>
+                {isEdit && (
+                  <Button variant="outlined" component={RouterLink} to={`${PATH_DASHBOARD.moto.root}/new`}>
+                    Nouvelle entrée
                   </Button>
-                </ButtonGroup>
-              </Stack>
+                )}
+
+                <Button type="button" fullWidth variant="outlined" onClick={() => resetForm()}>
+                  Annuler
+                </Button>
+              </ButtonGroup>
             </Card>
           </Grid>
           <Grid item xs={12} md={6}>

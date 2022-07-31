@@ -15,7 +15,7 @@ import { styles } from './styles';
 
 export default function MotoDashboardJourn() {
   const [seriesData, setSeriesData] = useState('Year');
-  const select = useSelector((state) => state.motos?.chartSelect || 'Mensuelle');
+  const select = useSelector((state) => state.motos?.chartSelect || 'Hebdomadaire');
   const start = startOfWeek(new Date(), { weekStartsOn: 1 });
   const end = endOfWeek(new Date(), { weekStartsOn: 1 });
   const dispatch = useDispatch();
@@ -35,28 +35,7 @@ export default function MotoDashboardJourn() {
         })
       )
     );
-  }, []);
-
-  useEffect(() => {
-    if (select === 'Hebdomadaire') {
-      dispatch(
-        getMotosHebdo(
-          start.toLocaleDateString('ja-JP', {
-            year: 'numeric',
-            month: 'numeric',
-            day: 'numeric'
-          }),
-          end.toLocaleDateString('ja-JP', {
-            year: 'numeric',
-            month: 'numeric',
-            day: 'numeric'
-          })
-        )
-      );
-    } else {
-      dispatch(getMotosMonthly(new Date()));
-    }
-  }, [select]);
+  }, [dispatch]);
 
   const motosHebdo = useSelector((state) => state.motos.motosHebdo);
   const motosMonth = useSelector((state) => state.motos.motosMonth);
@@ -70,7 +49,7 @@ export default function MotoDashboardJourn() {
     setSeriesData(event.target.value);
     dispatch(setChartSelect(event.target.value));
   };
-
+  console.log('Chart data');
   const CHART_DATA = [
     {
       year: 'Hebdomadaire',

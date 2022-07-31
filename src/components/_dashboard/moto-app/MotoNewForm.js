@@ -90,7 +90,7 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
         resetForm();
         setSubmitting(false);
         enqueueSnackbar(!isEdit ? 'Create success' : 'Update success', { variant: 'success' });
-        navigate(`${PATH_DASHBOARD.moto.root}/${values.ID_Moto}/edit`);
+        navigate(`${PATH_DASHBOARD.moto.root}/${curID}/edit`);
       } catch (error) {
         console.error(error);
         setSubmitting(false);

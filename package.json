@@ -114,6 +114,7 @@
     "react-helmet-async": "^1.0.9",
     "react-hook-form": "^7.12.2",
     "react-i18next": "^11.11.4",
+    "react-image-file-resizer": "^0.4.8",
     "react-image-lightbox": "^5.1.4",
     "react-infinite-scroll-component": "^6.1.0",
     "react-intersection-observer": "^8.32.0",
