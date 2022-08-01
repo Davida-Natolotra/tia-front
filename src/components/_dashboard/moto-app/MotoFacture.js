@@ -115,10 +115,10 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
     isSubmitting
   } = formik;
 
-  const options = [
-    { label: 'Dépot', year: 1994 },
-    { label: 'Showroom', year: 1972 }
-  ];
+  useEffect(() => {
+    values.PUHT = values.PV / 1.2;
+    values.TVA = 0.2 * values.PUHT;
+  }, [values.PV]);
 
   return (
     <FormikProvider value={formik}>
