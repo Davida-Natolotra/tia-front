@@ -13,7 +13,6 @@ import { Typography, Divider, Accordion, AccordionSummary, AccordionDetails } fr
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
 // utils
-
 //
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import frLocale from 'date-fns/locale/fr';
@@ -21,6 +20,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { frFR as calFR } from '@mui/x-date-pickers';
 import { useDispatch, useSelector } from 'react-redux';
+import FacturePreview from './MotoFacturePreview';
 import { fileChangedHandler } from '../../../utils/imageCompress';
 import { getLastID } from '../../../redux/slices/moto';
 import { fNumber } from '../../../utils/formatNumber';
@@ -300,7 +300,7 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
             </Card>
           </Grid>
           <Grid item xs={12} md={6}>
-            <Typography variant="subheading  ">Preview</Typography>
+            <FacturePreview />
           </Grid>
         </Grid>
       </Form>
