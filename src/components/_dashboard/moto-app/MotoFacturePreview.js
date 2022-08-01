@@ -23,9 +23,7 @@ export default function FactureMoto({ value }) {
         <Page style={styles.body} size="A4">
           <View style={styles.page}>
             <Image style={styles.sidebar} src={Logo} fixed />
-
             <Text style={styles.headingTitle}>TIA MOTO SARLU</Text>
-
             <Text style={styles.heading}>Ny Tsara Indrindra hAtrany</Text>
             <Text style={styles.heading}>Siège social: Lot IVX 72B Bis Ankazomanga</Text>
             <Text style={styles.heading}>Vente de scooter occasion et accessoires</Text>
@@ -33,9 +31,20 @@ export default function FactureMoto({ value }) {
             <Text style={styles.heading}>NIF: 2004105069</Text>
             <Text style={styles.heading}>Stat: 46101112020010758</Text>
             <Text style={styles.heading}>RCS: 2020 B 00714</Text>
-            <Text style={styles.title}>FACTURE</Text>
-            <Text style={styles.subtitle}>FACTURE N° :</Text>
-            <Text style={styles.date}>DATE </Text>
+            <View style={styles.container}>
+              <Text style={styles.title}>FACTURE</Text>
+            </View>
+            <View style={styles.subContainer}>
+              <View style={styles.titleLeft}>
+                <Text>FACTURE N° :</Text>
+                <Text>DATE </Text>
+              </View>
+              <View style={styles.titleRight}>
+                <Text>FACTURE N° :</Text>
+                <Text>DATE </Text>
+              </View>
+            </View>
+
             <Text style={styles.info}>NOM: {anarana}</Text>
             <Text style={styles.info}>CONTACT: {contact}</Text>
             <Text style={styles.info}>LOCATION du {location}</Text>
@@ -79,7 +88,6 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 30,
-    fontFamily: 'Noto-Sans',
     fontWeight: 'bold',
     textAlign: 'center',
     marginTop: 20,
@@ -99,8 +107,6 @@ const styles = StyleSheet.create({
   },
 
   subtitle: {
-    marginTop: -10,
-    marginBottom: -5,
     fontSize: 14,
     marginLeft: 300,
     fontFamily: 'Noto-Sans',
@@ -133,8 +139,8 @@ const styles = StyleSheet.create({
     left: 20,
     top: 20,
     // // transformOrigin: "60% 60% 0px",
-    width: '130px',
-    height: '130px',
+    width: '160px',
+    height: '150px',
     position: 'absolute',
     zIndex: 1
   },
@@ -183,11 +189,46 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     borderBottomWidth: 1,
     alignItems: 'center',
+    justifyContent: 'center',
     height: 24,
     textAlign: 'center',
     fontStyle: 'bold',
     flexGrow: 1,
     fontSize: 9,
+    letterSpacing: 3,
+    marginTop: 30
+  },
+  subContainer: {
+    flexDirection: 'row',
+    height: 24,
+    textAlign: 'center',
+    fontStyle: 'bold',
+    flexGrow: 1,
+    fontSize: 9,
+    letterSpacing: 3,
+    marginTop: 3,
+    marginBottom: 5
+  },
+  titleLeft: {
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
+    height: 24,
+    textAlign: 'left',
+    fontStyle: 'bold',
+    flexGrow: 1,
+    fontSize: 10,
+    letterSpacing: 3
+  },
+  titleRight: {
+    flexDirection: 'column',
+    alignItems: 'flex-end',
+    justifyContent: 'flex-start',
+    height: 24,
+    textAlign: 'left',
+    fontStyle: 'bold',
+    flexGrow: 1,
+    fontSize: 10,
     letterSpacing: 3
   }
 });

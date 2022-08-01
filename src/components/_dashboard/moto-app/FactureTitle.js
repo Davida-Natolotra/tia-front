@@ -1,24 +1,22 @@
 import React from 'react';
-import { Text, View, StyleSheet } from '@react-pdf/renderer';
+import { Text, View, StyleSheet, Font } from '@react-pdf/renderer';
 
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     borderBottomWidth: 1,
     alignItems: 'center',
+    justifyContent: 'center',
     height: 24,
-    textAlign: 'center',
-    fontStyle: 'bold',
     flexGrow: 1,
     fontSize: 9,
     letterSpacing: 3
   },
   title: {
     fontSize: 30,
-    fontFamily: 'Noto-Sans',
-    fontWeight: 'bold',
     textAlign: 'center',
     marginTop: 20,
+    fontWeight: 'bold',
     marginBottom: 20
   }
 });

@@ -59,7 +59,8 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
     carteRose: Yup.string(),
     carteGrise: Yup.string(),
     reparation: Yup.number(),
-    motifReparation: Yup.string()
+    motifReparation: Yup.string(),
+    commercial: Yup.string()
   });
 
   const formik = useFormik({
@@ -80,7 +81,8 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
       carteRose: currentProduct?.carte_rose || '',
       carteGrise: currentProduct?.carte_grise || '',
       reparation: currentProduct?.montant_reparation || 0,
-      motifReparation: currentProduct?.motif_reparation || ''
+      motifReparation: currentProduct?.motif_reparation || '',
+      commercial: currentProduct?.commercial || ''
     },
     validationSchema: NewProductSchema,
     onSubmit: async (values, { setSubmitting, resetForm, setErrors }) => {
@@ -318,6 +320,16 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
                   {...getFieldProps('motifReparation')}
                   error={Boolean(touched.motifReparation && errors.motifReparation)}
                   helperText={touched.motifReparation && errors.motifReparation}
+                />{' '}
+                <TextField
+                  fullWidth
+                  label="Commercial"
+                  name="commercial"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  {...getFieldProps('commercial')}
+                  error={Boolean(touched.commercial && errors.commercial)}
+                  helperText={touched.commercial && errors.commercial}
                 />
                 <ButtonGroup>
                   <LoadingButton type="submit" fullWidth variant="contained" size="large" loading={isSubmitting}>
