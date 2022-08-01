@@ -15,7 +15,6 @@ export const fileChangedHandler = (event, setState) => {
         100,
         0,
         (uri) => {
-          console.log(uri);
           setState(uri);
           const base64str = uri.split('base64,')[1];
           const decoded = atob(base64str);

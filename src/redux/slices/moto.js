@@ -105,7 +105,7 @@ export function getMotos() {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('http://localhost:8000/api/');
+      const response = await axios.get('https://tiamoto.com/api/');
       dispatch(slice.actions.getProductsSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
@@ -118,7 +118,7 @@ export function getMotosByDate(newDateDebut, newDateFin) {
     try {
       const response = await axios({
         method: 'get',
-        url: 'http://localhost:8000/api/motos',
+        url: 'https://tiamoto.com/api/motos',
         responseType: 'stream',
         params: {
           dateEntree: newDateDebut,
@@ -138,7 +138,7 @@ export function getMoto(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('http://localhost:8000/api/', {
+      const response = await axios.get('https://tiamoto.com/api/', {
         params: { id }
       });
       dispatch(slice.actions.getProductSuccess(response.data.product));
@@ -155,7 +155,7 @@ export function getMotosHebdo(newDateDebut, newDateFin) {
     try {
       const response = await axios({
         method: 'get',
-        url: 'http://localhost:8000/api/motos/chart_hebdo_api',
+        url: 'https://tiamoto.com/api/motos/chart_hebdo_api',
         responseType: 'stream',
         params: {
           dateEntree: newDateDebut,
@@ -174,7 +174,7 @@ export function getMotosMonthly(date) {
     try {
       const response = await axios({
         method: 'get',
-        url: 'http://localhost:8000/api/motos/chart_monthly_api',
+        url: 'https://tiamoto.com/api/motos/chart_monthly_api',
         responseType: 'stream',
         params: {
           month: date
@@ -192,7 +192,7 @@ export function getStock() {
     try {
       const response = await axios({
         method: 'get',
-        url: 'http://localhost:8000/api/motos/stock_level_api',
+        url: 'https://tiamoto.com/api/motos/stock_level_api',
         responseType: 'stream'
       });
       dispatch(slice.actions.getStockSuccess(response.data));
@@ -207,7 +207,7 @@ export function getLastFacture() {
     try {
       const response = await axios({
         method: 'get',
-        url: 'http://localhost:8000/api/motos/last_facture_api',
+        url: 'https://tiamoto.com/api/motos/last_facture_api',
         responseType: 'stream'
       });
       dispatch(slice.actions.getLastFactureSuccess(response.data));
@@ -222,7 +222,7 @@ export function getLastBL() {
     try {
       const response = await axios({
         method: 'get',
-        url: 'http://localhost:8000/api/motos/last_BL_api',
+        url: 'https://tiamoto.com/api/motos/last_BL_api',
         responseType: 'stream'
       });
       dispatch(slice.actions.getLastBLSuccess(response.data));
@@ -237,7 +237,7 @@ export function getLastID() {
     try {
       const response = await axios({
         method: 'get',
-        url: 'http://localhost:8000/api/motos/ID_Last_API',
+        url: 'https://tiamoto.com/api/motos/ID_Last_API',
         responseType: 'stream'
       });
       dispatch(slice.actions.getLastIDSuccess(response.data));

@@ -35,9 +35,9 @@ const sidebarConfig = [
         title: 'Dashboard',
         path: PATH_DASHBOARD.general.app,
         icon: ICONS.dashboard
-      },
-      { title: 'analytics', path: PATH_DASHBOARD.general.analytics, icon: ICONS.analytics },
-      { title: 'Caisse', path: PATH_DASHBOARD.general.banking, icon: ICONS.banking }
+      }
+      // { title: 'analytics', path: PATH_DASHBOARD.general.analytics, icon: ICONS.analytics },
+      // { title: 'Caisse', path: PATH_DASHBOARD.general.banking, icon: ICONS.banking }
     ]
   }
 ];

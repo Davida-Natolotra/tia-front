@@ -40,17 +40,6 @@ export default function AppWelcome({ displayName }) {
           Bonjour,
           <br /> {!displayName ? '...' : displayName}!
         </Typography>
-        <Typography variant="body2" sx={{ pb: { xs: 3, xl: 5 }, maxWidth: 480, mx: 'auto' }}>
-          <b>Code couleur de fond de ligne sur chaque produit:</b>
-        </Typography>
-        <Typography variant="body1">
-          <ul>
-            <br />
-            <li> Fond bleue: le produit est vendu et a une facture</li>
-            <br />
-            <li> Fond orange: le produit est vendu et a un BL</li>
-          </ul>
-        </Typography>
       </CardContent>
 
       <SeoIllustration
