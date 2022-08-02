@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { useSnackbar } from 'notistack5';
 import { useNavigate, Link as RouterLink } from 'react-router-dom';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Form, FormikProvider, useFormik } from 'formik';
 import CurrencyTextField from '@unicef/material-ui-currency-textfield';
 // material
@@ -20,9 +20,9 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { frFR as calFR } from '@mui/x-date-pickers';
 import { useDispatch, useSelector } from 'react-redux';
-import FacturePreview from './MotoFacturePreview';
+import FacturePreview from './Facture';
 import { fileChangedHandler } from '../../../utils/imageCompress';
-import { getLastID } from '../../../redux/slices/moto';
+import { getLastID, getNumberWord } from '../../../redux/slices/moto';
 import { fNumber } from '../../../utils/formatNumber';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
@@ -37,15 +37,11 @@ ProductNewForm.propTypes = {
 };
 
 export default function ProductNewForm({ isEdit, currentProduct }) {
-  const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const [value, setValue] = useState(null);
   const [CINRecto, setCINRecto] = useState('https://via.placeholder.com/500');
   const [CINVerso, setCINVerso] = useState('https://via.placeholder.com/500');
-  const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(getLastID());
-  }, [dispatch]);
+
+  const numWord = useSelector((state) => state.motos.numWord);
 
   const lastID = useSelector((state) => state.motos.lastID);
   const lastFacture = useSelector((state) => state.motos.lastFacture);
@@ -64,17 +60,16 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
     contactClient: Yup.string().required('Contact client est requis'),
     PUHT: Yup.number().required('PUHT est requis'),
     TVA: Yup.number().required('TVA est requis'),
-    PV: Yup.number().required('Le prix de vente est requis'),
-    montantLettre: Yup.string()
+    PV: Yup.number().required('Le prix de vente est requis')
   });
 
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
       ID_Moto: currentProduct?.ID_Moto || lastID + 1,
-      numFacture: currentProduct?.num_facture || lastFacture + 1,
+      numFacture: currentProduct?.num_sur_facture || lastFacture + 1,
       dateFacture: currentProduct?.date_facture || null,
-      ref: currentProduct?.ref || '',
+      ref: currentProduct?.Ref || '',
       nomMoto: currentProduct?.nom_moto || '',
       numMoteur: currentProduct?.num_moteur || '',
       volumeMoteur: currentProduct?.volume_moteur || 0,
@@ -84,8 +79,7 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
       contactClient: currentProduct?.tel_client_2 || '',
       PUHT: currentProduct?.PU_HT || '',
       TVA: currentProduct?.TVA || '',
-      PV: currentProduct?.PV || '',
-      montantLettre: currentProduct?.montantLettre || ''
+      PV: currentProduct?.PV || null
     },
     validationSchema: NewProductSchema,
     onSubmit: async (values, { setSubmitting, resetForm, setErrors }) => {
@@ -101,6 +95,12 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
       }
     }
   });
+
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getLastID());
+    dispatch(getNumberWord(values.PV));
+  }, []);
 
   const {
     handleChange,
@@ -118,6 +118,10 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
   useEffect(() => {
     values.PUHT = values.PV / 1.2;
     values.TVA = 0.2 * values.PUHT;
+  }, [values.PV]);
+
+  useMemo(() => {
+    dispatch(getNumberWord(values.PV));
   }, [values.PV]);
 
   return (
@@ -274,9 +278,7 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
                       error={Boolean(touched.PV && errors.PV)}
                       helperText={touched.PV && errors.PV}
                     />
-                    <Typography variant="subheading">
-                      Prix de vente en lettre: {values.montantLettre.toUpperCase()} ARIARY
-                    </Typography>
+
                     <Typography variant="subheading">TVA: {fNumber(values.TVA)} Ar</Typography>
                     <Typography variant="subheading">Prix hors taxe: {fNumber(values.PUHT)} Ar</Typography>
                   </Stack>
@@ -300,7 +302,7 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
             </Card>
           </Grid>
           <Grid item xs={12} md={6}>
-            <FacturePreview />
+            <FacturePreview currentProduct={currentProduct} />
           </Grid>
         </Grid>
       </Form>

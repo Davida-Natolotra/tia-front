@@ -1,8 +1,6 @@
 import { PDFViewer, Page, Image, Text, Document, StyleSheet, Font, View } from '@react-pdf/renderer';
-import { Button } from '@mui/material';
 import React from 'react';
 import Logo from './LogoTIA.jpeg';
-import FactureTitle from './FactureTitle';
 
 export default function FactureMoto({ value }) {
   const [height, setHeight] = React.useState(window.innerHeight);

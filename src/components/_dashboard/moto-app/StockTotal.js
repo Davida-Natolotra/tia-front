@@ -1,22 +1,21 @@
-import { useEffect } from 'react';
-import { Icon } from '@iconify/react';
-import personFill from '@iconify/icons-eva/person-fill';
 // material
-import { useTheme, styled } from '@material-ui/core/styles';
+import { useEffect } from 'react';
+import { styled } from '@material-ui/core/styles';
 import { Card, Typography, Box } from '@material-ui/core';
 // utils
+import { Icon } from '@iconify/react';
 import { useSelector, useDispatch } from 'react-redux';
-import { fNumber } from '../../../utils/formatNumber';
+import personFill from '@iconify/icons-eva/person-fill';
+import { fShortenNumber } from '../../../utils/formatNumber';
+//
 import { getStock } from '../../../redux/slices/moto';
-
 // ----------------------------------------------------------------------
 
 const RootStyle = styled(Card)(({ theme }) => ({
   display: 'flex',
-  position: 'relative',
   alignItems: 'center',
-  padding: theme.spacing(3),
-  backgroundColor: theme.palette.primary.darker
+  justifyContent: 'space-between',
+  padding: theme.spacing(2, 2, 2, 3)
 }));
 
 const IconStyle = styled(Icon)(({ theme }) => ({
@@ -30,23 +29,30 @@ const IconStyle = styled(Icon)(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-export default function AppStockState() {
+export default function BookingCheckIn() {
   const dispatch = useDispatch();
+
   useEffect(() => {
     dispatch(getStock());
-  }, [dispatch]);
-
-  const TOTAL = useSelector((state) => state.motos.stock);
-
+  }, []);
+  const TOTAL = useSelector((state) => state.motos.stock.number);
   return (
     <RootStyle>
-      <Box sx={{ ml: 3, color: 'common.white' }}>
-        <Typography variant="h4"> {fNumber(TOTAL.number)}</Typography>
-        <Typography variant="body2" sx={{ opacity: 0.72 }}>
+      <div>
+        <Typography variant="h3">{fShortenNumber(TOTAL)}</Typography>
+        <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
           Stock disponible
         </Typography>
+      </div>
+      <Box
+        sx={{
+          width: 140,
+          height: 140,
+          lineHeight: 0
+        }}
+      >
+        <IconStyle icon={personFill} />
       </Box>
-      <IconStyle icon={personFill} />
     </RootStyle>
   );
 }
