@@ -41,7 +41,7 @@ export default function AppStockState() {
   return (
     <RootStyle>
       <Box sx={{ ml: 3, color: 'common.white' }}>
-        <Typography variant="h4"> {fNumber(TOTAL)}</Typography>
+        <Typography variant="h4"> {fNumber(TOTAL.number)}</Typography>
         <Typography variant="body2" sx={{ opacity: 0.72 }}>
           Stock disponible
         </Typography>

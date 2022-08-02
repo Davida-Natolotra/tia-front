@@ -16,7 +16,8 @@ const initialState = {
   stock: 0,
   lastFacture: 0,
   lastBL: 0,
-  lastID: 0
+  lastID: 0,
+  numWord: ''
 };
 
 const slice = createSlice({
@@ -38,6 +39,10 @@ const slice = createSlice({
     getProductsSuccess(state, action) {
       state.isLoading = false;
       state.products = action.payload;
+    },
+    getNumberWordSuccess(state, action) {
+      state.isLoading = false;
+      state.numWord = action.payload;
     },
     getMotosHebdoSuccess(state, action) {
       state.isLoading = false;
@@ -105,7 +110,7 @@ export function getMotos() {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('https://tiamoto.com/api/');
+      const response = await axios.get('http://localhost:8000/api/');
       dispatch(slice.actions.getProductsSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
@@ -118,7 +123,7 @@ export function getMotosByDate(newDateDebut, newDateFin) {
     try {
       const response = await axios({
         method: 'get',
-        url: 'https://tiamoto.com/api/motos',
+        url: 'http://localhost:8000/api/motos',
         responseType: 'stream',
         params: {
           dateEntree: newDateDebut,
@@ -138,7 +143,7 @@ export function getMoto(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('https://tiamoto.com/api/', {
+      const response = await axios.get('http://localhost:8000/api/', {
         params: { id }
       });
       dispatch(slice.actions.getProductSuccess(response.data.product));
@@ -155,7 +160,7 @@ export function getMotosHebdo(newDateDebut, newDateFin) {
     try {
       const response = await axios({
         method: 'get',
-        url: 'https://tiamoto.com/api/motos/chart_hebdo_api',
+        url: 'http://localhost:8000/api/motos/chart_hebdo_api',
         responseType: 'stream',
         params: {
           dateEntree: newDateDebut,
@@ -174,7 +179,7 @@ export function getMotosMonthly(date) {
     try {
       const response = await axios({
         method: 'get',
-        url: 'https://tiamoto.com/api/motos/chart_monthly_api',
+        url: 'http://localhost:8000/api/motos/chart_monthly_api',
         responseType: 'stream',
         params: {
           month: date
@@ -192,7 +197,7 @@ export function getStock() {
     try {
       const response = await axios({
         method: 'get',
-        url: 'https://tiamoto.com/api/motos/stock_level_api',
+        url: 'http://localhost:8000/api/motos/stock_level_api',
         responseType: 'stream'
       });
       dispatch(slice.actions.getStockSuccess(response.data));
@@ -207,7 +212,7 @@ export function getLastFacture() {
     try {
       const response = await axios({
         method: 'get',
-        url: 'https://tiamoto.com/api/motos/last_facture_api',
+        url: 'http://localhost:8000/api/motos/last_facture_api',
         responseType: 'stream'
       });
       dispatch(slice.actions.getLastFactureSuccess(response.data));
@@ -222,7 +227,7 @@ export function getLastBL() {
     try {
       const response = await axios({
         method: 'get',
-        url: 'https://tiamoto.com/api/motos/last_BL_api',
+        url: 'http://localhost:8000/api/motos/last_BL_api',
         responseType: 'stream'
       });
       dispatch(slice.actions.getLastBLSuccess(response.data));
@@ -237,10 +242,28 @@ export function getLastID() {
     try {
       const response = await axios({
         method: 'get',
-        url: 'https://tiamoto.com/api/motos/ID_Last_API',
+        url: 'http://localhost:8000/api/motos/ID_Last_API',
         responseType: 'stream'
       });
       dispatch(slice.actions.getLastIDSuccess(response.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+export function getNumberWord(number) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios({
+        method: 'get',
+        url: 'http://localhost:8000/api/motos/total2word_API',
+        responseType: 'stream',
+        params: {
+          number
+        }
+      });
+      dispatch(slice.actions.getNumberWordSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }
