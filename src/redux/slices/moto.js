@@ -17,7 +17,8 @@ const initialState = {
   lastFacture: 0,
   lastBL: 0,
   lastID: 0,
-  numWord: ''
+  numWord: '',
+  venteToday: []
 };
 
 const slice = createSlice({
@@ -43,6 +44,10 @@ const slice = createSlice({
     getNumberWordSuccess(state, action) {
       state.isLoading = false;
       state.numWord = action.payload;
+    },
+    getVenteTodaySuccess(state, action) {
+      state.isLoading = false;
+      state.venteToday = action.payload;
     },
     getMotosHebdoSuccess(state, action) {
       state.isLoading = false;
@@ -201,6 +206,21 @@ export function getStock() {
         responseType: 'stream'
       });
       dispatch(slice.actions.getStockSuccess(response.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+export function getVenteToday() {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios({
+        method: 'get',
+        url: 'http://localhost:8000/api/motos/venteToday_API',
+        responseType: 'stream'
+      });
+      dispatch(slice.actions.getVenteTodaySuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }

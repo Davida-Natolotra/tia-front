@@ -13,7 +13,8 @@ import {
   AppLastInvoice,
   AppLastBL
 } from '../../components/_dashboard/general-app';
-
+import StockWidgets from '../../components/_dashboard/moto-app/StockWidgets';
+import StockTotal from '../../components/_dashboard/moto-app/StockTotal';
 import VenteDetails from '../../components/_dashboard/moto-app/motoDashboardDetails';
 import MotoChartHebdo from '../../components/_dashboard/moto-app/motoDashboardJourn';
 // ----------------------------------------------------------------------
@@ -38,13 +39,11 @@ export default function GeneralApp() {
           </Grid>
 
           <Grid item xs={12} sm={4} md={4}>
-            <AppStockState />
+            <StockTotal />
           </Grid>
-          <Grid item xs={12} sm={4} md={4}>
-            <AppLastInvoice />
-          </Grid>
-          <Grid item xs={12} sm={4} md={4}>
-            <AppLastBL />
+
+          <Grid item xs={12} sm={8} md={8}>
+            <StockWidgets />
           </Grid>
 
           <Grid item xs={12} md={6}>

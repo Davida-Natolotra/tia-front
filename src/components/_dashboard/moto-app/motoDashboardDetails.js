@@ -14,7 +14,8 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { Card, CardHeader, CardContent } from '@material-ui/core';
 
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { getVenteToday } from '../../../redux/slices/moto';
 
 import { styles } from './styles';
 
@@ -77,23 +78,6 @@ function Row(props) {
     </>
   );
 }
-// Row.propTypes = {
-//   row: PropTypes.shape({
-//     calories: PropTypes.number.isRequired,
-//     carbs: PropTypes.number.isRequired,
-//     fat: PropTypes.number.isRequired,
-//     history: PropTypes.arrayOf(
-//       PropTypes.shape({
-//         amount: PropTypes.number.isRequired,
-//         customerId: PropTypes.string.isRequired,
-//         date: PropTypes.string.isRequired
-//       })
-//     ).isRequired,
-//     name: PropTypes.string.isRequired,
-//     price: PropTypes.number.isRequired,
-//     protein: PropTypes.number.isRequired
-//   }).isRequired
-// };
 
 export default function CollapsibleTable() {
   const select = useSelector((state) => state.motos.chartSelect);
@@ -103,6 +87,7 @@ export default function CollapsibleTable() {
   const dataM = useSelector((state) => state.motos.motosMonth.data);
   const dateM = useSelector((state) => state.motos.motosMonth.date);
   const nbM = useSelector((state) => state.motos.motosMonth.nb);
+
   let data;
   let date;
   let nb;
@@ -115,21 +100,15 @@ export default function CollapsibleTable() {
     date = dateM;
     nb = nbM;
   }
-  const rows = date.map((di, index) => createData(di, nb[index], data[index]));
-  //   () => {
-  //   const globRow = [];
-  //   // eslint-disable-next-line no-plusplus
-  //   for (let i = 0; i < data.length(); i++) {
-  //     globRow.push(
-  //       createData(
-  //         date[i],
-  //         nb[i].reduce((partialSum, a) => partialSum + a, 0)
-  //       )
-  //     );
-  //   }
-  //   return globRow;
-  // };
+  const dispatch = useDispatch();
+  React.useEffect(() => {
+    dispatch(getVenteToday());
+  }, []);
 
+  const venteToday = useSelector((state) => state.motos.venteToday);
+  const rows = date.map((di, index) => createData(di, nb[index], data[index]));
+  const rowsToday = [createData(venteToday.date, venteToday.nb, venteToday.data)];
+  console.log(`rowsToday: ${JSON.stringify(rowsToday)}`);
   return (
     <Card>
       <CardHeader title="Détails de vente" />

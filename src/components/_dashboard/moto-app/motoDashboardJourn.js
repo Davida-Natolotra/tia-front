@@ -78,7 +78,7 @@ export default function MotoDashboardJourn() {
   return (
     <Card>
       <CardHeader
-        title="Vente journalière"
+        title={`Vente ${select.toLowerCase()}`}
         subheader={`Total: ${total.toString()} vendus`}
         action={
           <Stack spacing={1} direction="row" alignItems="center">

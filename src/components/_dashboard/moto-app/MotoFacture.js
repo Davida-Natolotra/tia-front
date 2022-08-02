@@ -278,9 +278,7 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
                       error={Boolean(touched.PV && errors.PV)}
                       helperText={touched.PV && errors.PV}
                     />
-                    <Typography variant="subheading">
-                      Prix de vente en lettre: {numWord.toUpperCase()} ARIARY
-                    </Typography>
+
                     <Typography variant="subheading">TVA: {fNumber(values.TVA)} Ar</Typography>
                     <Typography variant="subheading">Prix hors taxe: {fNumber(values.PUHT)} Ar</Typography>
                   </Stack>
