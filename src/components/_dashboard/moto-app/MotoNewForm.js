@@ -19,7 +19,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { frFR as calFR } from '@mui/x-date-pickers';
 import { useDispatch, useSelector } from 'react-redux';
-import { getLastID, getMotos } from '../../../redux/slices/moto';
+import { getLastID, getMotos, addMoto } from '../../../redux/slices/moto';
 import { fNumber } from '../../../utils/formatNumber';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
@@ -88,7 +88,7 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
     onSubmit: async (values, { setSubmitting, resetForm, setErrors }) => {
       try {
         await console.log(values);
-        // dispatch(getMotos);
+        dispatch(addMoto(values));
         resetForm();
         setSubmitting(false);
         enqueueSnackbar(!isEdit ? 'Create success' : 'Update success', { variant: 'success' });

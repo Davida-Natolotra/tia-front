@@ -12,8 +12,8 @@ import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import { Card, CardHeader, CardContent } from '@material-ui/core';
-
+import { Card, CardHeader, CardContent, Divider } from '@material-ui/core';
+import startOfWeek from 'date-fns/startOfWeek';
 import { useSelector, useDispatch } from 'react-redux';
 import { getVenteToday } from '../../../redux/slices/moto';
 
@@ -107,12 +107,56 @@ export default function CollapsibleTable() {
 
   const venteToday = useSelector((state) => state.motos.venteToday);
   const rows = date.map((di, index) => createData(di, nb[index], data[index]));
-  const rowsToday = [createData(venteToday.date, venteToday.nb, venteToday.data)];
-  console.log(`rowsToday: ${JSON.stringify(rowsToday)}`);
+  const rowsToday = venteToday?.data || [];
+  console.log(`date:${date[0]}, type:${typeof date[0]}`);
   return (
     <Card>
       <CardHeader title="Détails de vente" />
       <CardContent>
+        <Box>
+          <Typography variant="overline" gutterBottom component="div">
+            Vente d'aujourd'hui{' '}
+            {new Date().toLocaleDateString('fr-fr', {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric'
+            })}{' '}
+            - {venteToday.data?.length || 0} vente{venteToday.data?.length > 1 ? 's' : ''}
+          </Typography>
+          <Table size="small" aria-label="purchases">
+            <TableHead>
+              <TableRow>
+                <TableCell>Nom moto</TableCell>
+                <TableCell>Num moteur</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {rowsToday.map((historyRow) => (
+                <TableRow key={historyRow.date}>
+                  <TableCell component="th" scope="row">
+                    {historyRow.nom_moto}
+                  </TableCell>
+                  <TableCell component="th" scope="row">
+                    {historyRow.num_moteur}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </Box>
+        <Box sx={{ mt: 3 }}>
+          <Divider />
+          <Typography variant="overline" gutterBottom component="div">
+            Vente {select} - {select === 'Hebdomadaire' ? 'semaine du' : 'mois de'}{' '}
+            {select === 'Hebdomadaire'
+              ? new Date(startOfWeek(new Date(), { weekStartsOn: 1 })).toLocaleDateString('fr-fr', {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric'
+                })
+              : date[0].split(' ')[1]}
+          </Typography>
+        </Box>
         <TableContainer component={Paper} sx={{ maxHeight: '60vh' }}>
           <Table aria-label="collapsible table" stickyHeader sx={{ width: '100%' }}>
             <TableHead>

@@ -18,6 +18,7 @@ import Page from '../../components/Page';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 import MotoNewForm from '../../components/_dashboard/moto-app/MotoNewForm';
 import MotoFacture from '../../components/_dashboard/moto-app/MotoFacture';
+import MotoBL from '../../components/_dashboard/moto-app/MotoBL';
 // ----------------------------------------------------------------------
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -102,7 +103,7 @@ export default function MotoCreate() {
               <MotoFacture isEdit={isEdit} currentProduct={currentProduct} />
             </TabPanel>
             <TabPanel value={value} index={2}>
-              <Typography>BL</Typography>
+              <MotoBL isEdit={isEdit} currentProduct={currentProduct} />
             </TabPanel>
           </Box>
         ) : (

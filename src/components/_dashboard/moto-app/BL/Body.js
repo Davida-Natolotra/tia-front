@@ -1,20 +1,12 @@
 import { Image, Text, StyleSheet, Font, View } from '@react-pdf/renderer';
 import React from 'react';
 import Logo from './LogoTIA.jpeg';
-import InvoiceTableHeader from './InvoiceTableHeader';
-import InvoiceTableRow from './InvoiceTableRow';
-import InvoiceTableFooter from './InvoiceTableFooter';
-import RecFoot from './recfoot';
 import Signature from './signature';
 import Footer from './footer';
 
 export default function FactureMoto({ data }) {
   console.log(data);
-  const bodyInvoice = [
-    { sno: 1, ref: data.ref, desc: data.nomMoto, PU: data.PUHT, TVA: data.TVA },
-    { sno: 2, ref: ' ', desc: data.numMoteur, PU: ' ', TVA: ' ' },
-    { sno: 3, ref: ' ', desc: data.volumeMoteur, PU: ' ', TVA: ' ' }
-  ];
+
   return (
     <View style={styles.page}>
       <Image style={styles.logo} src={Logo} fixed />
@@ -27,28 +19,31 @@ export default function FactureMoto({ data }) {
       <Text style={styles.heading}>Stat: 46101112020010758</Text>
       <Text style={styles.heading}>RCS: 2020 B 00714</Text>
       <View style={styles.container}>
-        <Text style={styles.title}>FACTURE</Text>
+        <Text style={styles.title}>BON DE LIVRAISON</Text>
       </View>
       <View style={styles.subContainer}>
         <View style={styles.titleLeft}>
-          <Text style={styles.info}>Facturé à :</Text>
+          <Text style={styles.info}>Livré à :</Text>
           <Text style={styles.info}>{data.nomClient}</Text>
           <Text style={styles.info}>Tel: {data.telClient}</Text>
-          <Text style={styles.info}> {data.adresseClient}</Text>
         </View>
         <View style={styles.titleRight}>
-          <Text style={styles.info}>FACTURE N° :{data.numFacture}</Text>
+          <Text style={styles.info}>N° :{data.numBL}</Text>
           <Text style={styles.info}>DATE {data.dateFacture}</Text>
         </View>
       </View>
       <View style={styles.subContainer2}>
-        <InvoiceTableHeader />
-        <InvoiceTableRow items={bodyInvoice} />
-        <InvoiceTableFooter total={data.total} title="TOTAL" />
+        <Text>
+          <Text style={styles.boldUnderlineText}>Modèle:</Text> {data.nomMoto}
+        </Text>
+        <Text>
+          <Text style={styles.boldUnderlineText}>Numéro moteur:</Text> {data.numMoteur}
+        </Text>
+        <Text>
+          <Text style={styles.boldUnderlineText}>Prix:</Text> {data.total} Ar
+        </Text>
       </View>
-      <View style={styles.chiffre}>
-        <RecFoot totalLettre={data.totalLettre} />
-      </View>
+
       <View style={styles.signature}>
         <Signature />
       </View>
@@ -189,18 +184,16 @@ const styles = StyleSheet.create({
   },
   subContainer: {
     flexDirection: 'row',
-    flexGrow: 1,
-    position: 'relative',
-    marginTop: 5
+    marginTop: 5,
+    marginBottom: 5
   },
   subContainer2: {
     flexDirection: 'column',
-    marginTop: 10
+    marginTop: 2
   },
 
   titleLeft: {
     flexDirection: 'column',
-    alignItems: 'flex-start',
     justifyContent: 'flex-start',
 
     textAlign: 'left',
@@ -217,16 +210,24 @@ const styles = StyleSheet.create({
     fontSize: 10,
     letterSpacing: 1
   },
-  chiffre: {
-    flexDirection: 'column',
-    marginTop: 20
-  },
+
   signature: {
     flexDirection: 'column',
-    marginTop: 10
+    marginTop: 20,
+    marginBottom: 150
   },
   footer: {
+    flexDirection: 'column'
+  },
+  coreText: {
     flexDirection: 'column',
-    marginTop: 45
+    textAlign: 'left',
+    flexGrow: 1,
+    fontSize: 10,
+    letterSpacing: 1
+  },
+  boldUnderlineText: {
+    fontFamily: 'Noto-Sans-Bold',
+    textDecoration: 'underline'
   }
 });
