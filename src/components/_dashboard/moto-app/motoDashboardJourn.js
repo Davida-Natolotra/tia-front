@@ -7,10 +7,11 @@ import { Card, CardHeader, Box, TextField, Stack, CardContent } from '@material-
 import { useSelector, useDispatch } from 'react-redux';
 import endOfWeek from 'date-fns/endOfWeek';
 import startOfWeek from 'date-fns/startOfWeek';
+import { day as Day } from 'moment';
 import { BaseOptionChart } from '../../charts';
 import JournPick from './motoJournPick';
 import { getMotosHebdo, setChartSelect, getMotosMonthly } from '../../../redux/slices/moto';
-import { styles } from './styles';
+import useCheckMobile from '../../../hooks/useCheckMobile';
 // ----------------------------------------------------------------------
 
 export default function MotoDashboardJourn() {
@@ -19,6 +20,7 @@ export default function MotoDashboardJourn() {
   const start = startOfWeek(new Date(), { weekStartsOn: 1 });
   const end = endOfWeek(new Date(), { weekStartsOn: 1 });
   const dispatch = useDispatch();
+  const isMobile = useCheckMobile();
 
   useEffect(() => {
     dispatch(
@@ -49,11 +51,25 @@ export default function MotoDashboardJourn() {
     setSeriesData(event.target.value);
     dispatch(setChartSelect(event.target.value));
   };
+  function getThisWeekDates() {
+    const weekDates = [];
+    // eslint-disable-next-line no-plusplus
+    for (let i = 0; i < 7; i++) {
+      weekDates.push(
+        new Date(start.getTime() + i * 24 * 60 * 60 * 1000).toLocaleDateString('fr-fr', {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric'
+        })
+      );
+    }
+    return weekDates;
+  }
   console.log('Chart data');
   const CHART_DATA = [
     {
       year: 'Hebdomadaire',
-      data: [{ name: 'Nombre', data: [...motosHebdo.nb] }]
+      data: [{ name: 'Nombre', data: [...(motosHebdo?.nb || getThisWeekDates())] }]
     },
     {
       year: 'Mensuelle',
@@ -63,7 +79,7 @@ export default function MotoDashboardJourn() {
 
   const chartOptions = merge(BaseOptionChart(), {
     plotOptions: {
-      bar: { horizontal: true, barHeight: '28%', borderRadius: 2 }
+      bar: { horizontal: isMobile, barHeight: '28%', borderRadius: 2 }
     },
     xaxis: {
       categories: select === 'Hebdomadaire' ? motosHebdo.date : motosMonth.date
