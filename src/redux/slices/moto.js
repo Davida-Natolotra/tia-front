@@ -289,3 +289,19 @@ export function getNumberWord(number) {
     }
   };
 }
+
+export function addMoto(motoData) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios({
+        method: 'post',
+        url: 'http://localhost:8000/api/motos/add_moto_API',
+        data: motoData
+      });
+      dispatch(slice.actions.getProductsSuccess(response.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
