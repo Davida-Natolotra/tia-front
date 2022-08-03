@@ -153,7 +153,7 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
                   <Stack spacing={3} direction="column">
                     <TextField
                       fullWidth
-                      label="Nom du client"
+                      label="Nom"
                       name="nomClient"
                       onChange={handleChange}
                       onBlur={handleBlur}
@@ -163,7 +163,7 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
                     />
                     <TextField
                       fullWidth
-                      label="Adresse du client"
+                      label="Adresse"
                       name="adresseClient"
                       onChange={handleChange}
                       onBlur={handleBlur}
@@ -173,7 +173,7 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
                     />
                     <TextField
                       fullWidth
-                      label="Numéro CIN du client"
+                      label="Numéro CIN"
                       name="CIN"
                       onChange={handleChange}
                       onBlur={handleBlur}
@@ -181,16 +181,7 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
                       error={Boolean(touched.CIN && errors.CIN)}
                       helperText={touched.CIN && errors.CIN}
                     />
-                    <TextField
-                      fullWidth
-                      label="Adresse du client"
-                      name="adresseClient"
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      {...getFieldProps('adresseClient')}
-                      error={Boolean(touched.adresseClient && errors.adresseClient)}
-                      helperText={touched.adresseClient && errors.adresseClient}
-                    />
+
                     <Box>
                       <Typography variant="caption">Pièces jointe</Typography>
                       <Divider />
