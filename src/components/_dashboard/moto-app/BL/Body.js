@@ -95,13 +95,13 @@ const styles = StyleSheet.create({
   },
   heading: {
     fontSize: 8,
-    marginLeft: 100,
+
     fontFamily: 'Noto-Sans',
     textAlign: 'right'
   },
   headingTitle: {
     fontSize: 12,
-    marginLeft: 100,
+
     fontFamily: 'Noto-Sans',
     textAlign: 'right'
   },

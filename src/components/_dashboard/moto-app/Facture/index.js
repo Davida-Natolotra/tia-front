@@ -13,23 +13,6 @@ export default function FactureMoto({ currentProduct }) {
     return () => window.removeEventListener('resize', updateWidthAndHeight);
   });
   // Models
-  // Clients
-  const nomClient = 'RAKOTO Haja';
-  const adresseClient = 'Rue de la paix';
-  const telClient = '+221 77 888 888';
-
-  // Moto
-  const nomMoto = 'Honda';
-  const numMoteur = '123456789';
-  const volumeMoteur = '100 cc';
-
-  // Facture
-  const numFacture = '10';
-  const dateFacture = '01/01/2020';
-  const PUHT = 3000000;
-  const TVA = 40000;
-  const total = 500000;
-  const totalLettre = 'cinquante mille ';
 
   // Data
   const data = {
