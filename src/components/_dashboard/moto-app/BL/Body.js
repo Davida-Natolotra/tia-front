@@ -9,7 +9,6 @@ export default function FactureMoto({ data }) {
 
   return (
     <View style={styles.page}>
-      <Image style={styles.logo} src={Logo} fixed />
       <Text style={styles.headingTitle}>TIA MOTO SARLU</Text>
       <Text style={styles.heading}>Ny Tsara Indrindra hAtrany</Text>
       <Text style={styles.heading}>Siège social: Lot IVX 72B Bis Ankazomanga</Text>
