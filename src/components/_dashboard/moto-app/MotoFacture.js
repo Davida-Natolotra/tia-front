@@ -77,8 +77,8 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
       CIN: currentProduct?.CIN_Num_Client_2 || '',
       adresseClient: currentProduct?.adresse_client_2 || '',
       contactClient: currentProduct?.tel_client_2 || '',
-      PUHT: currentProduct?.PU_HT || '',
-      TVA: currentProduct?.TVA || '',
+      PUHT: currentProduct?.PU_HT || currentProduct.PV / 1.2,
+      TVA: currentProduct?.TVA || (0.2 * currentProduct.PV) / 1.2,
       PV: currentProduct?.PV || null
     },
     validationSchema: NewProductSchema,
