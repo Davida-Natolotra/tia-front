@@ -18,7 +18,8 @@ const initialState = {
   lastBL: 0,
   lastID: 0,
   numWord: '',
-  venteToday: []
+  venteToday: [],
+  currentData: {}
 };
 
 const slice = createSlice({
@@ -99,6 +100,10 @@ const slice = createSlice({
     getLastIDSuccess(state, action) {
       state.isLoading = false;
       state.lastID = action.payload;
+    },
+    getLastResponseMotoSuccess(state, action) {
+      state.isLoading = false;
+      state.currentData = action.payload;
     }
   }
 });
@@ -115,7 +120,7 @@ export function getMotos() {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('http://localhost:8000/api/');
+      const response = await axios.get('/api/');
       dispatch(slice.actions.getProductsSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
@@ -128,7 +133,7 @@ export function getMotosByDate(newDateDebut, newDateFin) {
     try {
       const response = await axios({
         method: 'get',
-        url: 'http://localhost:8000/api/motos',
+        url: '/api/motos',
         responseType: 'stream',
         params: {
           dateEntree: newDateDebut,
@@ -148,7 +153,7 @@ export function getMoto(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('http://localhost:8000/api/', {
+      const response = await axios.get('/api/', {
         params: { id }
       });
       dispatch(slice.actions.getProductSuccess(response.data.product));
@@ -165,7 +170,7 @@ export function getMotosHebdo(newDateDebut, newDateFin) {
     try {
       const response = await axios({
         method: 'get',
-        url: 'http://localhost:8000/api/motos/chart_hebdo_api',
+        url: '/api/motos/chart_hebdo_api',
         responseType: 'stream',
         params: {
           dateEntree: newDateDebut,
@@ -184,7 +189,7 @@ export function getMotosMonthly(date) {
     try {
       const response = await axios({
         method: 'get',
-        url: 'http://localhost:8000/api/motos/chart_monthly_api',
+        url: '/api/motos/chart_monthly_api',
         responseType: 'stream',
         params: {
           month: date
@@ -202,7 +207,7 @@ export function getStock() {
     try {
       const response = await axios({
         method: 'get',
-        url: 'http://localhost:8000/api/motos/stock_level_api',
+        url: '/api/motos/stock_level_api',
         responseType: 'stream'
       });
       dispatch(slice.actions.getStockSuccess(response.data));
@@ -217,7 +222,7 @@ export function getVenteToday() {
     try {
       const response = await axios({
         method: 'get',
-        url: 'http://localhost:8000/api/motos/venteToday_API',
+        url: '/api/motos/venteToday_API',
         responseType: 'stream'
       });
       dispatch(slice.actions.getVenteTodaySuccess(response.data));
@@ -232,7 +237,7 @@ export function getLastFacture() {
     try {
       const response = await axios({
         method: 'get',
-        url: 'http://localhost:8000/api/motos/last_facture_api',
+        url: '/api/motos/last_facture_api',
         responseType: 'stream'
       });
       dispatch(slice.actions.getLastFactureSuccess(response.data));
@@ -247,7 +252,7 @@ export function getLastBL() {
     try {
       const response = await axios({
         method: 'get',
-        url: 'http://localhost:8000/api/motos/last_BL_api',
+        url: '/api/motos/last_BL_api',
         responseType: 'stream'
       });
       dispatch(slice.actions.getLastBLSuccess(response.data));
@@ -262,7 +267,7 @@ export function getLastID() {
     try {
       const response = await axios({
         method: 'get',
-        url: 'http://localhost:8000/api/motos/ID_Last_API',
+        url: '/api/motos/ID_Last_API',
         responseType: 'stream'
       });
       dispatch(slice.actions.getLastIDSuccess(response.data));
@@ -277,7 +282,7 @@ export function getNumberWord(number) {
     try {
       const response = await axios({
         method: 'get',
-        url: 'http://localhost:8000/api/motos/total2word_API',
+        url: '/api/motos/total2word_API',
         responseType: 'stream',
         params: {
           number
@@ -296,10 +301,14 @@ export function addMoto(motoData) {
     try {
       const response = await axios({
         method: 'post',
-        url: 'http://localhost:8000/api/motos/add_moto_API',
-        data: motoData
+        url: '/api/motos/createMoto',
+        data: motoData,
+        responseType: 'stream',
+        headers: {
+          'Content-Type': 'application/json; charset= utf-8'
+        }
       });
-      dispatch(slice.actions.getProductsSuccess(response.data));
+      dispatch(slice.actions.getLastResponseMotoSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }

@@ -59,9 +59,9 @@ export default function MotoCreate() {
   const dispatch = useDispatch();
   const { pathname } = useLocation();
   const { id } = useParams();
-  const { products } = useSelector((state) => state.motos);
+  const { products, currentData } = useSelector((state) => state.motos);
   const isEdit = pathname.includes('edit');
-  const currentProduct = products.find((product) => product.id === parseInt(id, 10));
+  const currentProduct = products?.find((product) => product.id === parseInt(id, 10)) || currentData.id;
 
   useEffect(() => {
     dispatch(getProducts());

@@ -1,17 +1,16 @@
 import * as Yup from 'yup';
 import PropTypes from 'prop-types';
 import { useSnackbar } from 'notistack5';
-import { useNavigate, Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { Form, FormikProvider, useFormik } from 'formik';
 import CurrencyTextField from '@unicef/material-ui-currency-textfield';
 // material
 import { LoadingButton } from '@material-ui/lab';
-import { Card, Grid, Stack, Button, ButtonGroup, Box, TextField } from '@material-ui/core';
-import { Typography, Divider, Accordion, AccordionSummary, AccordionDetails } from '@mui/material';
+import { Card, Grid, Stack, Button, ButtonGroup, TextField } from '@material-ui/core';
+import { Typography, Accordion, AccordionSummary, AccordionDetails } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
 // utils
 //
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -21,12 +20,9 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { frFR as calFR } from '@mui/x-date-pickers';
 import { useDispatch, useSelector } from 'react-redux';
 import BLPreview from './BL';
-import { fileChangedHandler } from '../../../utils/imageCompress';
 import { getLastID, getNumberWord } from '../../../redux/slices/moto';
-import { fNumber } from '../../../utils/formatNumber';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
-import CarouselProductDetails from '../../carousel/CarouselProductDetails';
 // ----------------------------------------------------------------------
 
 // ----------------------------------------------------------------------
@@ -38,10 +34,6 @@ ProductNewForm.propTypes = {
 
 export default function ProductNewForm({ isEdit, currentProduct }) {
   const { enqueueSnackbar } = useSnackbar();
-  const [CINRecto, setCINRecto] = useState('https://via.placeholder.com/500');
-  const [CINVerso, setCINVerso] = useState('https://via.placeholder.com/500');
-
-  const numWord = useSelector((state) => state.motos.numWord);
 
   const lastID = useSelector((state) => state.motos.lastID);
   const lastFacture = useSelector((state) => state.motos.lastFacture);
@@ -87,7 +79,6 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getLastID());
-    dispatch(getNumberWord(values.PV));
   }, []);
 
   const {
@@ -106,10 +97,6 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
   useEffect(() => {
     values.PUHT = values.PV / 1.2;
     values.TVA = 0.2 * values.PUHT;
-  }, [values.PV]);
-
-  useMemo(() => {
-    dispatch(getNumberWord(values.PV));
   }, [values.PV]);
 
   return (

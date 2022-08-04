@@ -2,7 +2,7 @@ import * as Yup from 'yup';
 import PropTypes from 'prop-types';
 import { useSnackbar } from 'notistack5';
 import { useNavigate, Link as RouterLink } from 'react-router-dom';
-
+import moment from 'moment';
 import { useState, useEffect } from 'react';
 import { Form, FormikProvider, useFormik } from 'formik';
 import CurrencyTextField from '@unicef/material-ui-currency-textfield';
@@ -19,7 +19,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { frFR as calFR } from '@mui/x-date-pickers';
 import { useDispatch, useSelector } from 'react-redux';
-import { getLastID, getMotos, addMoto } from '../../../redux/slices/moto';
+import { getLastID, addMoto, getMotos } from '../../../redux/slices/moto';
 import { fNumber } from '../../../utils/formatNumber';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
@@ -42,25 +42,26 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
   }, [dispatch]);
   const curID = currentProduct?.id || null;
   const lastID = useSelector((state) => state.motos.lastID);
+  const lastPK = useSelector((state) => state.motos.currentData.id);
 
-  const NewProductSchema = Yup.object({
-    ID_Moto: Yup.string(),
+  const NewProductSchema = Yup.object().shape({
+    ID_Moto: Yup.number().required('IdMoto is required'),
     dateEntree: Yup.date("Date d'entrée requise").required("La date d'entrée est requis"),
     name: Yup.string().required('Veuillez entrer le nom du moto'),
     numMoteur: Yup.string().required('Entrer le numéro moteur'),
     FRN: Yup.string().required('Entrer le FRN'),
     PA: Yup.number().required('Entrer le PA'),
-    PV: Yup.number(),
+    PV: Yup.number().required(),
     localisation: Yup.string().required('Localisation requis'),
-    dateArrivee: Yup.date(),
-    volumeMoteur: Yup.string().required('Volume moteur requis'),
-    date_vente: Yup.date(),
-    vendeur: Yup.string().required('Vendeur requis'),
-    carteRose: Yup.string(),
-    carteGrise: Yup.string(),
-    reparation: Yup.number(),
-    motifReparation: Yup.string(),
-    commercial: Yup.string()
+    dateArrivee: Yup.date().required("Date d'arrivée requise"),
+    volumeMoteur: Yup.string().required('Volume moteur requis')
+    // dateVente: Yup.date().required('Date de vente requise')
+    // vendeur: Yup.string().notRequired('valid')
+    // carteRose: Yup.string().nullable().notRequired().default(undefined)
+    // carteGrise: Yup.string(),
+    // reparation: Yup.number(),
+    // motifReparation: Yup.string(),
+    // commercial: Yup.string()
   });
 
   const formik = useFormik({
@@ -75,24 +76,38 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
       PV: currentProduct?.PV || 0,
       localisation: currentProduct?.localisation || '',
       dateArrivee: currentProduct?.date_arrivee || null,
-      volumeMoteur: currentProduct?.volume_moteur || '',
-      date_vente: currentProduct?.date_vente || null,
-      vendeur: currentProduct?.vendeur || '',
-      carteRose: currentProduct?.carte_rose || '',
-      carteGrise: currentProduct?.carte_grise || '',
-      reparation: currentProduct?.montant_reparation || 0,
-      motifReparation: currentProduct?.motif_reparation || '',
-      commercial: currentProduct?.commercial || ''
+      volumeMoteur: currentProduct?.volume_moteur || ''
+      // dateVente: currentProduct?.date_vente || null
+      // vendeur: currentProduct?.vendeur || ''
+      // carteRose: currentProduct?.carte_rose || ''
+      // carteGrise: currentProduct?.carte_grise || '',
+      // reparation: currentProduct?.montant_reparation || 0,
+      // motifReparation: currentProduct?.motif_reparation || '',
+      // commercial: currentProduct?.commercial || ''
     },
     validationSchema: NewProductSchema,
     onSubmit: async (values, { setSubmitting, resetForm, setErrors }) => {
+      const dataSubmit = {
+        ID_Moto: values.ID_Moto,
+        nom_moto: values.name,
+        date_entree: moment(values.dateEntree).format('YYYY-MM-DD'),
+        num_moteur: values.numMoteur,
+        FRN: values.FRN,
+        PA: values.PA,
+        localisation: values.localisation,
+        date_arrivee: moment(values.dateArrivee).format('YYYY-MM-DD'),
+        volume_moteur: values.volumeMoteur
+        // date_vente: moment(values.dateVente).format('YYYY-MM-DD')
+        // carte_rose: values.carteRose
+      };
       try {
-        await console.log(values);
-        dispatch(addMoto(values));
-        resetForm();
+        console.log(dataSubmit);
+        await dispatch(addMoto(dataSubmit));
+        // resetForm();
         setSubmitting(false);
-        enqueueSnackbar(!isEdit ? 'Create success' : 'Update success', { variant: 'success' });
-        navigate(`${PATH_DASHBOARD.moto.root}/${curID}/edit`);
+        enqueueSnackbar(!isEdit ? 'Nouvelle entrée enregistrée avec succès' : 'Update success', { variant: 'success' });
+        await dispatch(getMotos());
+        isEdit = false;
       } catch (error) {
         console.error(error);
         setSubmitting(false);
@@ -118,6 +133,12 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
     { label: 'Dépot', value: 'Dépot' },
     { label: 'Showroom', value: 'Showroom' }
   ];
+
+  useEffect(() => {
+    if (lastPK) {
+      navigate(`${PATH_DASHBOARD.moto.root}/${lastPK}/edit`);
+    }
+  }, [lastPK]);
 
   return (
     <FormikProvider value={formik}>
@@ -152,7 +173,6 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
                 <TextField
                   fullWidth
                   label="Nom moto"
-                  name="name"
                   onChange={handleChange}
                   onBlur={handleBlur}
                   {...getFieldProps('name')}
@@ -162,7 +182,6 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
                 <TextField
                   fullWidth
                   label="Numéro moteur"
-                  name="numMoteur"
                   onChange={handleChange}
                   onBlur={handleBlur}
                   {...getFieldProps('numMoteur')}
@@ -172,7 +191,6 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
                 <TextField
                   fullWidth
                   label="Volume moteur"
-                  name="volumeMoteur"
                   onChange={handleChange}
                   onBlur={handleBlur}
                   {...getFieldProps('volumeMoteur')}
@@ -182,7 +200,6 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
                 <TextField
                   fullWidth
                   label="FRN"
-                  name="FRN"
                   onChange={handleChange}
                   onBlur={handleBlur}
                   {...getFieldProps('FRN')}
@@ -257,40 +274,31 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
                   helperText={touched.PA && errors.PA}
                 />
                 <Typography variant="subheading">PV: {fNumber(values.PV)} Ar</Typography>
-                <Typography variant="subheading">
-                  Date de vente:{' '}
-                  {values.date_vente
-                    ? new Date(values.date_vente).toLocaleDateString('fr-fr', {
+                {/* <Typography variant="subheading">
+                  Date de vente:
+                  {values.dateVente
+                    ? new Date(values.dateVente).toLocaleDateString('fr-fr', {
                         year: 'numeric',
                         month: 'long',
                         day: 'numeric'
                       })
                     : 'invendue'}
-                </Typography>
-                <TextField
-                  fullWidth
-                  label="Vendeur"
-                  name="vendeur"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  {...getFieldProps('vendeur')}
-                  error={Boolean(touched.vendeur && errors.vendeur)}
-                  helperText={touched.vendeur && errors.vendeur}
-                />
-                <TextField
+                </Typography> */}
+                {/* <Typography variant="subheading">Vendeur: {values.vendeur}</Typography> */}
+
+                {/* <TextField
                   fullWidth
                   label="Carte rose"
-                  name="carteRose"
                   onChange={handleChange}
                   onBlur={handleBlur}
                   {...getFieldProps('carteRose')}
                   error={Boolean(touched.carteRose && errors.carteRose)}
                   helperText={touched.carteRose && errors.carteRose}
-                />
+                /> */}
+                {/* 
                 <TextField
                   fullWidth
                   label="Carte grise"
-                  name="carteGrise"
                   onChange={handleChange}
                   onBlur={handleBlur}
                   {...getFieldProps('carteGrise')}
@@ -314,23 +322,21 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
                 <TextField
                   fullWidth
                   label="Motif de réparation"
-                  name="motifReparation"
                   onChange={handleChange}
                   onBlur={handleBlur}
                   {...getFieldProps('motifReparation')}
                   error={Boolean(touched.motifReparation && errors.motifReparation)}
                   helperText={touched.motifReparation && errors.motifReparation}
-                />{' '}
+                />
                 <TextField
                   fullWidth
                   label="Commercial"
-                  name="commercial"
                   onChange={handleChange}
                   onBlur={handleBlur}
                   {...getFieldProps('commercial')}
                   error={Boolean(touched.commercial && errors.commercial)}
                   helperText={touched.commercial && errors.commercial}
-                />
+                /> */}
                 <ButtonGroup>
                   <LoadingButton type="submit" fullWidth variant="contained" size="large" loading={isSubmitting}>
                     Enregistrer
