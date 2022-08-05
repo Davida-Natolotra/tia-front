@@ -1,28 +1,31 @@
+import { useEffect } from 'react';
 // material
-import { Container, Grid, Typography, Stack } from '@material-ui/core';
+import { Container, Grid, Typography } from '@material-ui/core';
 // hooks
+import { useDispatch } from 'react-redux';
+import { resetCurrentData } from '../../redux/slices/moto';
 import useCheckMobile from '../../hooks/useCheckMobile';
 import useAuth from '../../hooks/useAuth';
 import useSettings from '../../hooks/useSettings';
 // components
 import Page from '../../components/Page';
-import {
-  AppWelcome,
-  AppMotoTable,
-  AppStockState,
-  AppLastInvoice,
-  AppLastBL
-} from '../../components/_dashboard/general-app';
+import { AppWelcome, AppMotoTable } from '../../components/_dashboard/general-app';
 import StockWidgets from '../../components/_dashboard/moto-app/StockWidgets';
 import StockTotal from '../../components/_dashboard/moto-app/StockTotal';
 import VenteDetails from '../../components/_dashboard/moto-app/motoDashboardDetails';
 import MotoChartHebdo from '../../components/_dashboard/moto-app/motoDashboardJourn';
+
 // ----------------------------------------------------------------------
 
 export default function GeneralApp() {
   const { themeStretch } = useSettings();
   const { user } = useAuth();
   const isMobile = useCheckMobile();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(resetCurrentData());
+  }, []);
 
   return (
     <Page title="Moto Dashboard">

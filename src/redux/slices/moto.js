@@ -104,6 +104,9 @@ const slice = createSlice({
     getLastResponseMotoSuccess(state, action) {
       state.isLoading = false;
       state.currentData = action.payload;
+    },
+    resetCurrentData(state, action) {
+      state.currentData = {};
     }
   }
 });
@@ -112,7 +115,7 @@ const slice = createSlice({
 export default slice.reducer;
 
 // Actions
-export const { filterDisplay, setChartSelect } = slice.actions;
+export const { filterDisplay, setChartSelect, resetCurrentData } = slice.actions;
 
 // ----------------------------------------------------------------------
 
@@ -302,6 +305,26 @@ export function addMoto(motoData) {
       const response = await axios({
         method: 'post',
         url: '/api/motos/createMoto',
+        data: motoData,
+        responseType: 'stream',
+        headers: {
+          'Content-Type': 'application/json; charset= utf-8'
+        }
+      });
+      dispatch(slice.actions.getLastResponseMotoSuccess(response.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+export function updateMoto(motoData) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios({
+        method: 'post',
+        url: `/api/motos/updateMoto/${motoData.id}`,
         data: motoData,
         responseType: 'stream',
         headers: {

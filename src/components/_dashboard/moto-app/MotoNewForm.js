@@ -19,7 +19,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { frFR as calFR } from '@mui/x-date-pickers';
 import { useDispatch, useSelector } from 'react-redux';
-import { getLastID, addMoto, getMotos } from '../../../redux/slices/moto';
+import { getLastID, addMoto, getMotos, resetCurrentData, updateMoto } from '../../../redux/slices/moto';
 import { fNumber } from '../../../utils/formatNumber';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
@@ -40,9 +40,12 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
   useEffect(() => {
     dispatch(getLastID());
   }, [dispatch]);
-  const curID = currentProduct?.id || null;
+
   const lastID = useSelector((state) => state.motos.lastID);
   const lastPK = useSelector((state) => state.motos.currentData.id);
+  const [dateVente, setDateVente] = useState(currentProduct?.date_vente || null);
+  const [vendeur, setVendeur] = useState(currentProduct?.vendeur || null);
+  const [commercial, setCommercial] = useState(currentProduct?.commercial || null);
 
   const NewProductSchema = Yup.object().shape({
     ID_Moto: Yup.number().required('IdMoto is required'),
@@ -54,13 +57,11 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
     PV: Yup.number().required(),
     localisation: Yup.string().required('Localisation requis'),
     dateArrivee: Yup.date().required("Date d'arrivée requise"),
-    volumeMoteur: Yup.string().required('Volume moteur requis')
-    // dateVente: Yup.date().required('Date de vente requise')
-    // vendeur: Yup.string().notRequired('valid')
-    // carteRose: Yup.string().nullable().notRequired().default(undefined)
-    // carteGrise: Yup.string(),
-    // reparation: Yup.number(),
-    // motifReparation: Yup.string(),
+    volumeMoteur: Yup.string().required('Volume moteur requis'),
+    carteRose: Yup.string().nullable().notRequired(),
+    carteGrise: Yup.string().nullable().notRequired(),
+    montantReparation: Yup.number().nullable().notRequired(),
+    motifReparation: Yup.string().nullable().notRequired()
     // commercial: Yup.string()
   });
 
@@ -76,17 +77,15 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
       PV: currentProduct?.PV || 0,
       localisation: currentProduct?.localisation || '',
       dateArrivee: currentProduct?.date_arrivee || null,
-      volumeMoteur: currentProduct?.volume_moteur || ''
-      // dateVente: currentProduct?.date_vente || null
-      // vendeur: currentProduct?.vendeur || ''
-      // carteRose: currentProduct?.carte_rose || ''
-      // carteGrise: currentProduct?.carte_grise || '',
-      // reparation: currentProduct?.montant_reparation || 0,
-      // motifReparation: currentProduct?.motif_reparation || '',
+      volumeMoteur: currentProduct?.volume_moteur || '',
+      carteRose: currentProduct?.carte_rose || '',
+      carteGrise: currentProduct?.carte_grise || '',
+      montantReparation: currentProduct?.montant_reparation || 0,
+      motifReparation: currentProduct?.motif_reparation || ''
       // commercial: currentProduct?.commercial || ''
     },
     validationSchema: NewProductSchema,
-    onSubmit: async (values, { setSubmitting, resetForm, setErrors }) => {
+    onSubmit: async (values, { setSubmitting, setErrors }) => {
       const dataSubmit = {
         ID_Moto: values.ID_Moto,
         nom_moto: values.name,
@@ -96,13 +95,22 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
         PA: values.PA,
         localisation: values.localisation,
         date_arrivee: moment(values.dateArrivee).format('YYYY-MM-DD'),
-        volume_moteur: values.volumeMoteur
-        // date_vente: moment(values.dateVente).format('YYYY-MM-DD')
-        // carte_rose: values.carteRose
+        volume_moteur: values.volumeMoteur,
+        carte_rose: values.carteRose,
+        carte_grise: values.carteGrise,
+        montant_reparation: values.montantReparation,
+        motif_reparation: values.motifReparation
       };
+      if (isEdit) {
+        dataSubmit.id = currentProduct.id;
+      }
       try {
         console.log(dataSubmit);
-        await dispatch(addMoto(dataSubmit));
+        if (isEdit) {
+          await dispatch(updateMoto(dataSubmit));
+        } else {
+          await dispatch(addMoto(dataSubmit));
+        }
         // resetForm();
         setSubmitting(false);
         enqueueSnackbar(!isEdit ? 'Nouvelle entrée enregistrée avec succès' : 'Update success', { variant: 'success' });
@@ -274,19 +282,19 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
                   helperText={touched.PA && errors.PA}
                 />
                 <Typography variant="subheading">PV: {fNumber(values.PV)} Ar</Typography>
-                {/* <Typography variant="subheading">
-                  Date de vente:
-                  {values.dateVente
-                    ? new Date(values.dateVente).toLocaleDateString('fr-fr', {
+                <Typography variant="subheading">
+                  Date de vente:{' '}
+                  {dateVente
+                    ? new Date(dateVente).toLocaleDateString('fr-fr', {
                         year: 'numeric',
                         month: 'long',
                         day: 'numeric'
                       })
                     : 'invendue'}
-                </Typography> */}
-                {/* <Typography variant="subheading">Vendeur: {values.vendeur}</Typography> */}
+                </Typography>
+                <Typography variant="subheading">Vendeur: {vendeur}</Typography>
 
-                {/* <TextField
+                <TextField
                   fullWidth
                   label="Carte rose"
                   onChange={handleChange}
@@ -294,8 +302,8 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
                   {...getFieldProps('carteRose')}
                   error={Boolean(touched.carteRose && errors.carteRose)}
                   helperText={touched.carteRose && errors.carteRose}
-                /> */}
-                {/* 
+                />
+
                 <TextField
                   fullWidth
                   label="Carte grise"
@@ -307,17 +315,17 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
                 />
                 <CurrencyTextField
                   label="Montant réparation"
-                  name="reparation"
+                  name="montantReparation"
                   variant="outlined"
-                  value={values.reparation}
+                  value={values.montantReparation}
                   currencySymbol="Ar"
                   placeholder="PA"
                   outputFormat="number"
                   decimalCharacter=","
                   digitGroupSeparator=" "
-                  onChange={(event, value) => setFieldValue('reparation', value)}
-                  error={Boolean(touched.reparation && errors.reparation)}
-                  helperText={touched.reparation && errors.reparation}
+                  onChange={(event, value) => setFieldValue('montantReparation', value)}
+                  error={Boolean(touched.montantReparation && errors.montantReparation)}
+                  helperText={touched.montantReparation && errors.montantReparation}
                 />
                 <TextField
                   fullWidth
@@ -328,15 +336,7 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
                   error={Boolean(touched.motifReparation && errors.motifReparation)}
                   helperText={touched.motifReparation && errors.motifReparation}
                 />
-                <TextField
-                  fullWidth
-                  label="Commercial"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  {...getFieldProps('commercial')}
-                  error={Boolean(touched.commercial && errors.commercial)}
-                  helperText={touched.commercial && errors.commercial}
-                /> */}
+                <Typography variant="subheading">Commercial: {commercial}</Typography>
                 <ButtonGroup>
                   <LoadingButton type="submit" fullWidth variant="contained" size="large" loading={isSubmitting}>
                     Enregistrer
@@ -347,6 +347,7 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
                       variant="outlined"
                       component={RouterLink}
                       to={`${PATH_DASHBOARD.moto.root}/new`}
+                      onClick={() => dispatch(resetCurrentData())}
                     >
                       Nouvelle entrée
                     </Button>
