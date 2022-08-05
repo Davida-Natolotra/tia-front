@@ -9,7 +9,6 @@ import Signature from './signature';
 import Footer from './footer';
 
 export default function FactureMoto({ data }) {
-  console.log(data);
   const bodyInvoice = [
     { sno: 1, ref: data.ref, desc: data.nomMoto, PU: data.PUHT, TVA: data.TVA },
     { sno: 2, ref: ' ', desc: data.numMoteur, PU: ' ', TVA: ' ' },

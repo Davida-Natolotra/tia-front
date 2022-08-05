@@ -105,7 +105,6 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
         dataSubmit.id = currentProduct.id;
       }
       try {
-        console.log(dataSubmit);
         if (isEdit) {
           await dispatch(updateMoto(dataSubmit));
         } else {
