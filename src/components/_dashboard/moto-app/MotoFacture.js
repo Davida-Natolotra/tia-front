@@ -54,6 +54,9 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
   const [changedRecto, setChangedRecto] = useState(false);
   const [changedVerso, setChangedVerso] = useState(false);
 
+  const [errorFactureCase, setErrorFactureCase] = useState(false);
+  const [errorClientCase, setErrorClientCase] = useState(false);
+
   const [IDMoto, setIDMoto] = useState(currentProduct.ID_Moto);
   const [nomMoto, setNomMoto] = useState(currentProduct.nom_moto);
   const [numMoteur, setNumMoteur] = useState(currentProduct.num_moteur);
@@ -73,8 +76,7 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
     PUHT: Yup.number().required('PUHT est requis'),
     TVA: Yup.number().required('TVA est requis'),
     PV: Yup.number().required('Le prix de vente est requis'),
-    commercial: Yup.string().required('Commercial est requis'),
-    vendeur: Yup.string().required('Vendeur est requis')
+    commercial: Yup.string().required('Commercial est requis')
   });
 
   const formik = useFormik({
@@ -90,27 +92,10 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
       PUHT: currentProduct?.PU_HT || currentProduct.PV / 1.2,
       TVA: currentProduct?.TVA || (0.2 * currentProduct.PV) / 1.2,
       PV: currentProduct?.PV || 0,
-      commercial: currentProduct?.commercial || '',
-      vendeur: currentProduct?.vendeur || ''
+      commercial: currentProduct?.commercial || ''
     },
     validationSchema: NewProductSchema,
     onSubmit: async (values, { setSubmitting, resetForm, setErrors }) => {
-      // const dataSubmit = {
-      //   id: currentProduct.id,
-      //   num_sur_facture: values.numFacture,
-      //   date_facture: moment(values.dateFacture).format('YYYY-MM-DD'),
-      //   Ref: parseInt(values.ref, 10),
-      //   nom_client_2: values.nomClient,
-      //   CIN_Num_Client_2: values.CIN,
-      //   adresse_client_2: values.adresseClient,
-      //   tel_client_2: values.contactClient,
-      //   PU_HT: parseInt(values.PUHT, 10),
-      //   TVA: parseInt(values.TVA, 10),
-      //   PV: parseInt(values.PV, 10),
-      //   commercial: values.commercial,
-      //   vendeur: values.vendeur
-      // };
-
       const dataUpload = new FormData();
       dataUpload.append('num_sur_facture', values.numFacture);
       dataUpload.append('date_facture', moment(values.dateFacture).format('YYYY-MM-DD'));
@@ -123,7 +108,6 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
       dataUpload.append('TVA', parseInt(values.TVA, 10));
       dataUpload.append('PV', parseInt(values.PV, 10));
       dataUpload.append('commercial', values.commercial);
-      dataUpload.append('vendeur', values.vendeur);
       if (changedRecto) {
         dataUpload.append('PJ_CIN_Client_2_recto', CINRectoFile);
       }
@@ -196,6 +180,22 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
     }
   }, [CINVersoURI]);
 
+  useEffect(() => {
+    const errorDateFacture = Boolean(touched.dateFacture && errors.dateFacture);
+    const errorRef = Boolean(touched.ref && errors.ref);
+    const errorPV = Boolean(touched.PV && errors.PV);
+    const errorCommercial = Boolean(touched.commercial && errors.commercial);
+    setErrorFactureCase(errorDateFacture || errorRef || errorPV || errorCommercial);
+  }, [touched, errors]);
+
+  useEffect(() => {
+    const errorNomClient = Boolean(touched.nomClient && errors.nomClient);
+    const errorAdresseClient = Boolean(touched.adresseClient && errors.adresseClient);
+    const errorCIN = Boolean(touched.CIN && errors.CIN);
+    const errorContactClient = Boolean(touched.contactClient && errors.contactClient);
+    setErrorClientCase(errorNomClient || errorAdresseClient || errorCIN || errorContactClient);
+  }, [touched, errors]);
+
   return (
     <Grid container spacing={3}>
       <Grid item xs={12} md={6}>
@@ -217,7 +217,7 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
                 </AccordionDetails>
               </Accordion>
 
-              <Accordion>
+              <Accordion sx={{ border: errorClientCase ? 1 : 0, borderColor: 'red' }}>
                 <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
                   <Typography variant="overline">Client</Typography>
                 </AccordionSummary>
@@ -307,7 +307,7 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
                 </AccordionDetails>
               </Accordion>
 
-              <Accordion>
+              <Accordion sx={{ border: errorFactureCase ? 1 : 0, borderColor: 'red' }}>
                 <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
                   <Typography variant="overline">Facture</Typography>
                 </AccordionSummary>
@@ -371,15 +371,6 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
                       {...getFieldProps('commercial')}
                       error={Boolean(touched.commercial && errors.commercial)}
                       helperText={touched.commercial && errors.commercial}
-                    />
-                    <TextField
-                      fullWidth
-                      label="Vendeur"
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      {...getFieldProps('vendeur')}
-                      error={Boolean(touched.vendeur && errors.vendeur)}
-                      helperText={touched.vendeur && errors.vendeur}
                     />
                   </Stack>
                 </AccordionDetails>

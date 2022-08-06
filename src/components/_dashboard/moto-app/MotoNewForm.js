@@ -61,7 +61,8 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
     carteRose: Yup.string().nullable().notRequired(),
     carteGrise: Yup.string().nullable().notRequired(),
     montantReparation: Yup.number().nullable().notRequired(),
-    motifReparation: Yup.string().nullable().notRequired()
+    motifReparation: Yup.string().nullable().notRequired(),
+    fournisseur: Yup.string().nullable().notRequired()
     // commercial: Yup.string()
   });
 
@@ -81,7 +82,8 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
       carteRose: currentProduct?.carte_rose || '',
       carteGrise: currentProduct?.carte_grise || '',
       montantReparation: currentProduct?.montant_reparation || 0,
-      motifReparation: currentProduct?.motif_reparation || ''
+      motifReparation: currentProduct?.motif_reparation || '',
+      fournisseur: currentProduct?.fournisseur || ''
       // commercial: currentProduct?.commercial || ''
     },
     validationSchema: NewProductSchema,
@@ -99,15 +101,17 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
         carte_rose: values.carteRose,
         carte_grise: values.carteGrise,
         montant_reparation: values.montantReparation,
-        motif_reparation: values.motifReparation
+        motif_reparation: values.motifReparation,
+        fournisseur: values.fournisseur
       };
+
       if (isEdit) {
         dataSubmit.id = currentProduct.id;
       }
       try {
         console.log(dataSubmit);
         if (isEdit) {
-          await dispatch(updateMoto(dataSubmit));
+          await dispatch(updateMoto(dataSubmit, currentProduct.id));
         } else {
           await dispatch(addMoto(dataSubmit));
         }
@@ -292,7 +296,16 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
                       })
                     : 'invendue'}
                 </Typography>
-                <Typography variant="subheading">Vendeur: {vendeur}</Typography>
+
+                <TextField
+                  fullWidth
+                  label="Fournisseur"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  {...getFieldProps('fournisseur')}
+                  error={Boolean(touched.fournisseur && errors.fournisseur)}
+                  helperText={touched.fournisseur && errors.fournisseur}
+                />
 
                 <TextField
                   fullWidth

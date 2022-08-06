@@ -1,5 +1,5 @@
 import React from 'react';
-import { PDFViewer, Document, Page, StyleSheet } from '@react-pdf/renderer';
+import { PDFViewer, Document, Page, StyleSheet, Text } from '@react-pdf/renderer';
 import { useSelector } from 'react-redux';
 import Body from './Body';
 import { fNumber } from '../../../../utils/formatNumber';
@@ -37,6 +37,10 @@ export default function FactureMoto({ currentProduct }) {
       <Document>
         <Page style={styles.body} size="A4" orientation="landscape">
           <Body data={data} />
+          <Text> </Text>
+          <Text> </Text>
+          <Text> </Text>
+          <Text> </Text>
           <Body data={data} />
         </Page>
       </Document>

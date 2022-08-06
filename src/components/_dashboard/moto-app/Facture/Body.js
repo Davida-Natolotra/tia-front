@@ -105,13 +105,13 @@ const styles = StyleSheet.create({
   },
   heading: {
     fontSize: 8,
-    marginLeft: 100,
+    marginLeft: 110,
     fontFamily: 'Noto-Sans',
     textAlign: 'right'
   },
   headingTitle: {
     fontSize: 12,
-    marginLeft: 100,
+    marginLeft: 110,
     fontFamily: 'Noto-Sans',
     textAlign: 'right'
   },
@@ -145,7 +145,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 100
   },
   logo: {
-    left: 20,
+    left: 30,
     top: 20,
     // transformOrigin: "60% 60% 0px",
     width: '105px',
