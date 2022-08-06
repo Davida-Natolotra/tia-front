@@ -1,12 +1,15 @@
-import { Image, Text, StyleSheet, Font, View } from '@react-pdf/renderer';
+import { Text, StyleSheet, Font, View } from '@react-pdf/renderer';
 import React from 'react';
-import Logo from './LogoTIA.jpeg';
+
 import Signature from './signature';
 import Footer from './footer';
 
 export default function FactureMoto({ data }) {
-  console.log(data);
-
+  const dateBL = new Date(data.dateBL).toLocaleDateString('fr-fr', {
+    year: 'numeric',
+    month: 'numeric',
+    day: 'numeric'
+  });
   return (
     <View style={styles.page}>
       <Text style={styles.headingTitle}>TIA MOTO SARLU</Text>
@@ -28,7 +31,7 @@ export default function FactureMoto({ data }) {
         </View>
         <View style={styles.titleRight}>
           <Text style={styles.info}>N° :{data.numBL}</Text>
-          <Text style={styles.info}>DATE {data.dateFacture}</Text>
+          <Text style={styles.info}>DATE {dateBL}</Text>
         </View>
       </View>
       <View style={styles.subContainer2}>

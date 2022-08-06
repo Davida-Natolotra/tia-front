@@ -2,7 +2,7 @@ import * as Yup from 'yup';
 import PropTypes from 'prop-types';
 import { useSnackbar } from 'notistack5';
 import { Link as RouterLink } from 'react-router-dom';
-
+import moment from 'moment';
 import { useEffect, useMemo } from 'react';
 import { Form, FormikProvider, useFormik } from 'formik';
 import CurrencyTextField from '@unicef/material-ui-currency-textfield';
@@ -19,8 +19,9 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { frFR as calFR } from '@mui/x-date-pickers';
 import { useDispatch, useSelector } from 'react-redux';
+
 import BLPreview from './BL';
-import { getLastID, getNumberWord } from '../../../redux/slices/moto';
+import { getLastID, updateMoto, getMotos, getLastBL } from '../../../redux/slices/moto';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // ----------------------------------------------------------------------
@@ -36,7 +37,7 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
   const { enqueueSnackbar } = useSnackbar();
 
   const lastID = useSelector((state) => state.motos.lastID);
-  const lastFacture = useSelector((state) => state.motos.lastFacture);
+  const lastBL = useSelector((state) => state.motos.lastBL);
 
   const NewProductSchema = Yup.object({
     ID_Moto: Yup.number(),
@@ -53,7 +54,7 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
     enableReinitialize: true,
     initialValues: {
       ID_Moto: currentProduct?.ID_Moto || lastID + 1,
-      numBL: currentProduct?.num_BL || lastFacture + 1,
+      numBL: currentProduct?.num_BL || lastBL + 1,
       dateBL: currentProduct?.date_BL || null,
       nomMoto: currentProduct?.nom_moto || '',
       numMoteur: currentProduct?.num_moteur || '',
@@ -63,11 +64,19 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
     },
     validationSchema: NewProductSchema,
     onSubmit: async (values, { setSubmitting, resetForm, setErrors }) => {
+      const dataSubmit = new FormData();
+      dataSubmit.append('num_BL', values.numBL);
+      dataSubmit.append('date_BL', moment(values.dateBL).format('YYYY-MM-DD'));
+      dataSubmit.append('nom_client_1', values.nomClient);
+      dataSubmit.append('tel_client_1', values.contactClient);
+      dataSubmit.append('PV', parseInt(values.PV, 10));
       try {
-        await console.log(values);
-        resetForm();
+        await dispatch(updateMoto(dataSubmit, currentProduct.id));
         setSubmitting(false);
-        enqueueSnackbar(!isEdit ? 'Create success' : 'Update success', { variant: 'success' });
+        enqueueSnackbar('Update success', {
+          variant: 'success'
+        });
+        await dispatch(getMotos());
       } catch (error) {
         console.error(error);
         setSubmitting(false);
@@ -79,7 +88,12 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getLastID());
+    dispatch(getLastBL());
   }, []);
+
+  useEffect(() => {
+    values.numBL = lastBL + 1;
+  }, [lastBL]);
 
   const {
     handleChange,

@@ -27,7 +27,7 @@ export default function FactureMoto({ currentProduct }) {
     numMoteur: currentProduct.num_moteur,
     volumeMoteur: currentProduct.volume_moteur,
     numBL: currentProduct.num_BL,
-    dateFacture: currentProduct.date_BL,
+    dateBL: currentProduct.date_BL,
     total: fNumber(currentProduct.PV)
   };
 
