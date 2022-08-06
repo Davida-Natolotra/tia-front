@@ -9,12 +9,16 @@ import Signature from './signature';
 import Footer from './footer';
 
 export default function FactureMoto({ data }) {
-  console.log(data);
   const bodyInvoice = [
     { sno: 1, ref: data.ref, desc: data.nomMoto, PU: data.PUHT, TVA: data.TVA },
     { sno: 2, ref: ' ', desc: data.numMoteur, PU: ' ', TVA: ' ' },
     { sno: 3, ref: ' ', desc: data.volumeMoteur, PU: ' ', TVA: ' ' }
   ];
+  const dateFacture = new Date(data.dateFacture).toLocaleDateString('fr-fr', {
+    year: 'numeric',
+    month: 'numeric',
+    day: 'numeric'
+  });
   return (
     <View style={styles.page}>
       <Image style={styles.logo} src={Logo} fixed />
@@ -38,7 +42,7 @@ export default function FactureMoto({ data }) {
         </View>
         <View style={styles.titleRight}>
           <Text style={styles.info}>FACTURE N° :{data.numFacture}</Text>
-          <Text style={styles.info}>DATE {data.dateFacture}</Text>
+          <Text style={styles.info}>DATE {dateFacture}</Text>
         </View>
       </View>
       <View style={styles.subContainer2}>

@@ -2,7 +2,7 @@ import * as Yup from 'yup';
 import PropTypes from 'prop-types';
 import { useSnackbar } from 'notistack5';
 import { useNavigate, Link as RouterLink } from 'react-router-dom';
-
+import moment from 'moment';
 import { useState, useEffect, useMemo } from 'react';
 import { Form, FormikProvider, useFormik } from 'formik';
 import CurrencyTextField from '@unicef/material-ui-currency-textfield';
@@ -22,7 +22,14 @@ import { frFR as calFR } from '@mui/x-date-pickers';
 import { useDispatch, useSelector } from 'react-redux';
 import FacturePreview from './Facture';
 import { fileChangedHandler } from '../../../utils/imageCompress';
-import { getLastID, getNumberWord } from '../../../redux/slices/moto';
+import {
+  getLastID,
+  getNumberWord,
+  updateMoto,
+  getMotos,
+  resetCurrentData,
+  getLastFacture
+} from '../../../redux/slices/moto';
 import { fNumber } from '../../../utils/formatNumber';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
@@ -38,68 +45,113 @@ ProductNewForm.propTypes = {
 
 export default function ProductNewForm({ isEdit, currentProduct }) {
   const { enqueueSnackbar } = useSnackbar();
-  const [CINRecto, setCINRecto] = useState('https://via.placeholder.com/500');
-  const [CINVerso, setCINVerso] = useState('https://via.placeholder.com/500');
+  const [CINRecto, setCINRecto] = useState(currentProduct.PJ_CIN_Client_2_recto || 'https://via.placeholder.com/500');
+  const [CINVerso, setCINVerso] = useState(currentProduct.PJ_CIN_Client_2_verso || 'https://via.placeholder.com/500');
+  const [CINRectoFile, setCINRectoFile] = useState(null);
+  const [CINVersoFile, setCINVersoFile] = useState(null);
+  const [CINRectoURI, setCINRectoURI] = useState(null);
+  const [CINVersoURI, setCINVersoURI] = useState(null);
+  const [changedRecto, setChangedRecto] = useState(false);
+  const [changedVerso, setChangedVerso] = useState(false);
 
-  const numWord = useSelector((state) => state.motos.numWord);
-
-  const lastID = useSelector((state) => state.motos.lastID);
+  const [IDMoto, setIDMoto] = useState(currentProduct.ID_Moto);
+  const [nomMoto, setNomMoto] = useState(currentProduct.nom_moto);
+  const [numMoteur, setNumMoteur] = useState(currentProduct.num_moteur);
+  const [volumeMoteur, setVolumeMoteur] = useState(currentProduct.volume_moteur);
   const lastFacture = useSelector((state) => state.motos.lastFacture);
+  const montantLettreIn = useSelector((state) => state.motos.numWord);
+  const dispatch = useDispatch();
 
   const NewProductSchema = Yup.object({
-    ID_Moto: Yup.number(),
-    numFacture: Yup.number(),
+    numFacture: Yup.number().required('required'),
     dateFacture: Yup.date('Date de facture requise').required('La date de facture est requis'),
-    ref: Yup.string().required('Veuillez entrer le ref'),
-    nomMoto: Yup.string().required('Nom moto est requis'),
-    numMoteur: Yup.string().required('Num moteurs est requis'),
-    volumeMoteur: Yup.string().required('Volume de moteurs est requis'),
+    ref: Yup.number().required('Veuillez entrer le ref'),
     nomClient: Yup.string().required('Nom client est requis'),
     CIN: Yup.string().required('Cin est requis'),
     adresseClient: Yup.string().required('Adresse client est requis'),
     contactClient: Yup.string().required('Contact client est requis'),
     PUHT: Yup.number().required('PUHT est requis'),
     TVA: Yup.number().required('TVA est requis'),
-    PV: Yup.number().required('Le prix de vente est requis')
+    PV: Yup.number().required('Le prix de vente est requis'),
+    commercial: Yup.string().required('Commercial est requis'),
+    vendeur: Yup.string().required('Vendeur est requis')
   });
 
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
-      ID_Moto: currentProduct?.ID_Moto || lastID + 1,
       numFacture: currentProduct?.num_sur_facture || lastFacture + 1,
       dateFacture: currentProduct?.date_facture || null,
-      ref: currentProduct?.Ref || '',
-      nomMoto: currentProduct?.nom_moto || '',
-      numMoteur: currentProduct?.num_moteur || '',
-      volumeMoteur: currentProduct?.volume_moteur || 0,
+      ref: currentProduct?.Ref || 0,
       nomClient: currentProduct?.nom_client_2 || '',
       CIN: currentProduct?.CIN_Num_Client_2 || '',
       adresseClient: currentProduct?.adresse_client_2 || '',
       contactClient: currentProduct?.tel_client_2 || '',
       PUHT: currentProduct?.PU_HT || currentProduct.PV / 1.2,
       TVA: currentProduct?.TVA || (0.2 * currentProduct.PV) / 1.2,
-      PV: currentProduct?.PV || null
+      PV: currentProduct?.PV || 0,
+      commercial: currentProduct?.commercial || '',
+      vendeur: currentProduct?.vendeur || ''
     },
     validationSchema: NewProductSchema,
     onSubmit: async (values, { setSubmitting, resetForm, setErrors }) => {
+      // const dataSubmit = {
+      //   id: currentProduct.id,
+      //   num_sur_facture: values.numFacture,
+      //   date_facture: moment(values.dateFacture).format('YYYY-MM-DD'),
+      //   Ref: parseInt(values.ref, 10),
+      //   nom_client_2: values.nomClient,
+      //   CIN_Num_Client_2: values.CIN,
+      //   adresse_client_2: values.adresseClient,
+      //   tel_client_2: values.contactClient,
+      //   PU_HT: parseInt(values.PUHT, 10),
+      //   TVA: parseInt(values.TVA, 10),
+      //   PV: parseInt(values.PV, 10),
+      //   commercial: values.commercial,
+      //   vendeur: values.vendeur
+      // };
+
+      const dataUpload = new FormData();
+      dataUpload.append('num_sur_facture', values.numFacture);
+      dataUpload.append('date_facture', moment(values.dateFacture).format('YYYY-MM-DD'));
+      dataUpload.append('Ref', parseInt(values.ref, 10));
+      dataUpload.append('nom_client_2', values.nomClient);
+      dataUpload.append('CIN_Num_Client_2', values.CIN);
+      dataUpload.append('adresse_client_2', values.adresseClient);
+      dataUpload.append('tel_client_2', values.contactClient);
+      dataUpload.append('PU_HT', parseInt(values.PUHT, 10));
+      dataUpload.append('TVA', parseInt(values.TVA, 10));
+      dataUpload.append('PV', parseInt(values.PV, 10));
+      dataUpload.append('commercial', values.commercial);
+      dataUpload.append('vendeur', values.vendeur);
+      if (changedRecto) {
+        dataUpload.append('PJ_CIN_Client_2_recto', CINRectoFile);
+      }
+      if (changedVerso) {
+        dataUpload.append('PJ_CIN_Client_2_verso', CINVersoFile);
+      }
+
       try {
-        await console.log(values);
-        resetForm();
+        console.log(dataUpload);
+        await dispatch(updateMoto(dataUpload, currentProduct.id));
         setSubmitting(false);
-        enqueueSnackbar(!isEdit ? 'Create success' : 'Update success', { variant: 'success' });
+        enqueueSnackbar('Update success', {
+          variant: 'success'
+        });
+        await dispatch(getMotos());
+        resetForm(true);
       } catch (error) {
         console.error(error);
         setSubmitting(false);
         setErrors(error);
+        enqueueSnackbar("Erreur d'enregistrement", { variant: 'danger' });
       }
     }
   });
 
-  const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getLastID());
-    dispatch(getNumberWord(values.PV));
+    dispatch(getLastFacture());
   }, []);
 
   const {
@@ -124,11 +176,31 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
     dispatch(getNumberWord(values.PV));
   }, [values.PV]);
 
+  useEffect(() => {
+    values.numFacture = lastFacture + 1;
+  }, [lastFacture]);
+
+  useEffect(() => {
+    values.montantLettre = montantLettreIn;
+  }, [montantLettreIn]);
+
+  useEffect(() => {
+    if (changedRecto) {
+      setCINRecto(CINRectoURI);
+    }
+  }, [CINRectoURI]);
+
+  useEffect(() => {
+    if (changedVerso) {
+      setCINVerso(CINVersoURI);
+    }
+  }, [CINVersoURI]);
+
   return (
-    <FormikProvider value={formik}>
-      <Form autoComplete="off" onSubmit={handleSubmit}>
-        <Grid container spacing={3}>
-          <Grid item xs={12} md={6}>
+    <Grid container spacing={3}>
+      <Grid item xs={12} md={6}>
+        <FormikProvider value={formik}>
+          <Form autoComplete="off" onSubmit={handleSubmit}>
             <Card sx={{ p: 3 }}>
               <Accordion>
                 <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
@@ -136,11 +208,11 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
                 </AccordionSummary>
                 <AccordionDetails>
                   <Stack spacing={3} direction="column">
-                    <Typography variant="body2">ID Moto: {values.ID_Moto} </Typography>
+                    <Typography variant="body2">ID Moto: {IDMoto} </Typography>
 
-                    <Typography variant="body2">Nom Moto: {values.nomMoto} </Typography>
-                    <Typography variant="body2">Numéro moteur: {values.numMoteur} </Typography>
-                    <Typography variant="body2">Volume moteur: {values.volumeMoteur} </Typography>
+                    <Typography variant="body2">Nom Moto: {nomMoto} </Typography>
+                    <Typography variant="body2">Numéro moteur: {numMoteur} </Typography>
+                    <Typography variant="body2">Volume moteur: {volumeMoteur} </Typography>
                   </Stack>
                 </AccordionDetails>
               </Accordion>
@@ -154,7 +226,6 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
                     <TextField
                       fullWidth
                       label="Nom"
-                      name="nomClient"
                       onChange={handleChange}
                       onBlur={handleBlur}
                       {...getFieldProps('nomClient')}
@@ -164,7 +235,6 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
                     <TextField
                       fullWidth
                       label="Adresse"
-                      name="adresseClient"
                       onChange={handleChange}
                       onBlur={handleBlur}
                       {...getFieldProps('adresseClient')}
@@ -174,12 +244,20 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
                     <TextField
                       fullWidth
                       label="Numéro CIN"
-                      name="CIN"
                       onChange={handleChange}
                       onBlur={handleBlur}
                       {...getFieldProps('CIN')}
                       error={Boolean(touched.CIN && errors.CIN)}
                       helperText={touched.CIN && errors.CIN}
+                    />
+                    <TextField
+                      fullWidth
+                      label="Contact"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      {...getFieldProps('contactClient')}
+                      error={Boolean(touched.contactClient && errors.contactClient)}
+                      helperText={touched.contactClient && errors.contactClient}
                     />
 
                     <Box>
@@ -192,7 +270,14 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
                           type="file"
                           style={{ display: 'none' }}
                           id="CINRecto"
-                          onChange={(event) => fileChangedHandler(event, setCINRecto)}
+                          onChange={(event) =>
+                            fileChangedHandler({
+                              event,
+                              setStateFile: setCINRectoFile,
+                              setStateURI: setCINRectoURI,
+                              setChange: setChangedRecto
+                            })
+                          }
                         />
                         <Button variant="outlined" component="span" startIcon={<PhotoCameraIcon />}>
                           CIN Recto
@@ -203,7 +288,14 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
                           type="file"
                           style={{ display: 'none' }}
                           id="CINVerso"
-                          onChange={(event) => fileChangedHandler(event, setCINVerso)}
+                          onChange={(event) =>
+                            fileChangedHandler({
+                              event,
+                              setStateFile: setCINVersoFile,
+                              setStateURI: setCINVersoURI,
+                              setChange: setChangedVerso
+                            })
+                          }
                         />
                         <Button variant="outlined" component="span" startIcon={<PhotoCameraIcon />}>
                           CIN Verso
@@ -247,7 +339,6 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
                     <TextField
                       fullWidth
                       label="Ref"
-                      name="ref"
                       onChange={handleChange}
                       onBlur={handleBlur}
                       {...getFieldProps('ref')}
@@ -272,6 +363,24 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
 
                     <Typography variant="subheading">TVA: {fNumber(values.TVA)} Ar</Typography>
                     <Typography variant="subheading">Prix hors taxe: {fNumber(values.PUHT)} Ar</Typography>
+                    <TextField
+                      fullWidth
+                      label="Commercial"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      {...getFieldProps('commercial')}
+                      error={Boolean(touched.commercial && errors.commercial)}
+                      helperText={touched.commercial && errors.commercial}
+                    />
+                    <TextField
+                      fullWidth
+                      label="Vendeur"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      {...getFieldProps('vendeur')}
+                      error={Boolean(touched.vendeur && errors.vendeur)}
+                      helperText={touched.vendeur && errors.vendeur}
+                    />
                   </Stack>
                 </AccordionDetails>
               </Accordion>
@@ -281,7 +390,12 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
                   Enregistrer
                 </LoadingButton>
                 {isEdit && (
-                  <Button variant="outlined" component={RouterLink} to={`${PATH_DASHBOARD.moto.root}/new`}>
+                  <Button
+                    variant="outlined"
+                    component={RouterLink}
+                    to={`${PATH_DASHBOARD.moto.root}/new`}
+                    onClick={() => dispatch(resetCurrentData())}
+                  >
                     Nouvelle entrée
                   </Button>
                 )}
@@ -291,12 +405,12 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
                 </Button>
               </ButtonGroup>
             </Card>
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <FacturePreview currentProduct={currentProduct} />
-          </Grid>
-        </Grid>
-      </Form>
-    </FormikProvider>
+          </Form>
+        </FormikProvider>
+      </Grid>
+      <Grid item xs={12} md={6}>
+        <FacturePreview currentProduct={currentProduct} />
+      </Grid>
+    </Grid>
   );
 }

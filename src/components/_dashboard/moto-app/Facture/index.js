@@ -1,5 +1,6 @@
 import React from 'react';
 import { PDFViewer, Document, Page, StyleSheet } from '@react-pdf/renderer';
+import { useSelector } from 'react-redux';
 import Body from './Body';
 import { fNumber } from '../../../../utils/formatNumber';
 
@@ -27,7 +28,7 @@ export default function FactureMoto({ currentProduct }) {
     PUHT: fNumber(currentProduct.PU_HT),
     TVA: fNumber(currentProduct.TVA),
     total: fNumber(currentProduct.PV),
-    totalLettre: currentProduct.montant_lettre,
+    totalLettre: useSelector((state) => state.motos.numWord),
     ref: currentProduct.Ref
   };
 

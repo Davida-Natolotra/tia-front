@@ -318,13 +318,13 @@ export function addMoto(motoData) {
   };
 }
 
-export function updateMoto(motoData) {
+export function updateMoto(motoData, id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios({
-        method: 'post',
-        url: `/api/motos/updateMoto/${motoData.id}`,
+        method: 'put',
+        url: `/api/motos/updateMoto/${id}`,
         data: motoData,
         responseType: 'stream',
         headers: {

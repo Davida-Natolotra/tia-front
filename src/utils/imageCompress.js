@@ -1,13 +1,13 @@
 import Resizer from 'react-image-file-resizer';
 
-export const fileChangedHandler = (event, setState) => {
+export const fileChangedHandler = ({ event, setStateFile, setStateURI, setChange }) => {
   let fileInput = false;
   if (event.target.files[0]) {
     fileInput = true;
   }
   if (fileInput) {
     try {
-      const img = Resizer.imageFileResizer(
+      Resizer.imageFileResizer(
         event.target.files[0],
         720,
         500,
@@ -15,16 +15,32 @@ export const fileChangedHandler = (event, setState) => {
         100,
         0,
         (uri) => {
-          setState(uri);
-          const base64str = uri.split('base64,')[1];
-          const decoded = atob(base64str);
-          console.log(`compressed = ${decoded.length}`);
+          setStateFile(uri);
+        },
+        'file',
+        200,
+        200
+      );
+      //   console.log('img: ', typeof img);
+    } catch (err) {
+      console.log(err);
+    }
+    try {
+      Resizer.imageFileResizer(
+        event.target.files[0],
+        720,
+        500,
+        'JPEG',
+        100,
+        0,
+        (uri) => {
+          setStateURI(uri);
         },
         'base64',
         200,
         200
       );
-      //   console.log('img: ', typeof img);
+      setChange(true);
     } catch (err) {
       console.log(err);
     }
