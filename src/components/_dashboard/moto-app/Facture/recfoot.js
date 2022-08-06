@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
 
 const FootRow = ({ totalLettre }) => (
   <View style={styles.row}>
-    <Text style={styles.chiffre}>{totalLettre.toUpperCase()} ARIARY</Text>
+    <Text style={styles.chiffre}>{totalLettre.toUpperCase()}</Text>
   </View>
 );
 

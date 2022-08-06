@@ -5,6 +5,8 @@ import Signature from './signature';
 import Footer from './footer';
 
 export default function FactureMoto({ data }) {
+  console.log(data);
+
   return (
     <View style={styles.page}>
       <Text style={styles.headingTitle}>TIA MOTO SARLU</Text>
