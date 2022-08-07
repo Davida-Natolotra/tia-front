@@ -69,14 +69,14 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
     numFacture: Yup.number().required('required'),
     dateFacture: Yup.date('Date de facture requise').required('La date de facture est requis'),
     ref: Yup.number().required('Veuillez entrer le ref'),
-    nomClient: Yup.string().required('Nom client est requis'),
-    CIN: Yup.string().required('Cin est requis'),
-    adresseClient: Yup.string().required('Adresse client est requis'),
-    contactClient: Yup.string().required('Contact client est requis'),
+    nomClient: Yup.string().required('Le nom du client est requis'),
+    CIN: Yup.string().required('Le CIN du client est requis'),
+    adresseClient: Yup.string().required("L'adresse client est requis"),
+    contactClient: Yup.string().required('Le contact client est requis'),
     PUHT: Yup.number().required('PUHT est requis'),
     TVA: Yup.number().required('TVA est requis'),
     PV: Yup.number().required('Le prix de vente est requis'),
-    commercial: Yup.string().required('Commercial est requis')
+    commercial: Yup.string().required('Le commercial est requis')
   });
 
   const formik = useFormik({
@@ -230,7 +230,7 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
                       onBlur={handleBlur}
                       {...getFieldProps('nomClient')}
                       error={Boolean(touched.nomClient && errors.nomClient)}
-                      helperText={touched.renomClientf && errors.nomClient}
+                      helperText={touched.nomClient && errors.nomClient}
                     />
                     <TextField
                       fullWidth
