@@ -436,18 +436,18 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
                   </Stack>
                 </AccordionDetails>
               </Accordion>
+              <Stack spacing={1} sx={{ mt: 3 }}>
+                <LoadingButton type="submit" fullWidth variant="contained" size="large" loading={isSubmitting}>
+                  Enregistrer
+                </LoadingButton>
 
-              <LoadingButton type="submit" fullWidth variant="contained" size="large" loading={isSubmitting}>
-                Enregistrer
-              </LoadingButton>
-
-              <Button type="button" fullWidth variant="outlined" onClick={() => resetForm()}>
-                Réinitialiser
-              </Button>
-              <Button type="button" fullWidth variant="outlined" onClick={handleClickOpen}>
-                Annuler cette facture
-              </Button>
-
+                <Button type="button" fullWidth variant="outlined" onClick={() => resetForm()}>
+                  Réinitialiser
+                </Button>
+                <Button type="button" fullWidth variant="outlined" onClick={handleClickOpen}>
+                  Annuler cette facture
+                </Button>
+              </Stack>
               <Dialog
                 open={open}
                 onClose={handleClose}

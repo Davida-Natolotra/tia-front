@@ -236,20 +236,15 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
                 </AccordionDetails>
               </Accordion>
 
-              <ButtonGroup sx={{ mt: 3 }}>
+              <Stack spacing={1} sx={{ mt: 3 }}>
                 <LoadingButton type="submit" fullWidth variant="contained" size="large" loading={isSubmitting}>
                   Enregistrer
                 </LoadingButton>
-                {isEdit && (
-                  <Button variant="outlined" component={RouterLink} to={`${PATH_DASHBOARD.moto.root}/new`}>
-                    Nouvelle entrée
-                  </Button>
-                )}
 
                 <Button type="button" fullWidth variant="outlined" onClick={() => resetForm()}>
-                  Annuler
+                  Réinitialiser
                 </Button>
-              </ButtonGroup>
+              </Stack>
             </Card>
           </Grid>
           <Grid item xs={12} md={6}>
