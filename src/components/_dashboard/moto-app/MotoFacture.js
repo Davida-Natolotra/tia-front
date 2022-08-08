@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { useSnackbar } from 'notistack5';
 import { useNavigate, Link as RouterLink } from 'react-router-dom';
 import moment from 'moment';
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { Form, FormikProvider, useFormik } from 'formik';
 import CurrencyTextField from '@unicef/material-ui-currency-textfield';
 // material
@@ -57,8 +57,8 @@ function padLeadingZeros(num, size) {
 
 export default function ProductNewForm({ isEdit, currentProduct }) {
   const { enqueueSnackbar } = useSnackbar();
-  const [CINRecto, setCINRecto] = useState(currentProduct.PJ_CIN_Client_2_recto || 'https://via.placeholder.com/500');
-  const [CINVerso, setCINVerso] = useState(currentProduct.PJ_CIN_Client_2_verso || 'https://via.placeholder.com/500');
+  const [CINRecto, setCINRecto] = useState(currentProduct?.PJ_CIN_Client_2_recto || 'https://via.placeholder.com/500');
+  const [CINVerso, setCINVerso] = useState(currentProduct?.PJ_CIN_Client_2_verso || 'https://via.placeholder.com/500');
   const [CINRectoFile, setCINRectoFile] = useState(null);
   const [CINVersoFile, setCINVersoFile] = useState(null);
   const [CINRectoURI, setCINRectoURI] = useState(null);
@@ -221,14 +221,20 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
     values.montantLettre = montantLettreIn;
   }, [montantLettreIn]);
 
+  const isInit = useRef(true);
+
   useEffect(() => {
-    if (changedRecto) {
+    if (isInit.current) {
+      isInit.current = false;
+    } else if (changedRecto) {
       setCINRecto(CINRectoURI);
     }
   }, [CINRectoURI]);
 
   useEffect(() => {
-    if (changedVerso) {
+    if (isInit.current) {
+      isInit.current = false;
+    } else if (changedVerso) {
       setCINVerso(CINVersoURI);
     }
   }, [CINVersoURI]);
@@ -431,18 +437,17 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
                 </AccordionDetails>
               </Accordion>
 
-              <ButtonGroup sx={{ mt: 3 }}>
-                <LoadingButton type="submit" fullWidth variant="contained" size="large" loading={isSubmitting}>
-                  Enregistrer
-                </LoadingButton>
+              <LoadingButton type="submit" fullWidth variant="contained" size="large" loading={isSubmitting}>
+                Enregistrer
+              </LoadingButton>
 
-                <Button type="button" fullWidth variant="outlined" onClick={() => resetForm()}>
-                  Recommencer
-                </Button>
-                <Button type="button" fullWidth variant="outlined" onClick={handleClickOpen}>
-                  Annuler
-                </Button>
-              </ButtonGroup>
+              <Button type="button" fullWidth variant="outlined" onClick={() => resetForm()}>
+                Réinitialiser
+              </Button>
+              <Button type="button" fullWidth variant="outlined" onClick={handleClickOpen}>
+                Annuler cette facture
+              </Button>
+
               <Dialog
                 open={open}
                 onClose={handleClose}

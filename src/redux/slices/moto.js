@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 
 // Endpoint
-// const url = 'http://localhost:8080';
+// const url = 'http://localhost:8000';
 const url = 'https://tiamoto.com/backend';
 // ----------------------------------------------------------------------
 
