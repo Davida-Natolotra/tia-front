@@ -38,7 +38,7 @@ export default function FactureMoto({ currentProduct }) {
   };
 
   return (
-    <PDFViewer width="100%" height={height * 0.6}>
+    <PDFViewer width="100%" height={height * 0.7}>
       <Document>
         <Page style={styles.body} size="A4" orientation="landscape">
           <Body data={data} />
