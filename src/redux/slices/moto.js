@@ -126,7 +126,7 @@ export function getMotos() {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('/api/');
+      const response = await axios.get(`${url}/api/`);
       dispatch(slice.actions.getProductsSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
@@ -139,7 +139,7 @@ export function getMotosByDate(newDateDebut, newDateFin) {
     try {
       const response = await axios({
         method: 'get',
-        url: '/api/motos',
+        url: `${url}/api/motos`,
         responseType: 'stream',
         params: {
           dateEntree: newDateDebut,
@@ -159,7 +159,7 @@ export function getMoto(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('/api/', {
+      const response = await axios.get(`${url}/api/`, {
         params: { id }
       });
       dispatch(slice.actions.getProductSuccess(response.data.product));
