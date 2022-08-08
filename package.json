@@ -3,7 +3,7 @@
   "author": "minimals.cc",
   "version": "2.5.0",
   "private": true,
-  "proxy": "http://localhost:8000",
+  "proxy": "https://tiamoto.com/backend",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
