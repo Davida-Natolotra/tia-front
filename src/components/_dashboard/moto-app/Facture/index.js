@@ -15,7 +15,11 @@ export default function FactureMoto({ currentProduct }) {
     return () => window.removeEventListener('resize', updateWidthAndHeight);
   });
   // Models
-
+  function padLeadingZeros(num, size) {
+    let s = `${num}`;
+    while (s.length < size) s = `0${s}`;
+    return s;
+  }
   // Data
   const data = {
     nomClient: currentProduct.nom_client_2,
@@ -24,7 +28,7 @@ export default function FactureMoto({ currentProduct }) {
     nomMoto: currentProduct.nom_moto,
     numMoteur: currentProduct.num_moteur,
     volumeMoteur: currentProduct.volume_moteur,
-    numFacture: `${currentProduct.num_sur_facture}/${moment(new Date()).format('MM-YYYY')}`,
+    numFacture: `${padLeadingZeros(currentProduct.num_sur_facture, 3)}/${moment(new Date()).format('MM-YYYY')}`,
     dateFacture: currentProduct.date_facture,
     PUHT: fNumber(currentProduct.PU_HT),
     TVA: fNumber(currentProduct.TVA),

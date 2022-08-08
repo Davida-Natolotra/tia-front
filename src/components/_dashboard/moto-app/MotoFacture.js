@@ -49,6 +49,12 @@ ProductNewForm.propTypes = {
   currentProduct: PropTypes.object
 };
 
+function padLeadingZeros(num, size) {
+  let s = `${num}`;
+  while (s.length < size) s = `0${s}`;
+  return s;
+}
+
 export default function ProductNewForm({ isEdit, currentProduct }) {
   const { enqueueSnackbar } = useSnackbar();
   const [CINRecto, setCINRecto] = useState(currentProduct.PJ_CIN_Client_2_recto || 'https://via.placeholder.com/500');
@@ -361,7 +367,7 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
                 <AccordionDetails>
                   <Stack spacing={3} direction="column">
                     <Typography variant="subheading">
-                      Numéro facture: {values.numFacture}/{moment(new Date()).format('MM-YYYY')}
+                      Numéro facture: {padLeadingZeros(values.numFacture, 3)}/{moment(new Date()).format('MM-YYYY')}
                     </Typography>
                     <LocalizationProvider
                       dateAdapter={AdapterDateFns}
