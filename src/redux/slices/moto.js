@@ -3,8 +3,8 @@ import { createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 
 // Endpoint
-// export const url = 'http://localhost:8000';
-export const url = 'https://tiamoto.com/backend';
+export const url = 'http://localhost:8000';
+// export const url = 'https://tiamoto.com/backend';
 // ----------------------------------------------------------------------
 
 const initialState = {
@@ -328,6 +328,26 @@ export function updateMoto(motoData, id) {
       const response = await axios({
         method: 'put',
         url: `${url}/api/motos/updateMoto/${id}`,
+        data: motoData,
+        responseType: 'stream',
+        headers: {
+          'Content-Type': 'application/json; charset= utf-8'
+        }
+      });
+      dispatch(slice.actions.getLastResponseMotoSuccess(response.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+export function cancelFacture(motoData, id) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios({
+        method: 'put',
+        url: `${url}/api/motos/cancelFacture/${id}`,
         data: motoData,
         responseType: 'stream',
         headers: {

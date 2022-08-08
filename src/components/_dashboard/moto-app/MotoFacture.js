@@ -32,7 +32,8 @@ import {
   getMotos,
   resetCurrentData,
   getLastFacture,
-  url
+  url,
+  cancelFacture
 } from '../../../redux/slices/moto';
 import FacturePreview from './Facture';
 import { fileChangedHandler } from '../../../utils/imageCompress';
@@ -180,7 +181,7 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
 
     try {
       console.log(dataReset);
-      await dispatch(updateMoto(dataReset, currentProduct.id));
+      await dispatch(cancelFacture(dataReset, currentProduct.id));
       handleClose();
       enqueueSnackbar('Annulation de facture terminé', {
         variant: 'success'
