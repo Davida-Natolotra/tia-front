@@ -1,5 +1,6 @@
 import React from 'react';
 import { PDFViewer, Document, Page, StyleSheet } from '@react-pdf/renderer';
+import moment from 'moment';
 import Body from './Body';
 import { fNumber } from '../../../../utils/formatNumber';
 
@@ -16,7 +17,11 @@ export default function FactureMoto({ currentProduct }) {
   // Clients
 
   // Moto
-
+  function padLeadingZeros(num, size) {
+    let s = `${num}`;
+    while (s.length < size) s = `0${s}`;
+    return s;
+  }
   // Facture
 
   // Data
@@ -26,7 +31,7 @@ export default function FactureMoto({ currentProduct }) {
     nomMoto: currentProduct.nom_moto,
     numMoteur: currentProduct.num_moteur,
     volumeMoteur: currentProduct.volume_moteur,
-    numBL: currentProduct.num_BL,
+    numBL: `${padLeadingZeros(currentProduct.num_BL, 3)}/${moment(new Date()).format('MM-YYYY')}`,
     dateBL: currentProduct.date_BL,
     total: fNumber(currentProduct.PV)
   };

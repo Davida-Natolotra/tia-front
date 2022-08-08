@@ -33,6 +33,12 @@ ProductNewForm.propTypes = {
   currentProduct: PropTypes.object
 };
 
+function padLeadingZeros(num, size) {
+  let s = `${num}`;
+  while (s.length < size) s = `0${s}`;
+  return s;
+}
+
 export default function ProductNewForm({ isEdit, currentProduct }) {
   const { enqueueSnackbar } = useSnackbar();
 
@@ -185,7 +191,9 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
                 </AccordionSummary>
                 <AccordionDetails>
                   <Stack spacing={3} direction="column">
-                    <Typography variant="subheading">Numéro BL: {values.numBL} </Typography>
+                    <Typography variant="subheading">
+                      Numéro BL: {padLeadingZeros(values.numBL, 3)}/{moment(new Date()).format('MM-YYYY')}
+                    </Typography>
                     <LocalizationProvider
                       dateAdapter={AdapterDateFns}
                       adapterLocale={frLocale}
