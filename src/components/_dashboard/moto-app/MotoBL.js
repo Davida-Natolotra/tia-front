@@ -79,6 +79,9 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
       dataSubmit.append('nom_client_1', values.nomClient);
       dataSubmit.append('tel_client_1', values.contactClient);
       dataSubmit.append('PV', parseInt(values.PV, 10));
+      if (values.dateBL) {
+        dataSubmit.append('date_vente', moment(values.dateBL).format('YYYY-MM-DD'));
+      }
       try {
         await dispatch(updateMoto(dataSubmit, currentProduct.id));
         setSubmitting(false);

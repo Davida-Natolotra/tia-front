@@ -125,6 +125,9 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
       dataUpload.append('TVA', parseInt(values.TVA, 10));
       dataUpload.append('PV', parseInt(values.PV, 10));
       dataUpload.append('commercial', values.commercial);
+      if (values.dateFacture) {
+        dataUpload.append('date_vente', moment(values.dateFacture).format('YYYY-MM-DD'));
+      }
       if (changedRecto) {
         dataUpload.append('PJ_CIN_Client_2_recto', CINRectoFile);
       }
