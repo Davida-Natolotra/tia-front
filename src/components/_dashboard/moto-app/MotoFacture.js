@@ -17,7 +17,6 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-
 // utils
 //
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -26,16 +25,18 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { frFR as calFR } from '@mui/x-date-pickers';
 import { useDispatch, useSelector } from 'react-redux';
-import FacturePreview from './Facture';
-import { fileChangedHandler } from '../../../utils/imageCompress';
 import {
   getLastID,
   getNumberWord,
   updateMoto,
   getMotos,
   resetCurrentData,
-  getLastFacture
+  getLastFacture,
+  url
 } from '../../../redux/slices/moto';
+import FacturePreview from './Facture';
+import { fileChangedHandler } from '../../../utils/imageCompress';
+
 import { fNumber } from '../../../utils/formatNumber';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
@@ -57,8 +58,12 @@ function padLeadingZeros(num, size) {
 
 export default function ProductNewForm({ isEdit, currentProduct }) {
   const { enqueueSnackbar } = useSnackbar();
-  const [CINRecto, setCINRecto] = useState(currentProduct?.PJ_CIN_Client_2_recto || 'https://via.placeholder.com/500');
-  const [CINVerso, setCINVerso] = useState(currentProduct?.PJ_CIN_Client_2_verso || 'https://via.placeholder.com/500');
+  const [CINRecto, setCINRecto] = useState(
+    url + currentProduct?.PJ_CIN_Client_2_recto || 'https://via.placeholder.com/500'
+  );
+  const [CINVerso, setCINVerso] = useState(
+    url + currentProduct?.PJ_CIN_Client_2_verso || 'https://via.placeholder.com/500'
+  );
   const [CINRectoFile, setCINRectoFile] = useState(null);
   const [CINVersoFile, setCINVersoFile] = useState(null);
   const [CINRectoURI, setCINRectoURI] = useState(null);

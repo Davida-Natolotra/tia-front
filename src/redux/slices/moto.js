@@ -3,8 +3,8 @@ import { createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 
 // Endpoint
-// const url = 'http://localhost:8000';
-const url = 'https://tiamoto.com/backend';
+// export const url = 'http://localhost:8000';
+export const url = 'https://tiamoto.com/backend';
 // ----------------------------------------------------------------------
 
 const initialState = {
