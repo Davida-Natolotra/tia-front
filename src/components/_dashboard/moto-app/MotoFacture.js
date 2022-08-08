@@ -60,10 +60,14 @@ function padLeadingZeros(num, size) {
 export default function ProductNewForm({ isEdit, currentProduct }) {
   const { enqueueSnackbar } = useSnackbar();
   const [CINRecto, setCINRecto] = useState(
-    url + currentProduct?.PJ_CIN_Client_2_recto || 'https://via.placeholder.com/500'
+    currentProduct.PJ_CIN_Client_2_recto?.length > 0
+      ? url + currentProduct?.PJ_CIN_Client_2_recto
+      : 'https://via.placeholder.com/500'
   );
   const [CINVerso, setCINVerso] = useState(
-    url + currentProduct?.PJ_CIN_Client_2_verso || 'https://via.placeholder.com/500'
+    currentProduct.PJ_CIN_Client_2_verso?.length > 0
+      ? url + currentProduct?.PJ_CIN_Client_2_verso
+      : 'https://via.placeholder.com/500'
   );
   const [CINRectoFile, setCINRectoFile] = useState(null);
   const [CINVersoFile, setCINVersoFile] = useState(null);
