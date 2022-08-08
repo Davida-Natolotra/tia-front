@@ -2,6 +2,12 @@ import { Icon } from '@iconify/react';
 import moreVerticalFill from '@iconify/icons-eva/more-vertical-fill';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import CancelIcon from '@mui/icons-material/Cancel';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import { useSnackbar } from 'notistack5';
 // material
 
 import { DataGrid, GridToolbar, frFR } from '@mui/x-data-grid';
@@ -40,8 +46,9 @@ import { useSelector, useDispatch } from 'react-redux';
 import archiveFill from '@iconify/icons-eva/archive-fill';
 import trash2Outline from '@iconify/icons-eva/trash-2-outline';
 import pen from '@iconify/icons-eva/edit-2-outline';
+import { deleteMoto, filterDisplay, getMotos, getMotosByDate } from '../../../redux/slices/moto';
 import useCheckMobile from '../../../hooks/useCheckMobile';
-import { filterDisplay, getMotos, getMotosByDate } from '../../../redux/slices/moto';
+
 import { MIconButton } from '../../@material-extend';
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // ----------------------------------------------------------------------
@@ -59,6 +66,27 @@ export default function AppMotoTable() {
   const loading = useSelector((state) => state.motos?.isLoading);
   const dispatch = useDispatch();
   const isMobile = useCheckMobile();
+  const [openDialog, setOpenDialog] = useState(false);
+  const { enqueueSnackbar } = useSnackbar();
+
+  const handleClickOpenDialog = () => {
+    setOpenDialog(true);
+  };
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+  };
+
+  async function deleteMotoFunc() {
+    handleClose();
+    dispatch(deleteMoto(selectedRow));
+    dispatch(getMotos());
+    setOpenDialog(false);
+    handleCloseDialog();
+    await enqueueSnackbar("L'enregistrement a été supprimer avec succès", {
+      variant: 'success'
+    });
+  }
 
   useEffect(() => {
     dispatch(getMotos());
@@ -128,7 +156,7 @@ export default function AppMotoTable() {
       sortable: false,
       disableColumnMenu: true,
       flex: 0.5,
-      renderCell: (params) => <MoreMenuButton id={params.id} />
+      renderCell: (params) => <MoreMenuButton id={params.id} handleClickOpenDialog={handleClickOpenDialog} />
     }
   ];
 
@@ -247,19 +275,38 @@ export default function AppMotoTable() {
           </MenuItem>
 
           <Divider />
-          <MenuItem sx={{ color: 'error.main' }}>
+          <MenuItem sx={{ color: 'error.main' }} onClick={handleClickOpenDialog}>
             <Icon icon={trash2Outline} width={20} height={20} />
             <Typography variant="body2" sx={{ ml: 2 }}>
               Supprimer
             </Typography>
           </MenuItem>
         </Menu>
+        <Dialog
+          open={openDialog}
+          onClose={handleCloseDialog}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">Confirmer la suppression!</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              Voulez-vous vraiment supprimer cette enregistrement?
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => deleteMotoFunc()}>Oui</Button>
+            <Button onClick={handleCloseDialog} autoFocus>
+              Non
+            </Button>
+          </DialogActions>
+        </Dialog>
       </Box>
     </Card>
   );
 }
 
-function MoreMenuButton({ id }) {
+function MoreMenuButton({ id, handleClickOpenDialog }) {
   const menuRef = useRef(null);
   const [open, setOpen] = useState(false);
 
@@ -304,7 +351,13 @@ function MoreMenuButton({ id }) {
         </MenuItem>
 
         <Divider />
-        <MenuItem sx={{ color: 'error.main' }}>
+        <MenuItem
+          sx={{ color: 'error.main' }}
+          onClick={() => {
+            handleClose();
+            handleClickOpenDialog();
+          }}
+        >
           <Icon icon={trash2Outline} width={20} height={20} />
           <Typography variant="body2" sx={{ ml: 2 }}>
             Supprimer

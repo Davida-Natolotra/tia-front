@@ -337,3 +337,23 @@ export function updateMoto(motoData, id) {
     }
   };
 }
+
+export function deleteMoto(id) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios({
+        method: 'delete',
+        url: `/api/motos/deleteMoto/${id}`,
+
+        responseType: 'stream',
+        headers: {
+          'Content-Type': 'application/json; charset= utf-8'
+        }
+      });
+      dispatch(slice.actions.getLastResponseMotoSuccess(response.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}

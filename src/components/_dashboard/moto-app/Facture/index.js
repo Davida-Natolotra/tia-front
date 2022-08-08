@@ -1,6 +1,7 @@
 import React from 'react';
 import { PDFViewer, Document, Page, StyleSheet, Text } from '@react-pdf/renderer';
 import { useSelector } from 'react-redux';
+import moment from 'moment';
 import Body from './Body';
 import { fNumber } from '../../../../utils/formatNumber';
 
@@ -23,7 +24,7 @@ export default function FactureMoto({ currentProduct }) {
     nomMoto: currentProduct.nom_moto,
     numMoteur: currentProduct.num_moteur,
     volumeMoteur: currentProduct.volume_moteur,
-    numFacture: currentProduct.num_sur_facture,
+    numFacture: `${currentProduct.num_sur_facture}/${moment(new Date()).format('MM-YYYY')}`,
     dateFacture: currentProduct.date_facture,
     PUHT: fNumber(currentProduct.PU_HT),
     TVA: fNumber(currentProduct.TVA),

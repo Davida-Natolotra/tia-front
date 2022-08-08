@@ -12,6 +12,12 @@ import { Card, Grid, Stack, Button, ButtonGroup, Box, TextField } from '@materia
 import { Typography, Divider, Accordion, AccordionSummary, AccordionDetails } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+
 // utils
 //
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -53,7 +59,7 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
   const [CINVersoURI, setCINVersoURI] = useState(null);
   const [changedRecto, setChangedRecto] = useState(false);
   const [changedVerso, setChangedVerso] = useState(false);
-
+  const [open, setOpen] = useState(false);
   const [errorFactureCase, setErrorFactureCase] = useState(false);
   const [errorClientCase, setErrorClientCase] = useState(false);
 
@@ -132,6 +138,47 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
       }
     }
   });
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const resetFacture = async () => {
+    const dataReset = new FormData();
+
+    dataReset.append('num_sur_facture', '');
+    dataReset.append('date_facture', '');
+    dataReset.append('Ref', '');
+    dataReset.append('nom_client_2', '');
+    dataReset.append('CIN_Num_Client_2', '');
+    dataReset.append('adresse_client_2', '');
+    dataReset.append('tel_client_2', '');
+    dataReset.append('PU_HT', '');
+    dataReset.append('TVA', '');
+    dataReset.append('PV', '');
+    dataReset.append('commercial', '');
+    dataReset.append('PJ_CIN_Client_2_recto', '');
+    dataReset.append('PJ_CIN_Client_2_verso', '');
+
+    try {
+      console.log(dataReset);
+      await dispatch(updateMoto(dataReset, currentProduct.id));
+      handleClose();
+      enqueueSnackbar('Annulation de facture terminé', {
+        variant: 'success'
+      });
+      await dispatch(getMotos());
+      resetForm(true);
+    } catch (error) {
+      console.error(error);
+
+      enqueueSnackbar("Erreur d'enregistrement", { variant: 'danger' });
+    }
+  };
 
   useEffect(() => {
     dispatch(getLastID());
@@ -313,7 +360,9 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
                 </AccordionSummary>
                 <AccordionDetails>
                   <Stack spacing={3} direction="column">
-                    <Typography variant="subheading">Numéro facture: {values.numFacture} </Typography>
+                    <Typography variant="subheading">
+                      Numéro facture: {values.numFacture}/{moment(new Date()).format('MM-YYYY')}
+                    </Typography>
                     <LocalizationProvider
                       dateAdapter={AdapterDateFns}
                       adapterLocale={frLocale}
@@ -380,21 +429,33 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
                 <LoadingButton type="submit" fullWidth variant="contained" size="large" loading={isSubmitting}>
                   Enregistrer
                 </LoadingButton>
-                {isEdit && (
-                  <Button
-                    variant="outlined"
-                    component={RouterLink}
-                    to={`${PATH_DASHBOARD.moto.root}/new`}
-                    onClick={() => dispatch(resetCurrentData())}
-                  >
-                    Nouvelle entrée
-                  </Button>
-                )}
 
                 <Button type="button" fullWidth variant="outlined" onClick={() => resetForm()}>
+                  Recommencer
+                </Button>
+                <Button type="button" fullWidth variant="outlined" onClick={handleClickOpen}>
                   Annuler
                 </Button>
               </ButtonGroup>
+              <Dialog
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+              >
+                <DialogTitle id="alert-dialog-title">Confirmer l'annulation de cette facture</DialogTitle>
+                <DialogContent>
+                  <DialogContentText id="alert-dialog-description">
+                    Voulez-vous vraiment annuler cette facture?
+                  </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={() => resetFacture()}>Oui</Button>
+                  <Button onClick={handleClose} autoFocus>
+                    Non
+                  </Button>
+                </DialogActions>
+              </Dialog>
             </Card>
           </Form>
         </FormikProvider>

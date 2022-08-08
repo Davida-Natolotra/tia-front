@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { useSnackbar } from 'notistack5';
 import { Link as RouterLink } from 'react-router-dom';
 import moment from 'moment';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useState } from 'react';
 import { Form, FormikProvider, useFormik } from 'formik';
 import CurrencyTextField from '@unicef/material-ui-currency-textfield';
 // material
@@ -36,6 +36,9 @@ ProductNewForm.propTypes = {
 export default function ProductNewForm({ isEdit, currentProduct }) {
   const { enqueueSnackbar } = useSnackbar();
 
+  const [errorClientCase, setErrorClientCase] = useState(false);
+  const [errorBLCase, setErrorBLCase] = useState(false);
+
   const lastID = useSelector((state) => state.motos.lastID);
   const lastBL = useSelector((state) => state.motos.lastBL);
 
@@ -44,9 +47,9 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
     numBL: Yup.string(),
     dateBL: Yup.date('Date BL requise').required('La date de facture est requis'),
     nomMoto: Yup.string().required('Nom moto est requis'),
-    numMoteur: Yup.string().required('Num moteurs est requis'),
-    nomClient: Yup.string().required('Nom client est requis'),
-    contactClient: Yup.string().required('Contact client est requis'),
+    numMoteur: Yup.string().required('Num moteurs requis'),
+    nomClient: Yup.string().required('Nom client requis'),
+    contactClient: Yup.string().required('Contact client requis'),
     PV: Yup.number().required('Le prix de vente est requis')
   });
 
@@ -113,6 +116,18 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
     values.TVA = 0.2 * values.PUHT;
   }, [values.PV]);
 
+  useEffect(() => {
+    const errorNomClient = Boolean(touched.nomClient && errors.nomClient);
+    const errorContactClient = Boolean(touched.contactClient && errors.contactClient);
+    setErrorClientCase(errorNomClient || errorContactClient);
+  }, [touched, errors]);
+
+  useEffect(() => {
+    const errorDateBL = Boolean(touched.dateBL && errors.dateBL);
+    const errorPV = Boolean(touched.PV && errors.PV);
+    setErrorBLCase(errorDateBL || errorPV);
+  }, [touched, errors]);
+
   return (
     <FormikProvider value={formik}>
       <Form autoComplete="off" onSubmit={handleSubmit}>
@@ -133,7 +148,7 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
                 </AccordionDetails>
               </Accordion>
 
-              <Accordion>
+              <Accordion sx={{ border: errorClientCase ? 1 : 0, borderColor: 'red' }}>
                 <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
                   <Typography variant="overline">Client</Typography>
                 </AccordionSummary>
@@ -147,7 +162,7 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
                       onBlur={handleBlur}
                       {...getFieldProps('nomClient')}
                       error={Boolean(touched.nomClient && errors.nomClient)}
-                      helperText={touched.renomClientf && errors.nomClient}
+                      helperText={touched.nomClient && errors.nomClient}
                     />
 
                     <TextField
@@ -164,7 +179,7 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
                 </AccordionDetails>
               </Accordion>
 
-              <Accordion>
+              <Accordion sx={{ border: errorBLCase ? 1 : 0, borderColor: 'red' }}>
                 <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
                   <Typography variant="overline">BL</Typography>
                 </AccordionSummary>
