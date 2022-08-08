@@ -167,6 +167,7 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
 
     dataReset.append('num_sur_facture', '');
     dataReset.append('date_facture', '');
+    dataReset.append('date_vente', '');
     dataReset.append('Ref', '');
     dataReset.append('nom_client_2', '');
     dataReset.append('CIN_Num_Client_2', '');
