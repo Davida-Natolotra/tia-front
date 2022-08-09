@@ -62,12 +62,12 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
   const [CINRecto, setCINRecto] = useState(
     currentProduct.PJ_CIN_Client_2_recto?.length > 0
       ? url + currentProduct?.PJ_CIN_Client_2_recto
-      : 'https://via.placeholder.com/500'
+      : 'https://placehold.jp/24/cccccc/525252/500x500.png?text=Aucune%2520photo'
   );
   const [CINVerso, setCINVerso] = useState(
     currentProduct.PJ_CIN_Client_2_verso?.length > 0
       ? url + currentProduct?.PJ_CIN_Client_2_verso
-      : 'https://via.placeholder.com/500'
+      : 'https://placehold.jp/24/cccccc/525252/500x500.png?text=Aucune%2520photo'
   );
   const [CINRectoFile, setCINRectoFile] = useState(null);
   const [CINVersoFile, setCINVersoFile] = useState(null);
