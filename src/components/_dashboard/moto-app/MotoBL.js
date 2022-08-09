@@ -33,6 +33,12 @@ ProductNewForm.propTypes = {
   currentProduct: PropTypes.object
 };
 
+function padLeadingZeros(num, size) {
+  let s = `${num}`;
+  while (s.length < size) s = `0${s}`;
+  return s;
+}
+
 export default function ProductNewForm({ isEdit, currentProduct }) {
   const { enqueueSnackbar } = useSnackbar();
 
@@ -73,6 +79,9 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
       dataSubmit.append('nom_client_1', values.nomClient);
       dataSubmit.append('tel_client_1', values.contactClient);
       dataSubmit.append('PV', parseInt(values.PV, 10));
+      if (values.dateBL) {
+        dataSubmit.append('date_vente', moment(values.dateBL).format('YYYY-MM-DD'));
+      }
       try {
         await dispatch(updateMoto(dataSubmit, currentProduct.id));
         setSubmitting(false);
@@ -185,7 +194,9 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
                 </AccordionSummary>
                 <AccordionDetails>
                   <Stack spacing={3} direction="column">
-                    <Typography variant="subheading">Numéro BL: {values.numBL} </Typography>
+                    <Typography variant="subheading">
+                      Numéro BL: {padLeadingZeros(values.numBL, 3)}/{moment(new Date()).format('MM-YYYY')}
+                    </Typography>
                     <LocalizationProvider
                       dateAdapter={AdapterDateFns}
                       adapterLocale={frLocale}
@@ -228,20 +239,15 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
                 </AccordionDetails>
               </Accordion>
 
-              <ButtonGroup sx={{ mt: 3 }}>
+              <Stack spacing={1} sx={{ mt: 3 }}>
                 <LoadingButton type="submit" fullWidth variant="contained" size="large" loading={isSubmitting}>
                   Enregistrer
                 </LoadingButton>
-                {isEdit && (
-                  <Button variant="outlined" component={RouterLink} to={`${PATH_DASHBOARD.moto.root}/new`}>
-                    Nouvelle entrée
-                  </Button>
-                )}
 
                 <Button type="button" fullWidth variant="outlined" onClick={() => resetForm()}>
-                  Annuler
+                  Réinitialiser
                 </Button>
-              </ButtonGroup>
+              </Stack>
             </Card>
           </Grid>
           <Grid item xs={12} md={6}>

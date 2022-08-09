@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { useSnackbar } from 'notistack5';
 import { useNavigate, Link as RouterLink } from 'react-router-dom';
 import moment from 'moment';
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { Form, FormikProvider, useFormik } from 'formik';
 import CurrencyTextField from '@unicef/material-ui-currency-textfield';
 // material
@@ -17,7 +17,6 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-
 // utils
 //
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -26,16 +25,19 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { frFR as calFR } from '@mui/x-date-pickers';
 import { useDispatch, useSelector } from 'react-redux';
-import FacturePreview from './Facture';
-import { fileChangedHandler } from '../../../utils/imageCompress';
 import {
   getLastID,
   getNumberWord,
   updateMoto,
   getMotos,
   resetCurrentData,
-  getLastFacture
+  getLastFacture,
+  url,
+  cancelFacture
 } from '../../../redux/slices/moto';
+import FacturePreview from './Facture';
+import { fileChangedHandler } from '../../../utils/imageCompress';
+
 import { fNumber } from '../../../utils/formatNumber';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
@@ -57,8 +59,16 @@ function padLeadingZeros(num, size) {
 
 export default function ProductNewForm({ isEdit, currentProduct }) {
   const { enqueueSnackbar } = useSnackbar();
-  const [CINRecto, setCINRecto] = useState(currentProduct.PJ_CIN_Client_2_recto || 'https://via.placeholder.com/500');
-  const [CINVerso, setCINVerso] = useState(currentProduct.PJ_CIN_Client_2_verso || 'https://via.placeholder.com/500');
+  const [CINRecto, setCINRecto] = useState(
+    currentProduct.PJ_CIN_Client_2_recto?.length > 0
+      ? url + currentProduct?.PJ_CIN_Client_2_recto
+      : 'https://via.placeholder.com/500'
+  );
+  const [CINVerso, setCINVerso] = useState(
+    currentProduct.PJ_CIN_Client_2_verso?.length > 0
+      ? url + currentProduct?.PJ_CIN_Client_2_verso
+      : 'https://via.placeholder.com/500'
+  );
   const [CINRectoFile, setCINRectoFile] = useState(null);
   const [CINVersoFile, setCINVersoFile] = useState(null);
   const [CINRectoURI, setCINRectoURI] = useState(null);
@@ -120,6 +130,9 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
       dataUpload.append('TVA', parseInt(values.TVA, 10));
       dataUpload.append('PV', parseInt(values.PV, 10));
       dataUpload.append('commercial', values.commercial);
+      if (values.dateFacture) {
+        dataUpload.append('date_vente', moment(values.dateFacture).format('YYYY-MM-DD'));
+      }
       if (changedRecto) {
         dataUpload.append('PJ_CIN_Client_2_recto', CINRectoFile);
       }
@@ -158,6 +171,7 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
 
     dataReset.append('num_sur_facture', '');
     dataReset.append('date_facture', '');
+    dataReset.append('date_vente', '');
     dataReset.append('Ref', '');
     dataReset.append('nom_client_2', '');
     dataReset.append('CIN_Num_Client_2', '');
@@ -172,7 +186,7 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
 
     try {
       console.log(dataReset);
-      await dispatch(updateMoto(dataReset, currentProduct.id));
+      await dispatch(cancelFacture(dataReset, currentProduct.id));
       handleClose();
       enqueueSnackbar('Annulation de facture terminé', {
         variant: 'success'
@@ -221,14 +235,20 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
     values.montantLettre = montantLettreIn;
   }, [montantLettreIn]);
 
+  const isInit = useRef(true);
+
   useEffect(() => {
-    if (changedRecto) {
+    if (isInit.current) {
+      isInit.current = false;
+    } else if (changedRecto) {
       setCINRecto(CINRectoURI);
     }
   }, [CINRectoURI]);
 
   useEffect(() => {
-    if (changedVerso) {
+    if (isInit.current) {
+      isInit.current = false;
+    } else if (changedVerso) {
       setCINVerso(CINVersoURI);
     }
   }, [CINVersoURI]);
@@ -430,19 +450,18 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
                   </Stack>
                 </AccordionDetails>
               </Accordion>
-
-              <ButtonGroup sx={{ mt: 3 }}>
+              <Stack spacing={1} sx={{ mt: 3 }}>
                 <LoadingButton type="submit" fullWidth variant="contained" size="large" loading={isSubmitting}>
                   Enregistrer
                 </LoadingButton>
 
                 <Button type="button" fullWidth variant="outlined" onClick={() => resetForm()}>
-                  Recommencer
+                  Réinitialiser
                 </Button>
                 <Button type="button" fullWidth variant="outlined" onClick={handleClickOpen}>
-                  Annuler
+                  Annuler cette facture
                 </Button>
-              </ButtonGroup>
+              </Stack>
               <Dialog
                 open={open}
                 onClose={handleClose}

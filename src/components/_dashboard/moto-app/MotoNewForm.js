@@ -350,7 +350,7 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
                   helperText={touched.motifReparation && errors.motifReparation}
                 />
                 <Typography variant="subheading">Commercial: {commercial}</Typography>
-                <ButtonGroup>
+                <Stack spacing={1}>
                   <LoadingButton type="submit" fullWidth variant="contained" size="large" loading={isSubmitting}>
                     Enregistrer
                   </LoadingButton>
@@ -367,9 +367,9 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
                   )}
 
                   <Button type="button" fullWidth variant="outlined" onClick={() => resetForm()}>
-                    Annuler
+                    Réinitialiser
                   </Button>
-                </ButtonGroup>
+                </Stack>
               </Stack>
             </Card>
           </Grid>

@@ -57,6 +57,8 @@ const getBackgroundColor = (color, mode) => (mode === 'dark' ? darken(color, 0.6
 
 const getHoverBackgroundColor = (color, mode) => (mode === 'dark' ? darken(color, 0.5) : lighten(color, 0.5));
 
+const setBgTableFiltre = (mode) => (mode === 'dark' ? '#333d48' : '#f4f6f8');
+
 export default function AppMotoTable() {
   const motos = useSelector((state) => state.motos?.products);
   const [pageSize, setPageSize] = useState(10);
@@ -200,7 +202,7 @@ export default function AppMotoTable() {
           </Tooltip>
         }
       />
-      <Box sx={{ p: 3, backgroundColor: '#f4f6f8' }}>
+      <Box sx={{ p: 3, backgroundColor: (theme) => setBgTableFiltre(theme.palette.mode) }}>
         <FiltreDate motosFiltre={motosFiltre} />
       </Box>
       <Box

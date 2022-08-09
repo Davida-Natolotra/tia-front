@@ -2,6 +2,9 @@ import { createSlice } from '@reduxjs/toolkit';
 // utils
 import axios from 'axios';
 
+// Endpoint
+// export const url = 'http://localhost:8000';
+export const url = 'https://tiamoto.com/backend';
 // ----------------------------------------------------------------------
 
 const initialState = {
@@ -123,7 +126,7 @@ export function getMotos() {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('/api/');
+      const response = await axios.get(`${url}/api/`);
       dispatch(slice.actions.getProductsSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
@@ -136,7 +139,7 @@ export function getMotosByDate(newDateDebut, newDateFin) {
     try {
       const response = await axios({
         method: 'get',
-        url: '/api/motos',
+        url: `${url}/api/motos`,
         responseType: 'stream',
         params: {
           dateEntree: newDateDebut,
@@ -156,7 +159,7 @@ export function getMoto(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('/api/', {
+      const response = await axios.get(`${url}/api/`, {
         params: { id }
       });
       dispatch(slice.actions.getProductSuccess(response.data.product));
@@ -173,7 +176,7 @@ export function getMotosHebdo(newDateDebut, newDateFin) {
     try {
       const response = await axios({
         method: 'get',
-        url: '/api/motos/chart_hebdo_api',
+        url: `${url}/api/motos/chart_hebdo_api`,
         responseType: 'stream',
         params: {
           dateEntree: newDateDebut,
@@ -192,7 +195,7 @@ export function getMotosMonthly(date) {
     try {
       const response = await axios({
         method: 'get',
-        url: '/api/motos/chart_monthly_api',
+        url: `${url}/api/motos/chart_monthly_api`,
         responseType: 'stream',
         params: {
           month: date
@@ -210,7 +213,7 @@ export function getStock() {
     try {
       const response = await axios({
         method: 'get',
-        url: '/api/motos/stock_level_api',
+        url: `${url}/api/motos/stock_level_api`,
         responseType: 'stream'
       });
       dispatch(slice.actions.getStockSuccess(response.data));
@@ -225,7 +228,7 @@ export function getVenteToday() {
     try {
       const response = await axios({
         method: 'get',
-        url: '/api/motos/venteToday_API',
+        url: `${url}/api/motos/venteToday_API`,
         responseType: 'stream'
       });
       dispatch(slice.actions.getVenteTodaySuccess(response.data));
@@ -240,7 +243,7 @@ export function getLastFacture() {
     try {
       const response = await axios({
         method: 'get',
-        url: '/api/motos/last_facture_api',
+        url: `${url}/api/motos/last_facture_api`,
         responseType: 'stream'
       });
       dispatch(slice.actions.getLastFactureSuccess(response.data));
@@ -255,7 +258,7 @@ export function getLastBL() {
     try {
       const response = await axios({
         method: 'get',
-        url: '/api/motos/last_BL_api',
+        url: `${url}/api/motos/last_BL_api`,
         responseType: 'stream'
       });
       dispatch(slice.actions.getLastBLSuccess(response.data));
@@ -270,7 +273,7 @@ export function getLastID() {
     try {
       const response = await axios({
         method: 'get',
-        url: '/api/motos/ID_Last_API',
+        url: `${url}/api/motos/ID_Last_API`,
         responseType: 'stream'
       });
       dispatch(slice.actions.getLastIDSuccess(response.data));
@@ -285,7 +288,7 @@ export function getNumberWord(number) {
     try {
       const response = await axios({
         method: 'get',
-        url: '/api/motos/total2word_API',
+        url: `${url}/api/motos/total2word_API`,
         responseType: 'stream',
         params: {
           number
@@ -304,7 +307,7 @@ export function addMoto(motoData) {
     try {
       const response = await axios({
         method: 'post',
-        url: '/api/motos/createMoto',
+        url: `${url}/api/motos/createMoto`,
         data: motoData,
         responseType: 'stream',
         headers: {
@@ -324,7 +327,27 @@ export function updateMoto(motoData, id) {
     try {
       const response = await axios({
         method: 'put',
-        url: `/api/motos/updateMoto/${id}`,
+        url: `${url}/api/motos/updateMoto/${id}`,
+        data: motoData,
+        responseType: 'stream',
+        headers: {
+          'Content-Type': 'application/json; charset= utf-8'
+        }
+      });
+      dispatch(slice.actions.getLastResponseMotoSuccess(response.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+export function cancelFacture(motoData, id) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios({
+        method: 'put',
+        url: `${url}/api/motos/cancelFacture/${id}`,
         data: motoData,
         responseType: 'stream',
         headers: {
@@ -344,7 +367,7 @@ export function deleteMoto(id) {
     try {
       const response = await axios({
         method: 'delete',
-        url: `/api/motos/deleteMoto/${id}`,
+        url: `${url}/api/motos/deleteMoto/${id}`,
 
         responseType: 'stream',
         headers: {

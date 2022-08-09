@@ -15,9 +15,8 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { Card, CardHeader, CardContent, Divider } from '@material-ui/core';
 import startOfWeek from 'date-fns/startOfWeek';
 import { useSelector, useDispatch } from 'react-redux';
+import { v4 as uuidv4 } from 'uuid';
 import { getVenteToday } from '../../../redux/slices/moto';
-
-import { styles } from './styles';
 
 function createData(nomMoto, numMoteur, data) {
   return {
@@ -60,7 +59,7 @@ function Row(props) {
                 </TableHead>
                 <TableBody>
                   {row.data.map((historyRow) => (
-                    <TableRow key={historyRow.date}>
+                    <TableRow key={uuidv4()}>
                       <TableCell component="th" scope="row">
                         {historyRow.nom_moto}
                       </TableCell>
@@ -132,7 +131,7 @@ export default function CollapsibleTable() {
             </TableHead>
             <TableBody>
               {rowsToday.map((historyRow) => (
-                <TableRow key={historyRow.date}>
+                <TableRow key={uuidv4()}>
                   <TableCell component="th" scope="row">
                     {historyRow.nom_moto}
                   </TableCell>
