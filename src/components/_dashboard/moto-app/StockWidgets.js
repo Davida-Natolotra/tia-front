@@ -63,7 +63,7 @@ export default function BookingCheckInWidgets() {
               {fNumber(TOTAL_CHECK_IN)}
             </Typography>
             <Typography variant="body2" sx={{ opacity: 0.72 }}>
-              Dépot
+              Stock dépot
             </Typography>
           </div>
         </Stack>
@@ -80,7 +80,7 @@ export default function BookingCheckInWidgets() {
               {fNumber(TOTAL_CHECK_OUT)}
             </Typography>
             <Typography variant="body2" sx={{ opacity: 0.72 }}>
-              Showroom
+              Stock showroom
             </Typography>
           </div>
         </Stack>

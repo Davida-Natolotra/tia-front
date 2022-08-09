@@ -41,7 +41,7 @@ export default function BookingCheckIn() {
       <div>
         <Typography variant="h3">{fShortenNumber(TOTAL)}</Typography>
         <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
-          Stock disponible
+          Stock total disponible
         </Typography>
       </div>
       <Box
