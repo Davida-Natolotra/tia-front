@@ -22,7 +22,8 @@ const initialState = {
   lastID: 0,
   numWord: '',
   venteToday: [],
-  currentData: {}
+  currentData: {},
+  isChartLoading: false
 };
 
 const slice = createSlice({
@@ -32,6 +33,9 @@ const slice = createSlice({
     // START LOADING
     startLoading(state) {
       state.isLoading = true;
+    },
+    startChartLoading(state) {
+      state.isChartLoading = true;
     },
 
     // HAS ERROR
@@ -54,7 +58,7 @@ const slice = createSlice({
       state.venteToday = action.payload;
     },
     getMotosHebdoSuccess(state, action) {
-      state.isLoading = false;
+      state.isChartLoading = false;
       state.motosHebdo = action.payload;
       state.motosHebdo.date = action.payload.date.map((date) =>
         new Date(date).toLocaleDateString('fr-fr', {
@@ -65,7 +69,7 @@ const slice = createSlice({
       );
     },
     getMotosMonthSuccess(state, action) {
-      state.isLoading = false;
+      state.isChartLoading = false;
       state.motosMonth = action.payload;
       state.motosMonth.date = action.payload.date.map((date) =>
         new Date(date).toLocaleDateString('fr-fr', {
@@ -172,7 +176,7 @@ export function getMoto(id) {
 
 export function getMotosHebdo(newDateDebut, newDateFin) {
   return async (dispatch) => {
-    dispatch(slice.actions.startLoading());
+    dispatch(slice.actions.startChartLoading());
     try {
       const response = await axios({
         method: 'get',
@@ -191,7 +195,7 @@ export function getMotosHebdo(newDateDebut, newDateFin) {
 }
 export function getMotosMonthly(date) {
   return async (dispatch) => {
-    dispatch(slice.actions.startLoading());
+    dispatch(slice.actions.startChartLoading());
     try {
       const response = await axios({
         method: 'get',

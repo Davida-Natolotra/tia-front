@@ -17,6 +17,7 @@ import useCheckMobile from '../../../hooks/useCheckMobile';
 export default function MotoDashboardJourn() {
   const [seriesData, setSeriesData] = useState('Year');
   const select = useSelector((state) => state.motos?.chartSelect || 'Hebdomadaire');
+  const isChartLoading = useSelector((state) => state.motos?.isChartLoading || true);
   const start = startOfWeek(new Date(), { weekStartsOn: 1 });
   const end = endOfWeek(new Date(), { weekStartsOn: 1 });
   const dispatch = useDispatch();
@@ -69,7 +70,7 @@ export default function MotoDashboardJourn() {
   const CHART_DATA = [
     {
       year: 'Hebdomadaire',
-      data: [{ name: 'Nombre', data: [...(motosHebdo?.nb || [...0, 0, 0, 0, 0, 0, 0])] }]
+      data: [{ name: 'Nombre', data: [...motosHebdo.nb] }]
     },
     {
       year: 'Mensuelle',
@@ -82,7 +83,8 @@ export default function MotoDashboardJourn() {
       bar: { horizontal: isMobile, barHeight: '28%', borderRadius: 2 }
     },
     xaxis: {
-      categories: select === 'Hebdomadaire' ? motosHebdo.date : motosMonth?.date || getThisWeekDates()
+      categories:
+        select === 'Hebdomadaire' ? motosHebdo?.date || getThisWeekDates() : motosMonth?.date || getThisWeekDates()
     },
     tooltip: {
       y: {

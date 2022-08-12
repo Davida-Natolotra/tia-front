@@ -61,7 +61,7 @@ function padLeadingZeros(num, size) {
 export default function ProductNewForm({ isEdit, currentProduct }) {
   const linkRecto = () => {
     let link;
-    if (currentProduct.PJ_CIN_Client_2_recto.length > 0) {
+    if (currentProduct.PJ_CIN_Client_2_recto) {
       if (currentProduct.PJ_CIN_Client_2_recto.includes('media')) {
         link = `${url}/${currentProduct.PJ_CIN_Client_2_recto}`;
       } else {
@@ -74,7 +74,7 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
   };
   const linkVerso = () => {
     let link;
-    if (currentProduct.PJ_CIN_Client_2_verso.length > 0) {
+    if (currentProduct.PJ_CIN_Client_2_verso) {
       if (currentProduct.PJ_CIN_Client_2_verso.includes('media')) {
         link = `${url}/${currentProduct.PJ_CIN_Client_2_verso}`;
       } else {
