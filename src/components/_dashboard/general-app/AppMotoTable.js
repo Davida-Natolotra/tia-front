@@ -150,11 +150,13 @@ export default function AppMotoTable() {
       sortable: true,
       hide: isMobile,
       valueFormatter: (params) =>
-        new Date(params?.value).toLocaleDateString('fr-fr', {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric'
-        })
+        params.value !== null
+          ? new Date(params?.value).toLocaleDateString('fr-fr', {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric'
+            })
+          : '-'
     },
     {
       field: 'commercial',

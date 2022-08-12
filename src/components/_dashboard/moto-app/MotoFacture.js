@@ -59,17 +59,35 @@ function padLeadingZeros(num, size) {
 }
 
 export default function ProductNewForm({ isEdit, currentProduct }) {
+  const linkRecto = () => {
+    let link;
+    if (currentProduct.PJ_CIN_Client_2_recto.length > 0) {
+      if (currentProduct.PJ_CIN_Client_2_recto.includes('media')) {
+        link = `${url}/${currentProduct.PJ_CIN_Client_2_recto}`;
+      } else {
+        link = `${url}/media/${currentProduct.PJ_CIN_Client_2_recto}`;
+      }
+    } else {
+      link = 'https://placehold.jp/24/cccccc/525252/500x500.png?text=Aucune%20photo';
+    }
+    return link;
+  };
+  const linkVerso = () => {
+    let link;
+    if (currentProduct.PJ_CIN_Client_2_verso.length > 0) {
+      if (currentProduct.PJ_CIN_Client_2_verso.includes('media')) {
+        link = `${url}/${currentProduct.PJ_CIN_Client_2_verso}`;
+      } else {
+        link = `${url}/media/${currentProduct.PJ_CIN_Client_2_verso}`;
+      }
+    } else {
+      link = 'https://placehold.jp/24/cccccc/525252/500x500.png?text=Aucune%20photo';
+    }
+    return link;
+  };
   const { enqueueSnackbar } = useSnackbar();
-  const [CINRecto, setCINRecto] = useState(
-    currentProduct.PJ_CIN_Client_2_recto?.length > 0
-      ? `${url}/${currentProduct?.PJ_CIN_Client_2_recto}`
-      : 'https://placehold.jp/24/cccccc/525252/500x500.png?text=Aucune%20photo'
-  );
-  const [CINVerso, setCINVerso] = useState(
-    currentProduct.PJ_CIN_Client_2_verso?.length > 0
-      ? `${url}/${currentProduct?.PJ_CIN_Client_2_verso}`
-      : 'https://placehold.jp/24/cccccc/525252/500x500.png?text=Aucune%20photo'
-  );
+  const [CINRecto, setCINRecto] = useState(linkRecto);
+  const [CINVerso, setCINVerso] = useState(linkVerso);
   const [CINRectoFile, setCINRectoFile] = useState(null);
   const [CINVersoFile, setCINVersoFile] = useState(null);
   const [CINRectoURI, setCINRectoURI] = useState(null);

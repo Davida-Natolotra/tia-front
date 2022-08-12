@@ -69,7 +69,7 @@ export default function MotoDashboardJourn() {
   const CHART_DATA = [
     {
       year: 'Hebdomadaire',
-      data: [{ name: 'Nombre', data: [...(motosHebdo?.nb || getThisWeekDates())] }]
+      data: [{ name: 'Nombre', data: [...(motosHebdo?.nb || [...0, 0, 0, 0, 0, 0, 0])] }]
     },
     {
       year: 'Mensuelle',
@@ -82,7 +82,7 @@ export default function MotoDashboardJourn() {
       bar: { horizontal: isMobile, barHeight: '28%', borderRadius: 2 }
     },
     xaxis: {
-      categories: select === 'Hebdomadaire' ? motosHebdo.date : motosMonth.date
+      categories: select === 'Hebdomadaire' ? motosHebdo.date : motosMonth?.date || getThisWeekDates()
     },
     tooltip: {
       y: {
