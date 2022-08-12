@@ -18,13 +18,14 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 // utils
+
 //
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import frLocale from 'date-fns/locale/fr';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { frFR as calFR } from '@mui/x-date-pickers';
 import { useDispatch, useSelector } from 'react-redux';
+import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 import {
   getLastID,
   getNumberWord,
@@ -394,7 +395,7 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
                       adapterLocale={frLocale}
                       localeText={calFR.components.MuiLocalizationProvider.defaultProps.localeText}
                     >
-                      <DatePicker
+                      <MobileDatePicker
                         label="Date Facture"
                         value={values.dateFacture}
                         name="dateFacture"

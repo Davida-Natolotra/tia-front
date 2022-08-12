@@ -143,6 +143,20 @@ export default function AppMotoTable() {
         })
     },
     {
+      field: 'date_vente',
+      headerName: 'Date de vente',
+      minWidth: 150,
+      flex: 2,
+      sortable: true,
+      hide: isMobile,
+      valueFormatter: (params) =>
+        new Date(params?.value).toLocaleDateString('fr-fr', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        })
+    },
+    {
       field: 'commercial',
       headerName: 'Commercial',
       width: 200,

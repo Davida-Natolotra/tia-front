@@ -11,9 +11,9 @@ import { LoadingButton } from '@material-ui/lab';
 import { Card, Grid, Stack, Button, ButtonGroup, Box, TextField } from '@material-ui/core';
 import { Autocomplete, Typography } from '@mui/material';
 // utils
-
+import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 //
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+
 import frLocale from 'date-fns/locale/fr';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
@@ -165,7 +165,7 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
                   adapterLocale={frLocale}
                   localeText={calFR.components.MuiLocalizationProvider.defaultProps.localeText}
                 >
-                  <DatePicker
+                  <MobileDatePicker
                     label="Date d'entrée"
                     value={values.dateEntree}
                     name="dateEntree"
@@ -254,7 +254,7 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
                   adapterLocale={frLocale}
                   localeText={calFR.components.MuiLocalizationProvider.defaultProps.localeText}
                 >
-                  <DatePicker
+                  <MobileDatePicker
                     label="Date d'arrivée"
                     value={values.dateArrivee}
                     name="dateArrivee"
@@ -281,6 +281,7 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
                   outputFormat="number"
                   decimalCharacter=","
                   digitGroupSeparator=" "
+                  decimalPlaces={0}
                   onChange={(event, value) => setFieldValue('PA', value)}
                   error={Boolean(touched.PA && errors.PA)}
                   helperText={touched.PA && errors.PA}
@@ -336,6 +337,7 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
                   outputFormat="number"
                   decimalCharacter=","
                   digitGroupSeparator=" "
+                  decimalPlaces={0}
                   onChange={(event, value) => setFieldValue('montantReparation', value)}
                   error={Boolean(touched.montantReparation && errors.montantReparation)}
                   helperText={touched.montantReparation && errors.montantReparation}
