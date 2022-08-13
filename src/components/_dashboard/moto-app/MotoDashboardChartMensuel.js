@@ -1,5 +1,5 @@
 import { merge } from 'lodash';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import ReactApexChart from 'react-apexcharts';
 // material
 import { Card, CardHeader, Box, TextField, Stack } from '@material-ui/core';
@@ -8,6 +8,8 @@ import startOfWeek from 'date-fns/startOfWeek';
 
 // Redux
 import { useSelector, useDispatch } from 'react-redux';
+import { getMotosMonthly } from '../../../redux/slices/moto';
+
 import { BaseOptionChart } from '../../charts';
 import JournPick from './motoJournPick';
 import useCheckMobile from '../../../hooks/useCheckMobile';
@@ -16,6 +18,12 @@ import useCheckMobile from '../../../hooks/useCheckMobile';
 export default function MotoDashboardChartMonth() {
   const motosMonth = useSelector((state) => state.motos.motosMonth);
   const isMobile = useCheckMobile();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getMotosMonthly(new Date()));
+  }, []);
+
   const chartOptions = merge(BaseOptionChart(), {
     stroke: {
       show: true,

@@ -55,7 +55,7 @@ export default function MotoDashboardChartHebdo() {
         })
       )
     );
-  }, [dispatch]);
+  }, []);
 
   const dataSeries = [{ name: 'Vente', data: [...motosHebdo.nb] }];
   const total = motosHebdo.nb.reduce((partialSum, a) => partialSum + a, 0);
