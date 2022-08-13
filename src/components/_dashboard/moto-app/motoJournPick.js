@@ -45,7 +45,7 @@ const CustomPickersDay = styled(PickersDay, {
 const minDate = new Date('2020-01-01T00:00:00.000');
 const maxDate = new Date('2030-01-01T00:00:00.000');
 
-export default function CustomDay() {
+export default function CustomDay({ select }) {
   const [value, setValue] = useState(new Date());
   const [anchorEl, setAnchorEl] = useState(null);
   const [range, setRange] = useState([
@@ -62,7 +62,6 @@ export default function CustomDay() {
   ]);
   const [date, setDate] = useState(new Date());
   const dispatch = useDispatch();
-  const select = useSelector((state) => state.motos?.chartSelect || 'month');
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);

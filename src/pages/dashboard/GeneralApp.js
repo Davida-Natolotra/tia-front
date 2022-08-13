@@ -14,7 +14,8 @@ import StockWidgets from '../../components/_dashboard/moto-app/StockWidgets';
 import StockTotal from '../../components/_dashboard/moto-app/StockTotal';
 import VenteDetails from '../../components/_dashboard/moto-app/motoDashboardDetails';
 import MotoChartHebdo from '../../components/_dashboard/moto-app/motoDashboardJourn';
-
+import MotoChartHebdo2 from '../../components/_dashboard/moto-app/MotoDashboardChartHebdo';
+import MotoChartMonth from '../../components/_dashboard/moto-app/MotoDashboardChartMensuel';
 // ----------------------------------------------------------------------
 
 export default function GeneralApp() {
@@ -50,10 +51,14 @@ export default function GeneralApp() {
           </Grid>
 
           <Grid item xs={12} md={6}>
-            <MotoChartHebdo />
+            {/* <MotoChartHebdo /> */}
+            <MotoChartHebdo2 />
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <MotoChartMonth />
           </Grid>
 
-          <Grid item xs={12} md={6}>
+          <Grid item xs={12}>
             <VenteDetails />
           </Grid>
           {/* Add here the recap */}

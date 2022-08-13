@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Collapse from '@mui/material/Collapse';
 import IconButton from '@mui/material/IconButton';
@@ -12,11 +12,11 @@ import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import { Card, CardHeader, CardContent, Divider } from '@material-ui/core';
+import { Card, CardHeader, CardContent, Divider, TextField } from '@material-ui/core';
 import startOfWeek from 'date-fns/startOfWeek';
 import { useSelector, useDispatch } from 'react-redux';
 import { v4 as uuidv4 } from 'uuid';
-import { getVenteToday } from '../../../redux/slices/moto';
+import { getVenteToday, setChartSelect } from '../../../redux/slices/moto';
 
 function createData(nomMoto, numMoteur, data) {
   return {
@@ -28,7 +28,7 @@ function createData(nomMoto, numMoteur, data) {
 
 function Row(props) {
   const { row } = props;
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
 
   return (
     <>
@@ -100,17 +100,45 @@ export default function CollapsibleTable() {
     nb = nbM;
   }
   const dispatch = useDispatch();
-  React.useEffect(() => {
+  useEffect(() => {
     dispatch(getVenteToday());
   }, []);
 
   const venteToday = useSelector((state) => state.motos.venteToday);
   const rows = date.map((di, index) => createData(di, nb[index], data[index]));
   const rowsToday = venteToday?.data || [];
-  console.log(`date:${date[0]}, type:${typeof date[0]}`);
+  const [seriesData, setSeriesData] = useState('Year');
+  const handleChangeSeriesData = (event) => {
+    dispatch(setChartSelect(event.target.value));
+  };
+
+  const SELECT = [{ label: 'Hebdomadaire' }, { label: 'Mensuelle' }];
   return (
     <Card>
-      <CardHeader title="Détails de vente" />
+      <CardHeader
+        title="Détails de vente"
+        action={
+          <TextField
+            select
+            fullWidth
+            value={select}
+            SelectProps={{ native: true }}
+            onChange={handleChangeSeriesData}
+            sx={{
+              '& fieldset': { border: '0 !important' },
+              '& select': { pl: 1, py: 0.5, pr: '24px !important', typography: 'subtitle2' },
+              '& .MuiOutlinedInput-root': { borderRadius: 0.75, bgcolor: 'background.neutral' },
+              '& .MuiNativeSelect-icon': { top: 4, right: 0, width: 20, height: 20 }
+            }}
+          >
+            {SELECT.map((option) => (
+              <option key={option.label} value={option.label}>
+                {option.label}
+              </option>
+            ))}
+          </TextField>
+        }
+      />
       <CardContent>
         <Box>
           <Typography variant="overline" gutterBottom component="div">
