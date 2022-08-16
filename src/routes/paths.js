@@ -1,5 +1,4 @@
 // ----------------------------------------------------------------------
-
 function path(root, sublink) {
   return `${root}${sublink}`;
 }
@@ -39,7 +38,8 @@ export const PATH_DASHBOARD = {
     ecommerce: path(ROOTS_DASHBOARD, '/ecommerce'),
     analytics: path(ROOTS_DASHBOARD, '/analytics'),
     banking: path(ROOTS_DASHBOARD, '/banking'),
-    booking: path(ROOTS_DASHBOARD, '/booking')
+    booking: path(ROOTS_DASHBOARD, '/booking'),
+    caisseMoto: path(ROOTS_DASHBOARD, '/caisseMoto')
   },
   mail: {
     root: path(ROOTS_DASHBOARD, '/mail'),
@@ -84,6 +84,9 @@ export const PATH_DASHBOARD = {
     list: path(ROOTS_DASHBOARD, '/moto/list'),
     newMoto: path(ROOTS_DASHBOARD, '/moto/new'),
     editById: path(ROOTS_DASHBOARD, '/moto/:idMoto/edit')
+  },
+  caisseMoto: {
+    root: path(ROOTS_DASHBOARD, '/caisseMoto')
   }
 };
 

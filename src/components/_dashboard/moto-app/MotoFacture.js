@@ -1,14 +1,13 @@
 import * as Yup from 'yup';
 import PropTypes from 'prop-types';
 import { useSnackbar } from 'notistack5';
-import { useNavigate, Link as RouterLink } from 'react-router-dom';
 import moment from 'moment';
 import { useState, useEffect, useMemo, useRef } from 'react';
 import { Form, FormikProvider, useFormik } from 'formik';
 import CurrencyTextField from '@unicef/material-ui-currency-textfield';
 // material
 import { LoadingButton } from '@material-ui/lab';
-import { Card, Grid, Stack, Button, ButtonGroup, Box, TextField } from '@material-ui/core';
+import { Grid, Stack, Button, Box, TextField } from '@material-ui/core';
 import { Typography, Divider, Accordion, AccordionSummary, AccordionDetails } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
@@ -26,12 +25,12 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { frFR as calFR } from '@mui/x-date-pickers';
 import { useDispatch, useSelector } from 'react-redux';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
+import useCheckMobile from '../../../hooks/useCheckMobile';
 import {
   getLastID,
   getNumberWord,
   updateMoto,
   getMotos,
-  resetCurrentData,
   getLastFacture,
   url,
   cancelFacture
@@ -41,7 +40,6 @@ import { fileChangedHandler } from '../../../utils/imageCompress';
 
 import { fNumber } from '../../../utils/formatNumber';
 // routes
-import { PATH_DASHBOARD } from '../../../routes/paths';
 import CarouselProductDetails from '../../carousel/CarouselProductDetails';
 // ----------------------------------------------------------------------
 
@@ -58,17 +56,19 @@ function padLeadingZeros(num, size) {
   return s;
 }
 
-export default function ProductNewForm({ isEdit, currentProduct }) {
+const urlBlank = 'https://placehold.jp/24/cccccc/525252/500x500.png?text=Aucune%20photo';
+
+export default function ProductNewForm({ currentProduct }) {
   const linkRecto = () => {
     let link;
     if (currentProduct.PJ_CIN_Client_2_recto) {
       if (currentProduct.PJ_CIN_Client_2_recto.includes('media')) {
-        link = `${url}/${currentProduct.PJ_CIN_Client_2_recto}`;
+        link = `${url}${currentProduct.PJ_CIN_Client_2_recto}`;
       } else {
         link = `${url}/media/${currentProduct.PJ_CIN_Client_2_recto}`;
       }
     } else {
-      link = 'https://placehold.jp/24/cccccc/525252/500x500.png?text=Aucune%20photo';
+      link = urlBlank;
     }
     return link;
   };
@@ -76,18 +76,18 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
     let link;
     if (currentProduct.PJ_CIN_Client_2_verso) {
       if (currentProduct.PJ_CIN_Client_2_verso.includes('media')) {
-        link = `${url}/${currentProduct.PJ_CIN_Client_2_verso}`;
+        link = `${url}${currentProduct.PJ_CIN_Client_2_verso}`;
       } else {
         link = `${url}/media/${currentProduct.PJ_CIN_Client_2_verso}`;
       }
     } else {
-      link = 'https://placehold.jp/24/cccccc/525252/500x500.png?text=Aucune%20photo';
+      link = urlBlank;
     }
     return link;
   };
   const { enqueueSnackbar } = useSnackbar();
-  const [CINRecto, setCINRecto] = useState(linkRecto);
-  const [CINVerso, setCINVerso] = useState(linkVerso);
+  const [CINRecto, setCINRecto] = useState(linkRecto());
+  const [CINVerso, setCINVerso] = useState(linkVerso());
   const [CINRectoFile, setCINRectoFile] = useState(null);
   const [CINVersoFile, setCINVersoFile] = useState(null);
   const [CINRectoURI, setCINRectoURI] = useState(null);
@@ -149,9 +149,12 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
       dataUpload.append('TVA', parseInt(values.TVA, 10));
       dataUpload.append('PV', parseInt(values.PV, 10));
       dataUpload.append('commercial', values.commercial);
-      if (values.dateFacture) {
-        dataUpload.append('date_vente', moment(values.dateFacture).format('YYYY-MM-DD'));
+      if (!currentProduct.date_vente) {
+        if (values.dateFacture) {
+          dataUpload.append('date_vente', moment(values.dateFacture).format('YYYY-MM-DD'));
+        }
       }
+
       if (changedRecto) {
         dataUpload.append('PJ_CIN_Client_2_recto', CINRectoFile);
       }
@@ -293,7 +296,7 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
       <Grid item xs={12} md={6}>
         <FormikProvider value={formik}>
           <Form autoComplete="off" onSubmit={handleSubmit}>
-            <Card sx={{ p: 3 }}>
+            <Box>
               <Accordion>
                 <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
                   <Typography variant="overline">moto</Typography>
@@ -500,7 +503,7 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
                   </Button>
                 </DialogActions>
               </Dialog>
-            </Card>
+            </Box>
           </Form>
         </FormikProvider>
       </Grid>

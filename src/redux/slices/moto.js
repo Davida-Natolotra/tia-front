@@ -3,8 +3,8 @@ import { createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 
 // Endpoint
-// export const url = 'http://localhost:8000';
-export const url = 'https://tiamoto.com/backend';
+export const url = 'http://localhost:8000';
+// export const url = 'https://tiamoto.com/backend';
 // ----------------------------------------------------------------------
 
 const initialState = {
@@ -23,7 +23,8 @@ const initialState = {
   numWord: '',
   venteToday: [],
   currentData: {},
-  isChartLoading: false
+  isChartLoading: false,
+  ventes: []
 };
 
 const slice = createSlice({
@@ -114,6 +115,10 @@ const slice = createSlice({
     },
     resetCurrentData(state, action) {
       state.currentData = {};
+    },
+    getVentesSuccess(state, action) {
+      state.isLoading = false;
+      state.ventes = action.payload;
     }
   }
 });
@@ -379,6 +384,22 @@ export function deleteMoto(id) {
         }
       });
       dispatch(slice.actions.getLastResponseMotoSuccess(response.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+export function getVentes() {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios({
+        method: 'get',
+        url: `${url}/api/motos/ventes/`,
+        responseType: 'stream'
+      });
+      dispatch(slice.actions.getVentesSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }

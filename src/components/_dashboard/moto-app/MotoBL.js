@@ -1,14 +1,13 @@
 import * as Yup from 'yup';
 import PropTypes from 'prop-types';
 import { useSnackbar } from 'notistack5';
-import { Link as RouterLink } from 'react-router-dom';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { Form, FormikProvider, useFormik } from 'formik';
 import CurrencyTextField from '@unicef/material-ui-currency-textfield';
 // material
 import { LoadingButton } from '@material-ui/lab';
-import { Card, Grid, Stack, Button, ButtonGroup, TextField } from '@material-ui/core';
+import { Box, Grid, Stack, Button, TextField } from '@material-ui/core';
 import { Typography, Accordion, AccordionSummary, AccordionDetails } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 // utils
@@ -23,7 +22,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import BLPreview from './BL';
 import { getLastID, updateMoto, getMotos, getLastBL } from '../../../redux/slices/moto';
 // routes
-import { PATH_DASHBOARD } from '../../../routes/paths';
 // ----------------------------------------------------------------------
 
 // ----------------------------------------------------------------------
@@ -142,7 +140,7 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
       <Form autoComplete="off" onSubmit={handleSubmit}>
         <Grid container spacing={3}>
           <Grid item xs={12} md={6}>
-            <Card sx={{ p: 3 }}>
+            <Box>
               <Accordion>
                 <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
                   <Typography variant="overline">moto</Typography>
@@ -248,7 +246,7 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
                   Réinitialiser
                 </Button>
               </Stack>
-            </Card>
+            </Box>
           </Grid>
           <Grid item xs={12} md={6}>
             <BLPreview currentProduct={currentProduct} />

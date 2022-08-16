@@ -63,14 +63,6 @@ export default function GeneralApp() {
           </Grid>
           {/* Add here the recap */}
           <Grid item xs={12} lg={12}>
-            {/* {isMobile ? (
-              <Stack spacing={3}>
-                <AppWidgets1 />
-                <AppWidgets2 />
-              </Stack>
-            ) : (
-              
-            )} */}
             <AppMotoTable />
           </Grid>
         </Grid>

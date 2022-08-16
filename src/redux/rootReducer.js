@@ -10,7 +10,7 @@ import productReducer from './slices/product';
 import calendarReducer from './slices/calendar';
 import kanbanReducer from './slices/kanban';
 import motoReducer from './slices/moto';
-
+import caisseMotoReducer from './slices/caisse';
 // ----------------------------------------------------------------------
 
 const rootPersistConfig = {
@@ -35,7 +35,8 @@ const rootReducer = combineReducers({
   calendar: calendarReducer,
   kanban: kanbanReducer,
   product: persistReducer(productPersistConfig, productReducer),
-  motos: motoReducer
+  motos: motoReducer,
+  caisseMoto: caisseMotoReducer
 });
 
 export { rootPersistConfig, rootReducer };

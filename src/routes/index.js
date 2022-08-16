@@ -85,19 +85,7 @@ export default function Router() {
           path: 'analytics',
           element: <GeneralAnalytics />
         },
-        {
-          path: 'e-commerce',
-          children: [
-            { path: '/', element: <Navigate to="/dashboard/e-commerce/shop" replace /> },
-            { path: 'shop', element: <EcommerceShop /> },
-            { path: 'product/:name', element: <EcommerceProductDetails /> },
-            { path: 'list', element: <EcommerceProductList /> },
-            { path: 'product/new', element: <EcommerceProductCreate /> },
-            { path: 'product/:name/edit', element: <EcommerceProductCreate /> },
-            { path: 'checkout', element: <EcommerceCheckout /> },
-            { path: 'invoice', element: <EcommerceInvoice /> }
-          ]
-        },
+
         {
           path: 'user',
           children: [
@@ -146,7 +134,8 @@ export default function Router() {
             { path: ':id/edit', element: <MotoCreate /> },
             { path: 'new', element: <MotoCreate /> }
           ]
-        }
+        },
+        { path: 'caisseMoto', element: <CaisseMoto /> }
       ]
     },
 
@@ -326,3 +315,5 @@ const MultiLanguage = Loadable(lazy(() => import('../pages/components-overview/e
 const Animate = Loadable(lazy(() => import('../pages/components-overview/extra/animate')));
 const MegaMenu = Loadable(lazy(() => import('../pages/components-overview/extra/MegaMenu')));
 const FormValidation = Loadable(lazy(() => import('../pages/components-overview/extra/form-validation')));
+
+const CaisseMoto = Loadable(lazy(() => import('../pages/dashboard/CaisseMoto')));

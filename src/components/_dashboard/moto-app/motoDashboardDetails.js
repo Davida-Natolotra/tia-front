@@ -107,7 +107,7 @@ export default function CollapsibleTable() {
   const venteToday = useSelector((state) => state.motos.venteToday);
   const rows = date.map((di, index) => createData(di, nb[index], data[index]));
   const rowsToday = venteToday?.data || [];
-  const [seriesData, setSeriesData] = useState('Year');
+
   const handleChangeSeriesData = (event) => {
     dispatch(setChartSelect(event.target.value));
   };
