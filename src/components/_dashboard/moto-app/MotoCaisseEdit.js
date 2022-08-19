@@ -239,7 +239,7 @@ export default function ProductNewForm() {
                       variant="contained"
                       size="large"
                       loading={isSubmitting}
-                      disabled={!isChanged}
+                      disabled={!isChanged || currentProduct.is_moto}
                     >
                       Enregistrer
                     </LoadingButton>

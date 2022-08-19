@@ -163,7 +163,14 @@ export default function AppMotoTable() {
       headerName: 'Commercial',
       width: 200,
       flex: 2,
-      hide: true
+      hide: isMobile
+    },
+    {
+      field: 'localisation',
+      headerName: 'Local',
+      width: 200,
+      flex: 2,
+      hide: isMobile
     },
 
     {
