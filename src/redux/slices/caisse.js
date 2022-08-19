@@ -203,3 +203,23 @@ export function updateSolde(dataUpdate) {
     }
   };
 }
+
+export function createOrUpdateFromMoto(dataUpload) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios({
+        method: 'post',
+        url: `${url}/api/caisseMotos/add_or_update`,
+        data: dataUpload,
+        responseType: 'stream',
+        headers: {
+          'Content-Type': 'application/json; charset= utf-8'
+        }
+      });
+      dispatch(slice.actions.getCaisseSuccess(response.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}

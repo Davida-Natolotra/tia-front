@@ -75,35 +75,6 @@ export default function CaisseListe() {
     dispatch(getVentes());
   }, []);
 
-  function updateCaisseVentes() {
-    caisses.forEach((caisse) => {
-      ventesMoto.forEach((moto) =>
-        moto.id === caisse.id_moto
-          ? dispatch(
-              updateCaisseMoto(
-                {
-                  id_moto: moto.id,
-                  libellee: `Vente moto ${moto.nom_moto} - ${moto.num_moteur}`,
-                  date: moto.date_vente,
-                  recette: moto.PV,
-                  is_moto: true
-                },
-                caisse.id
-              )
-            )
-          : dispatch(
-              addCaisseMoto({
-                id_moto: moto.id,
-                libellee: `Vente moto ${moto.nom_moto} - ${moto.num_moteur}`,
-                date: moto.date_vente,
-                recette: moto.PV,
-                is_moto: true
-              })
-            )
-      );
-    });
-  }
-
   const columns = [
     {
       field: 'libellee',
@@ -180,7 +151,7 @@ export default function CaisseListe() {
         subheader={`Vous avez ${caisses?.length} enregistrements`}
         action={
           <Tooltip title="Update vente caisse">
-            <IconButton color="primary" size="large" onClick={updateCaisseVentes}>
+            <IconButton color="primary" size="large">
               <Icon icon={<SyncIcon />} width={20} height={20} />
             </IconButton>
           </Tooltip>
