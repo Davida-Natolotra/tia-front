@@ -69,7 +69,7 @@ export default function MotoCaisseSolde() {
 
   return (
     <Card>
-      <CardHeader title="Solde de la caisse" />
+      <CardHeader title="Solde" />
       <CardContent>
         <Stack direction="column" spacing={3}>
           <Stack direction="row" spacing={2} align="end" justify="end">

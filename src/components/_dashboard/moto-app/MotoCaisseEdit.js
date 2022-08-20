@@ -7,18 +7,31 @@ import { Form, FormikProvider, useFormik } from 'formik';
 import CurrencyTextField from '@unicef/material-ui-currency-textfield';
 // material
 import { LoadingButton } from '@material-ui/lab';
-import { Card, Grid, Stack, Button, Typography, TextField, CardHeader, CardContent } from '@material-ui/core';
+import {
+  Card,
+  Grid,
+  Stack,
+  Button,
+  DialogTitle,
+  TextField,
+  CardHeader,
+  CardContent,
+  Dialog,
+  DialogContent,
+  Tooltip
+} from '@material-ui/core';
 import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
+import CloseIcon from '@mui/icons-material/Close';
 // utils
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 //
-
+import IconButton from '@mui/material/IconButton';
 import frLocale from 'date-fns/locale/fr';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { frFR as calFR } from '@mui/x-date-pickers';
 import { useDispatch, useSelector } from 'react-redux';
-import { url, updateCaisseMoto, addCaisseMoto, setEdit, resetCaisse } from '../../../redux/slices/caisse';
+import { url, updateCaisseMoto, addCaisseMoto, setEdit, resetCaisse, setShow } from '../../../redux/slices/caisse';
 // routes
 import CarouselProductDetails from '../../carousel/CarouselProductDetails';
 import { fileChangedHandler } from '../../../utils/imageCompress';
@@ -33,7 +46,7 @@ ProductNewForm.propTypes = {
 };
 const urlBlank = 'https://placehold.jp/24/cccccc/525252/500x500.png?text=Aucune%20photo';
 
-export default function ProductNewForm() {
+function ProductNewForm() {
   const currentProduct = useSelector((state) => state.caisseMoto.caisse);
   const { isEdit } = useSelector((state) => state.caisseMoto);
   const [isChanged, setIsChanged] = useState(false);
@@ -151,8 +164,10 @@ export default function ProductNewForm() {
   }, [currentProduct]);
 
   useEffect(() => {
-    resetFormInit();
-  }, []);
+    if (!isEdit) {
+      resetFormInit();
+    }
+  }, [isEdit]);
 
   return (
     <FormikProvider value={formik}>
@@ -160,7 +175,6 @@ export default function ProductNewForm() {
         <Grid container spacing={3} justifyContent="center">
           <Grid item xs={12} md={6}>
             <Card>
-              <CardHeader title={isEdit ? 'Edition' : 'Nouvelle entrée'} />
               <CardContent>
                 <Stack spacing={3} direction="column">
                   <TextField
@@ -245,7 +259,7 @@ export default function ProductNewForm() {
                     </LoadingButton>
 
                     <Button type="button" fullWidth variant="outlined" onClick={() => resetFormInit()}>
-                      Annuler
+                      Nouveau
                     </Button>
                   </Stack>
                 </Stack>
@@ -278,5 +292,42 @@ export default function ProductNewForm() {
         </Grid>
       </Form>
     </FormikProvider>
+  );
+}
+export default function CaisseEdit() {
+  const openDialog = useSelector((state) => state.caisseMoto.show);
+  const { isEdit } = useSelector((state) => state.caisseMoto);
+  const dispatch = useDispatch();
+  const handleCloseDialog = () => dispatch(setShow(false));
+  return (
+    <Dialog
+      open={openDialog}
+      onClose={handleCloseDialog}
+      aria-labelledby="alert-dialog-title"
+      aria-describedby="alert-dialog-description"
+    >
+      <DialogTitle sx={{ p: 3 }}>
+        {isEdit ? 'Edition' : 'Nouvelle entrée'}
+        {openDialog ? (
+          <Tooltip title="Fermer">
+            <IconButton
+              aria-label="close"
+              onClick={handleCloseDialog}
+              sx={{
+                position: 'absolute',
+                right: 8,
+                top: 8,
+                color: (theme) => theme.palette.grey[500]
+              }}
+            >
+              <CloseIcon />
+            </IconButton>
+          </Tooltip>
+        ) : null}
+      </DialogTitle>
+      <DialogContent>
+        <ProductNewForm />
+      </DialogContent>
+    </Dialog>
   );
 }

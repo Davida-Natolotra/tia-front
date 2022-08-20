@@ -74,7 +74,7 @@ const slice = createSlice({
 });
 
 export default slice.reducer;
-export const { setCaisse, setSolde, setEdit, resetCaisse } = slice.actions;
+export const { setCaisse, setSolde, setEdit, resetCaisse, setShow } = slice.actions;
 
 export function getCaisseListe() {
   return async (dispatch) => {

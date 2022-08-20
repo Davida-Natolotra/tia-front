@@ -7,11 +7,10 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { useSnackbar } from 'notistack5';
 // material
-import SyncIcon from '@mui/icons-material/Sync';
 import { IconButton } from '@mui/material';
 import { DataGrid, GridToolbar, frFR } from '@mui/x-data-grid';
 import { Menu, Divider, MenuItem, Typography, Card, CardHeader, Box, Button, Tooltip } from '@material-ui/core';
-
+import plusFill from '@iconify/icons-eva/plus-fill';
 // utils
 import { useRef, useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
@@ -19,15 +18,9 @@ import { useSelector, useDispatch } from 'react-redux';
 import archiveFill from '@iconify/icons-eva/archive-fill';
 import trash2Outline from '@iconify/icons-eva/trash-2-outline';
 import pen from '@iconify/icons-eva/edit-2-outline';
+import { MIconButton } from '../../@material-extend';
 import { fNumber } from '../../../utils/formatNumber';
-import {
-  getCaisseListe,
-  deleteCaisse,
-  setCaisse,
-  setEdit,
-  addCaisseMoto,
-  updateCaisseMoto
-} from '../../../redux/slices/caisse';
+import { getCaisseListe, deleteCaisse, setCaisse, setEdit, setShow } from '../../../redux/slices/caisse';
 import { getVentes } from '../../../redux/slices/moto';
 import useCheckMobile from '../../../hooks/useCheckMobile';
 
@@ -55,9 +48,9 @@ export default function CaisseListe() {
 
   const handleEdit = (id) => {
     dispatch(setEdit(true));
+    dispatch(setShow(true));
     const caisse = caisses.find((c) => c.id === id);
     dispatch(setCaisse(caisse));
-    window.scrollTo(0, 0);
   };
 
   async function deleteMotoFunc() {
@@ -144,16 +137,21 @@ export default function CaisseListe() {
     setContextMenu(null);
   };
 
+  const handleNew = () => {
+    dispatch(setEdit(false));
+    dispatch(setShow(true));
+  };
+
   return (
     <Card>
       <CardHeader
         title="Table de récapitulation"
         subheader={`Vous avez ${caisses?.length} enregistrements`}
         action={
-          <Tooltip title="Update vente caisse">
-            <IconButton color="primary" size="large">
-              <Icon icon={<SyncIcon />} width={20} height={20} />
-            </IconButton>
+          <Tooltip title="Nouvelle entrée">
+            <MIconButton color="primary" size="large" onClick={handleNew}>
+              <Icon icon={plusFill} width={20} height={20} />
+            </MIconButton>
           </Tooltip>
         }
       />

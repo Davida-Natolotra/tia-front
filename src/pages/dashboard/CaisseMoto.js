@@ -19,7 +19,7 @@ export default function GeneralApp() {
           <Grid item xs={12} md={4}>
             <MotoCaisseSolde />
           </Grid>
-          <Grid item xs={12} md={8}>
+          <Grid item xs={12}>
             <MotoCaisseEdit />
           </Grid>
           <Grid item xs={12}>
