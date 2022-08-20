@@ -111,6 +111,7 @@ function ProductNewForm() {
         enqueueSnackbar(!isEdit ? 'Nouvelle entrée enregistrée avec succès' : 'Update success', { variant: 'success' });
 
         setIsChanged(false);
+        dispatch(setShow(false));
       } catch (error) {
         console.error(error);
         setSubmitting(false);
@@ -148,13 +149,14 @@ function ProductNewForm() {
       isInit.current = false;
     } else if (changedPJ) {
       setPJ(PJURI);
+      setIsChanged(true);
     }
   }, [PJURI]);
 
   useEffect(() => {
     if (isInit.current) {
       isInit.current = false;
-    } else if (values.libellee !== '') {
+    } else if (values.libellee !== '' && !currentProduct.is_moto) {
       setIsChanged(true);
     }
   }, [values]);
@@ -253,7 +255,7 @@ function ProductNewForm() {
                       variant="contained"
                       size="large"
                       loading={isSubmitting}
-                      disabled={!isChanged || currentProduct.is_moto}
+                      disabled={!isChanged}
                     >
                       Enregistrer
                     </LoadingButton>
