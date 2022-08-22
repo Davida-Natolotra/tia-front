@@ -75,10 +75,6 @@ export default function Login() {
               </Typography>
               <Typography sx={{ color: 'text.secondary' }}>Veuillez entrer les informations suivantes</Typography>
             </Box>
-
-            <Tooltip title={capitalCase(method)}>
-              <Box component="img" src={`/static/auth/ic_${method}.png`} sx={{ width: 32, height: 32 }} />
-            </Tooltip>
           </Stack>
 
           {method === 'firebase' && <AuthFirebaseSocials />}

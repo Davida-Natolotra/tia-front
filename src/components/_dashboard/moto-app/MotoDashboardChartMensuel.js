@@ -36,6 +36,13 @@ export default function MotoDashboardChartMonth() {
     xaxis: {
       categories: motosMonth.date
     },
+    yaxis: {
+      labels: {
+        formatter: (value) => value.toFixed(0)
+      },
+      stepSize: 1
+    },
+
     tooltip: {
       y: {
         formatter: (val) => `${val} ${val <= 1 ? 'vendu' : 'vendus'}`

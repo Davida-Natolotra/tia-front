@@ -16,9 +16,10 @@ export default function MotoCaisseSolde() {
   const motos = useSelector((state) => state.motos.products);
   const motosVente = motos.filter((moto) => moto.PV !== 0 && moto.date_vente !== null && moto.date_vente !== '');
   const isLoading = useSelector((state) => state.caisseMoto.isLoading);
-  const [tempValue, setTempValue] = useState(0);
+  const { enqueueSnackbar } = useSnackbar();
   const soldeInitial = soldes.solde_initial;
   const soldeActuel = soldes.solde_actuel;
+  const [tempValue, setTempValue] = useState(soldeInitial);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -39,7 +40,7 @@ export default function MotoCaisseSolde() {
     );
   }, []);
 
-  const updateSoldeFrom = () =>
+  const updateSoldeFrom = () => {
     dispatch(
       updateSolde({
         solde_initial: tempValue,
@@ -49,6 +50,8 @@ export default function MotoCaisseSolde() {
           caisses.reduce((partialSum, a) => partialSum + Number(a.depense), 0)
       })
     );
+    enqueueSnackbar('Solde mise à jour avec succès', { variant: 'success' });
+  };
 
   const isInit = useRef(true);
   useEffect(() => {
