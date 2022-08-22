@@ -8,7 +8,7 @@ import { Form, FormikProvider, useFormik } from 'formik';
 import CurrencyTextField from '@unicef/material-ui-currency-textfield';
 // material
 import { LoadingButton } from '@material-ui/lab';
-import { Card, Grid, Stack, Button, ButtonGroup, Box, TextField } from '@material-ui/core';
+import { Card, Grid, Stack, Button, Box, TextField } from '@material-ui/core';
 import { Autocomplete, Typography } from '@mui/material';
 // utils
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
@@ -19,6 +19,8 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { frFR as calFR } from '@mui/x-date-pickers';
 import { useDispatch, useSelector } from 'react-redux';
+import useAuth from '../../../hooks/useAuth';
+
 import { getLastID, addMoto, getMotos, resetCurrentData, updateMoto } from '../../../redux/slices/moto';
 import { fNumber } from '../../../utils/formatNumber';
 // routes
@@ -37,6 +39,8 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
   const { enqueueSnackbar } = useSnackbar();
   const [value, setValue] = useState(null);
   const dispatch = useDispatch();
+  const { user } = useAuth();
+
   useEffect(() => {
     dispatch(getLastID());
   }, [dispatch]);
@@ -271,21 +275,26 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
                     variant="standard"
                   />
                 </LocalizationProvider>
-                <CurrencyTextField
-                  label="PA"
-                  name="PA"
-                  variant="outlined"
-                  value={values.PA}
-                  currencySymbol="Ar"
-                  placeholder="PA"
-                  outputFormat="number"
-                  decimalCharacter=","
-                  digitGroupSeparator=" "
-                  decimalPlaces={0}
-                  onChange={(event, value) => setFieldValue('PA', value)}
-                  error={Boolean(touched.PA && errors.PA)}
-                  helperText={touched.PA && errors.PA}
-                />
+                {user.role === 'admin' || user.role === 'manager' ? (
+                  <CurrencyTextField
+                    label="PA"
+                    name="PA"
+                    variant="outlined"
+                    value={values.PA}
+                    currencySymbol="Ar"
+                    placeholder="PA"
+                    outputFormat="number"
+                    decimalCharacter=","
+                    digitGroupSeparator=" "
+                    decimalPlaces={0}
+                    onChange={(event, value) => setFieldValue('PA', value)}
+                    error={Boolean(touched.PA && errors.PA)}
+                    helperText={touched.PA && errors.PA}
+                  />
+                ) : (
+                  <></>
+                )}
+
                 <Typography variant="subheading">PV: {fNumber(values.PV)} Ar</Typography>
                 <Typography variant="subheading">
                   Date de vente:{' '}

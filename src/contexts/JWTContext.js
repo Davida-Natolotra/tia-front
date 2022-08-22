@@ -1,10 +1,12 @@
 import { createContext, useEffect, useReducer } from 'react';
 import PropTypes from 'prop-types';
 // utils
-import axios from '../utils/axios';
+import axios from 'axios';
 import { isValidToken, setSession } from '../utils/jwt';
 
 // ----------------------------------------------------------------------
+
+export const url = 'http://localhost:8000';
 
 const initialState = {
   isAuthenticated: false,
@@ -68,12 +70,60 @@ function AuthProvider({ children }) {
     const initialize = async () => {
       try {
         const accessToken = window.localStorage.getItem('accessToken');
+        const refreshToken = window.localStorage.getItem('refreshToken');
 
-        if (accessToken && isValidToken(accessToken)) {
+        if (refreshToken && isValidToken(refreshToken)) {
+          const response = await axios({
+            method: 'post',
+            url: `${url}/api/token/refresh/`,
+            headers: { Authorization: `Bearer ${refreshToken}`, 'Content-Type': 'application/json' },
+            data: { refresh: refreshToken }
+          });
+          const { access, refresh } = await response.data;
+          setSession(access);
+          window.localStorage.setItem('refreshToken', refresh);
+
+          const dataUser = await axios({
+            method: 'get',
+            url: `${url}/api/user/`,
+            headers: {
+              Authorization: `Bearer ${access}`,
+              'Content-Type': 'application/json'
+            }
+          });
+          const user = await dataUser.data;
+          console.log(dataUser);
+
+          dispatch({
+            type: 'INITIALIZE',
+            payload: {
+              isAuthenticated: true,
+              user
+            }
+          });
+        } else if (accessToken && isValidToken(accessToken)) {
           setSession(accessToken);
 
-          const response = await axios.get('/api/account/my-account');
-          const { user } = response.data;
+          const response = await axios({
+            method: 'get',
+            url: `${url}/api/token`,
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+              'Content-Type': 'application/json'
+            }
+          });
+          const { access } = await response.data;
+
+          const dataUser = await axios({
+            method: 'get',
+            url: `${url}/api/user/`,
+            headers: {
+              Authorization: `Bearer ${access}`,
+              'Content-Type': 'application/json'
+            }
+          });
+          const user = await dataUser.data;
+          console.log(dataUser);
 
           dispatch({
             type: 'INITIALIZE',
@@ -106,34 +156,26 @@ function AuthProvider({ children }) {
     initialize();
   }, []);
 
-  const login = async (email, password) => {
-    const response = await axios.post('/api/account/login', {
-      email,
+  const login = async (username, password) => {
+    const response = await axios.post(`${url}/api/token/`, {
+      username,
       password
     });
-    const { accessToken, user } = response.data;
-
-    setSession(accessToken);
-    dispatch({
-      type: 'LOGIN',
-      payload: {
-        user
+    const { access, refresh } = response.data;
+    const dataUser = await axios({
+      method: 'get',
+      url: `${url}/api/user`,
+      headers: {
+        Authorization: `Bearer ${access}`,
+        'Content-Type': 'application/json'
       }
     });
-  };
+    const user = dataUser.data;
 
-  const register = async (email, password, firstName, lastName) => {
-    const response = await axios.post('/api/account/register', {
-      email,
-      password,
-      firstName,
-      lastName
-    });
-    const { accessToken, user } = response.data;
-
-    window.localStorage.setItem('accessToken', accessToken);
+    setSession(access);
+    window.localStorage.setItem('refreshToken', refresh);
     dispatch({
-      type: 'REGISTER',
+      type: 'LOGIN',
       payload: {
         user
       }
@@ -156,7 +198,6 @@ function AuthProvider({ children }) {
         method: 'jwt',
         login,
         logout,
-        register,
         resetPassword,
         updateProfile
       }}

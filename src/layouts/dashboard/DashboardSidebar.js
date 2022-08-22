@@ -156,7 +156,10 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
         )}
       </Stack>
 
-      <NavSection navConfig={sidebarConfig} isShow={!isCollapse} />
+      <NavSection
+        navConfig={user.role !== 'commercial' ? [sidebarConfig[0]] : [sidebarConfig[1]]}
+        isShow={!isCollapse}
+      />
 
       <Box sx={{ flexGrow: 1 }} />
     </Scrollbar>

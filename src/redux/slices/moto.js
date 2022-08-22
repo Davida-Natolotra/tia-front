@@ -3,8 +3,8 @@ import { createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 
 // Endpoint
-// export const url = 'http://localhost:8000';
-export const url = 'https://tiamoto.com/backend';
+export const url = 'http://localhost:8000';
+// export const url = 'https://tiamoto.com/backend';
 // ----------------------------------------------------------------------
 
 const initialState = {
@@ -168,10 +168,8 @@ export function getMoto(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${url}/api/`, {
-        params: { id }
-      });
-      dispatch(slice.actions.getProductSuccess(response.data.product));
+      const response = await axios.get(`${url}/api/motos/${id}`);
+      dispatch(slice.actions.getProductSuccess(response.data));
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error));

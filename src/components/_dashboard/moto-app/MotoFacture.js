@@ -25,6 +25,7 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { frFR as calFR } from '@mui/x-date-pickers';
 import { useDispatch, useSelector } from 'react-redux';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
+import useAuth from '../../../hooks/useAuth';
 import useCheckMobile from '../../../hooks/useCheckMobile';
 import {
   getLastID,
@@ -97,7 +98,7 @@ export default function ProductNewForm({ currentProduct }) {
   const [open, setOpen] = useState(false);
   const [errorFactureCase, setErrorFactureCase] = useState(false);
   const [errorClientCase, setErrorClientCase] = useState(false);
-
+  const { user } = useAuth();
   const [IDMoto, setIDMoto] = useState(currentProduct.ID_Moto);
   const [nomMoto, setNomMoto] = useState(currentProduct.nom_moto);
   const [numMoteur, setNumMoteur] = useState(currentProduct.num_moteur);
@@ -442,6 +443,7 @@ export default function ProductNewForm({ currentProduct }) {
                       error={Boolean(touched.ref && errors.ref)}
                       helperText={touched.ref && errors.ref}
                     />
+
                     <CurrencyTextField
                       label="Prix de vente"
                       name="PV"
@@ -456,6 +458,7 @@ export default function ProductNewForm({ currentProduct }) {
                       onChange={(event, value) => setFieldValue('PV', value)}
                       error={Boolean(touched.PV && errors.PV)}
                       helperText={touched.PV && errors.PV}
+                      disabled={user.role === 'commercial' && currentProduct.PV}
                     />
 
                     <Typography variant="subheading">TVA: {fNumber(values.TVA)} Ar</Typography>

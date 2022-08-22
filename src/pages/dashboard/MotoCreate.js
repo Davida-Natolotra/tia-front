@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { paramCase } from 'change-case';
-import { useParams, useLocation } from 'react-router-dom';
+import { useParams, useLocation, useNavigate } from 'react-router-dom';
+
 // material
 import { Container, Box, Typography } from '@material-ui/core';
 import PropTypes from 'prop-types';
@@ -8,7 +9,7 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-import { getProducts } from '../../redux/slices/product';
+import { getMoto, getMotos } from '../../redux/slices/moto';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // hooks
@@ -58,14 +59,25 @@ export default function MotoCreate() {
   const { themeStretch } = useSettings();
   const dispatch = useDispatch();
   const { pathname } = useLocation();
+  const navigate = useNavigate();
   const { id } = useParams();
-  const { products, currentData } = useSelector((state) => state.motos);
+  const { products, product, currentData } = useSelector((state) => state.motos);
   const isEdit = pathname.includes('edit');
   const currentProduct = products?.find((product) => product.id === parseInt(id, 10)) || currentData.id;
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    dispatch(getProducts());
-  }, [dispatch]);
+    dispatch(getMotos());
+  }, []);
+
+  useEffect(() => {
+    if (currentProduct) {
+      setIsLoading(false);
+    }
+    if (!currentProduct) {
+      navigate(`${PATH_DASHBOARD.moto.root}`);
+    }
+  }, [currentProduct, product]);
 
   const [value, setValue] = useState(0);
 
@@ -73,7 +85,9 @@ export default function MotoCreate() {
     setValue(newValue);
   };
 
-  return (
+  return isLoading ? (
+    <h1>Veuillez revenir à la page principale...</h1>
+  ) : (
     <Page title="Edition">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs

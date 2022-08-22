@@ -3,7 +3,6 @@ import { PATH_DASHBOARD } from '../../routes/paths';
 // components
 import Label from '../../components/Label';
 import SvgIconStyle from '../../components/SvgIconStyle';
-
 // ----------------------------------------------------------------------
 
 const getIcon = (name) => (
@@ -26,8 +25,6 @@ const ICONS = {
 };
 
 const sidebarConfig = [
-  // GENERAL
-  // ----------------------------------------------------------------------
   {
     subheader: 'Tia moto',
     items: [
@@ -37,6 +34,16 @@ const sidebarConfig = [
         icon: ICONS.dashboard
       },
       { title: 'Caisse', path: PATH_DASHBOARD.general.caisseMoto, icon: ICONS.banking }
+    ]
+  },
+  {
+    subheader: 'Tia moto',
+    items: [
+      {
+        title: 'Dashboard',
+        path: PATH_DASHBOARD.general.app,
+        icon: ICONS.dashboard
+      }
     ]
   }
 ];

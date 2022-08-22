@@ -8,6 +8,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { useSnackbar } from 'notistack5';
+
 // material
 
 import { DataGrid, GridToolbar, frFR } from '@mui/x-data-grid';
@@ -46,6 +47,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import archiveFill from '@iconify/icons-eva/archive-fill';
 import trash2Outline from '@iconify/icons-eva/trash-2-outline';
 import pen from '@iconify/icons-eva/edit-2-outline';
+import useAuth from '../../../hooks/useAuth';
 import { deleteMoto, filterDisplay, getMotos, getMotosByDate } from '../../../redux/slices/moto';
 import useCheckMobile from '../../../hooks/useCheckMobile';
 
@@ -70,6 +72,7 @@ export default function AppMotoTable() {
   const isMobile = useCheckMobile();
   const [openDialog, setOpenDialog] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
+  const { user } = useAuth();
 
   const handleClickOpenDialog = () => {
     setOpenDialog(true);
@@ -181,7 +184,9 @@ export default function AppMotoTable() {
       sortable: false,
       disableColumnMenu: true,
       flex: 0.5,
-      renderCell: (params) => <MoreMenuButton id={params.id} handleClickOpenDialog={handleClickOpenDialog} />
+      renderCell: (params) => (
+        <MoreMenuButton id={params.id} handleClickOpenDialog={handleClickOpenDialog} user={user} />
+      )
     }
   ];
 
@@ -298,14 +303,18 @@ export default function AppMotoTable() {
               Archiver
             </Typography>
           </MenuItem>
+          {user.role === 'manager' && (
+            <>
+              <Divider />
 
-          <Divider />
-          <MenuItem sx={{ color: 'error.main' }} onClick={handleClickOpenDialog}>
-            <Icon icon={trash2Outline} width={20} height={20} />
-            <Typography variant="body2" sx={{ ml: 2 }}>
-              Supprimer
-            </Typography>
-          </MenuItem>
+              <MenuItem sx={{ color: 'error.main' }} onClick={handleClickOpenDialog}>
+                <Icon icon={trash2Outline} width={20} height={20} />
+                <Typography variant="body2" sx={{ ml: 2 }}>
+                  Supprimer
+                </Typography>
+              </MenuItem>
+            </>
+          )}
         </Menu>
         <Dialog
           open={openDialog}
@@ -331,7 +340,7 @@ export default function AppMotoTable() {
   );
 }
 
-function MoreMenuButton({ id, handleClickOpenDialog }) {
+function MoreMenuButton({ id, handleClickOpenDialog, user }) {
   const menuRef = useRef(null);
   const [open, setOpen] = useState(false);
 
@@ -374,20 +383,23 @@ function MoreMenuButton({ id, handleClickOpenDialog }) {
             Archiver
           </Typography>
         </MenuItem>
-
-        <Divider />
-        <MenuItem
-          sx={{ color: 'error.main' }}
-          onClick={() => {
-            handleClose();
-            handleClickOpenDialog();
-          }}
-        >
-          <Icon icon={trash2Outline} width={20} height={20} />
-          <Typography variant="body2" sx={{ ml: 2 }}>
-            Supprimer
-          </Typography>
-        </MenuItem>
+        {user.role === 'manager' && (
+          <>
+            <Divider />
+            <MenuItem
+              sx={{ color: 'error.main' }}
+              onClick={() => {
+                handleClose();
+                handleClickOpenDialog();
+              }}
+            >
+              <Icon icon={trash2Outline} width={20} height={20} />
+              <Typography variant="body2" sx={{ ml: 2 }}>
+                Supprimer
+              </Typography>
+            </MenuItem>
+          </>
+        )}
       </Menu>
     </>
   );
