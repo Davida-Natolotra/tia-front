@@ -12,12 +12,13 @@ import { Typography, Accordion, AccordionSummary, AccordionDetails } from '@mui/
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 // utils
 //
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 import frLocale from 'date-fns/locale/fr';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { frFR as calFR } from '@mui/x-date-pickers';
 import { useDispatch, useSelector } from 'react-redux';
+import useAuth from '../../../hooks/useAuth';
 
 import BLPreview from './BL';
 import { getLastID, updateMoto, getMotos, getLastBL } from '../../../redux/slices/moto';
@@ -42,6 +43,7 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
 
   const [errorClientCase, setErrorClientCase] = useState(false);
   const [errorBLCase, setErrorBLCase] = useState(false);
+  const { user } = useAuth();
 
   const lastID = useSelector((state) => state.motos.lastID);
   const lastBL = useSelector((state) => state.motos.lastBL);
@@ -200,7 +202,7 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
                       adapterLocale={frLocale}
                       localeText={calFR.components.MuiLocalizationProvider.defaultProps.localeText}
                     >
-                      <DatePicker
+                      <MobileDatePicker
                         label="Date BL"
                         value={values.dateBL}
                         name="dateBL"
@@ -232,6 +234,7 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
                       onChange={(event, value) => setFieldValue('PV', value)}
                       error={Boolean(touched.PV && errors.PV)}
                       helperText={touched.PV && errors.PV}
+                      disabled={user.role === 'commercial' && currentProduct.PV}
                     />
                   </Stack>
                 </AccordionDetails>

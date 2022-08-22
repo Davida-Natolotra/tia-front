@@ -184,6 +184,7 @@ function AuthProvider({ children }) {
 
   const logout = async () => {
     setSession(null);
+    window.localStorage.setItem('refreshToken', null);
     dispatch({ type: 'LOGOUT' });
   };
 

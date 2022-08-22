@@ -57,17 +57,10 @@ export default function Login() {
 
   return (
     <RootStyle title="Login | Minimal-UI">
-      <AuthLayout>
-        Don’t have an account? &nbsp;
-        <Link underline="none" variant="subtitle2" component={RouterLink} to={PATH_AUTH.register}>
-          Get started
-        </Link>
-      </AuthLayout>
-
       <MHidden width="mdDown">
         <SectionStyle>
           <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
-            Hi, Welcome Back
+            Bienvenue
           </Typography>
           <img src="/static/illustrations/illustration_login.png" alt="login" />
         </SectionStyle>
@@ -90,10 +83,6 @@ export default function Login() {
 
           {method === 'firebase' && <AuthFirebaseSocials />}
 
-          <Alert severity="info" sx={{ mb: 3 }}>
-            Use email : <strong>demo@tiamoto.mtz</strong> / password :<strong>&nbsp;demo1234</strong>
-          </Alert>
-
           {method !== 'auth0' ? (
             <LoginForm />
           ) : (
@@ -101,15 +90,6 @@ export default function Login() {
               Login
             </Button>
           )}
-
-          <MHidden width="smUp">
-            <Typography variant="body2" align="center" sx={{ mt: 3 }}>
-              Don’t have an account?&nbsp;
-              <Link variant="subtitle2" component={RouterLink} to={PATH_AUTH.register}>
-                Get started
-              </Link>
-            </Typography>
-          </MHidden>
         </ContentStyle>
       </Container>
     </RootStyle>

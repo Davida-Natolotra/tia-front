@@ -64,16 +64,12 @@ export default function MotoCreate() {
   const { products, product, currentData } = useSelector((state) => state.motos);
   const isEdit = pathname.includes('edit');
   const currentProduct = products?.find((product) => product.id === parseInt(id, 10)) || currentData.id;
-  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     dispatch(getMotos());
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
-    if (currentProduct) {
-      setIsLoading(false);
-    }
     if (!currentProduct) {
       navigate(`${PATH_DASHBOARD.moto.root}`);
     }
@@ -85,9 +81,7 @@ export default function MotoCreate() {
     setValue(newValue);
   };
 
-  return isLoading ? (
-    <h1>Veuillez revenir à la page principale...</h1>
-  ) : (
+  return (
     <Page title="Edition">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs

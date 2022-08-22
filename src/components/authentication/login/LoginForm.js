@@ -37,7 +37,7 @@ export default function LoginForm() {
 
   const LoginSchema = Yup.object().shape({
     username: Yup.string().required("Veuillez entrer votre nom d'utilisateur"),
-    password: Yup.string().required('Password is required')
+    password: Yup.string().required('Entrer le mot de passe')
   });
 
   const formik = useFormik({
@@ -50,7 +50,7 @@ export default function LoginForm() {
     onSubmit: async (values, { setErrors, setSubmitting, resetForm }) => {
       try {
         await login(values.username, values.password);
-        enqueueSnackbar('Login success', {
+        enqueueSnackbar('Connexion réussie', {
           variant: 'success',
           action: (key) => (
             <MIconButton size="small" onClick={() => closeSnackbar(key)}>
@@ -82,7 +82,7 @@ export default function LoginForm() {
     <FormikProvider value={formik}>
       <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
         <Stack spacing={3}>
-          {errors.afterSubmit && <Alert severity="error">{errors.afterSubmit}</Alert>}
+          {errors.afterSubmit && <Alert severity="error">Vérifier vos nom d'utilisateur et mots de passe</Alert>}
 
           <TextField
             fullWidth
@@ -117,12 +117,8 @@ export default function LoginForm() {
         <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ my: 2 }}>
           <FormControlLabel
             control={<Checkbox {...getFieldProps('remember')} checked={values.remember} />}
-            label="Remember me"
+            label="Se souvenir de moi"
           />
-
-          <Link component={RouterLink} variant="subtitle2" to={PATH_AUTH.resetPassword}>
-            Forgot password?
-          </Link>
         </Stack>
 
         <LoadingButton fullWidth size="large" type="submit" variant="contained" loading={isSubmitting}>
