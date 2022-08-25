@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { paramCase } from 'change-case';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 
@@ -61,16 +61,21 @@ export default function MotoCreate() {
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const { id } = useParams();
+  const init = useRef();
   const { products, product, currentData } = useSelector((state) => state.motos);
   const isEdit = pathname.includes('edit');
+  const isNew = pathname.includes('new');
   const currentProduct = products?.find((product) => product.id === parseInt(id, 10)) || currentData.id;
+  console.log(`currentProduct: ${currentProduct}, type: ${typeof currentProduct}, not:${!currentProduct}`);
 
   useEffect(() => {
     dispatch(getMotos());
   }, [dispatch]);
 
   useEffect(() => {
-    if (!currentProduct) {
+    if (init.current) {
+      init.current = false;
+    } else if (!currentProduct && isEdit && !isNew) {
       navigate(`${PATH_DASHBOARD.moto.root}`);
     }
   }, [currentProduct, product]);
@@ -92,7 +97,7 @@ export default function MotoCreate() {
               name: 'Dashboard',
               href: PATH_DASHBOARD.moto.root
             },
-            { name: !isEdit ? 'New product' : currentProduct.ID_Moto }
+            { name: !isEdit ? 'New product' : currentProduct?.ID_Moto }
           ]}
         />
         {isEdit ? (

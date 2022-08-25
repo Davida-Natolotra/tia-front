@@ -1,8 +1,9 @@
 {
-  "name": "@minimal/minimal-kit-react",
+  "name": "@mtz/tia-moto",
   "author": "minimals.cc",
   "version": "2.5.0",
   "private": true,
+  "homepage": "https://tiamoto.com",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",

@@ -56,7 +56,7 @@ export default function Login() {
   };
 
   return (
-    <RootStyle title="Login | Minimal-UI">
+    <RootStyle title="Login | Tia Moto">
       <MHidden width="mdDown">
         <SectionStyle>
           <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
@@ -73,7 +73,7 @@ export default function Login() {
               <Typography variant="h4" gutterBottom>
                 Connecter à Tia Moto
               </Typography>
-              <Typography sx={{ color: 'text.secondary' }}>Veuillez entrer les informations suivantes</Typography>
+              <Typography sx={{ color: 'text.secondary' }}>Veuillez vous authentifier.</Typography>
             </Box>
           </Stack>
 
