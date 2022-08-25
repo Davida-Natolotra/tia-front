@@ -3,8 +3,8 @@ import { createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 
 // Endpoint
-// export const url = 'http://localhost:8000';
-export const url = 'https://tiamoto.com/backend';
+export const url = 'http://localhost:8000';
+// export const url = 'https://tiamoto.com/backend';
 // ----------------------------------------------------------------------
 
 const initialState = {
@@ -24,7 +24,8 @@ const initialState = {
   venteToday: [],
   currentData: {},
   isChartLoading: false,
-  ventes: []
+  ventes: [],
+  isNumMoteurUnique: Boolean
 };
 
 const slice = createSlice({
@@ -119,6 +120,10 @@ const slice = createSlice({
     getVentesSuccess(state, action) {
       state.isLoading = false;
       state.ventes = action.payload;
+    },
+    setResCheckNumMoteur(state, action) {
+      state.isLoading = false;
+      state.isNumMoteurUnique = action.payload;
     }
   }
 });
@@ -398,6 +403,22 @@ export function getVentes() {
         responseType: 'stream'
       });
       dispatch(slice.actions.getVentesSuccess(response.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+export function checkNumMoteurUnique(numMoteur) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios({
+        method: 'get',
+        url: `${url}/api/motos/check_num_moteur_unique/${numMoteur}`,
+        responseType: 'stream'
+      });
+      dispatch(slice.actions.setResCheckNumMoteur(response.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }

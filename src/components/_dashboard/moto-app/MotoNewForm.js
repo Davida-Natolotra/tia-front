@@ -21,7 +21,14 @@ import { frFR as calFR } from '@mui/x-date-pickers';
 import { useDispatch, useSelector } from 'react-redux';
 import useAuth from '../../../hooks/useAuth';
 
-import { getLastID, addMoto, getMotos, resetCurrentData, updateMoto } from '../../../redux/slices/moto';
+import {
+  getLastID,
+  addMoto,
+  getMotos,
+  resetCurrentData,
+  updateMoto,
+  checkNumMoteurUnique
+} from '../../../redux/slices/moto';
 import { fNumber } from '../../../utils/formatNumber';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
@@ -47,6 +54,7 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
 
   const lastID = useSelector((state) => state.motos.lastID);
   const lastPK = useSelector((state) => state.motos.currentData.id);
+  const isNumMoteurUnique = useSelector((state) => state.motos.isNumMoteurUnique);
   const [dateVente, setDateVente] = useState(currentProduct?.date_vente || null);
   const [vendeur, setVendeur] = useState(currentProduct?.vendeur || null);
   const [commercial, setCommercial] = useState(currentProduct?.commercial || null);
@@ -55,7 +63,12 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
     ID_Moto: Yup.number().required('IdMoto is required'),
     dateEntree: Yup.date("Date d'entrée requise").required("La date d'entrée est requis"),
     name: Yup.string().required('Veuillez entrer le nom du moto'),
-    numMoteur: Yup.string().required('Entrer le numéro moteur'),
+    numMoteur: Yup.string()
+      .required('Entrer le numéro moteur')
+      .test('Vérification de numéro moteur', 'Cette numéro existe déjà', async (numMoteur) => {
+        await dispatch(checkNumMoteurUnique(numMoteur));
+        return isNumMoteurUnique;
+      }),
     FRN: Yup.string().required('Entrer le FRN'),
     PA: Yup.number().required('Entrer le PA'),
     PV: Yup.number().required(),
