@@ -366,6 +366,7 @@ export default function ProductNewForm({ currentProduct }) {
                           type="file"
                           style={{ display: 'none' }}
                           id="CINRecto"
+                          accept="image/*"
                           onChange={(event) =>
                             fileChangedHandler({
                               event,

@@ -1,5 +1,5 @@
 import React from 'react';
-import { PDFViewer, Document, Page, StyleSheet, Text } from '@react-pdf/renderer';
+import { PDFViewer, Document, Page, StyleSheet, Text, View } from '@react-pdf/renderer';
 import { useSelector } from 'react-redux';
 import moment from 'moment';
 import Body from './Body';
@@ -25,6 +25,7 @@ export default function FactureMoto({ currentProduct }) {
     nomClient: currentProduct.nom_client_2,
     adresseClient: currentProduct.adresse_client_2,
     telClient: currentProduct.tel_client_2,
+    CIN: currentProduct.CIN_Num_Client_2,
     nomMoto: currentProduct.nom_moto,
     numMoteur: currentProduct.num_moteur,
     volumeMoteur: currentProduct.volume_moteur,
@@ -42,10 +43,10 @@ export default function FactureMoto({ currentProduct }) {
       <Document>
         <Page style={styles.body} size="A4" orientation="landscape">
           <Body data={data} />
-          <Text> </Text>
-          <Text> </Text>
-          <Text> </Text>
-          <Text> </Text>
+          <View style={styles.marg}>
+            <Text> </Text>
+          </View>
+
           <Body data={data} />
         </Page>
       </Document>
@@ -67,5 +68,9 @@ const styles = StyleSheet.create({
   element2: {
     width: '50%',
     marginLeft: 30
+  },
+  marg: {
+    marginLeft: 20,
+    marginRight: 20
   }
 });

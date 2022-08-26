@@ -37,8 +37,9 @@ export default function FactureMoto({ data }) {
         <View style={styles.titleLeft}>
           <Text style={styles.info}>Facturé à :</Text>
           <Text style={styles.info}>{data.nomClient}</Text>
+          <Text style={styles.info}>CIN: {data.CIN}</Text>
           <Text style={styles.info}>Tel: {data.telClient}</Text>
-          <Text style={styles.info}>{data.adresseClient}</Text>
+          <Text style={styles.info}>Adresse: {data.adresseClient}</Text>
         </View>
         <View style={styles.titleRight}>
           <Text style={styles.info}>FACTURE N° :{data.numFacture}</Text>
