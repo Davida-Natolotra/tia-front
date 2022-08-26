@@ -28,7 +28,7 @@ export default function MotoDashboardChartHebdo() {
       colors: ['transparent']
     },
     plotOptions: {
-      bar: { horizontal: isMobile, barHeight: '28%', borderRadius: 2 }
+      bar: { horizontal: false, barHeight: '28%', borderRadius: 2 }
     },
     xaxis: {
       categories: motosHebdo.date

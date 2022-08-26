@@ -38,7 +38,7 @@ export default function MotoDashboardChartMonth() {
     },
     yaxis: {
       labels: {
-        formatter: (value) => Number(value).toFixed(0)
+        formatter: (value) => (!isMobile ? Number(value).toFixed(0) : value)
       },
       stepSize: 1
     },
