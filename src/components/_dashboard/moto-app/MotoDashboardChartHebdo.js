@@ -35,7 +35,7 @@ export default function MotoDashboardChartHebdo() {
     },
     yaxis: {
       labels: {
-        formatter: (value) => value.toFixed(0)
+        formatter: (value) => Number(value).toFixed(0)
       },
       stepSize: 1
     },

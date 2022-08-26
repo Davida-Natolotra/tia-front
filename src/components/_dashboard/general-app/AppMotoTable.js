@@ -115,7 +115,7 @@ export default function AppMotoTable() {
       headerName: 'Num moteur',
       width: 200,
       flex: 2,
-      hide: true
+      hide: isMobile
     },
     {
       field: 'date_entree',
@@ -269,7 +269,11 @@ export default function AppMotoTable() {
               onContextMenu: handleContextMenu,
               style: { cursor: 'context-menu' }
             },
-            toolbar: { printOptions: { disableToolbarButton: true } }
+            toolbar: {
+              printOptions: { disableToolbarButton: true },
+              showQuickFilter: true,
+              quickFilterProps: { debounceMs: 500 }
+            }
           }}
           components={{
             Toolbar: GridToolbar
