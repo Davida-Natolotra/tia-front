@@ -66,6 +66,13 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
     numMoteur: Yup.string()
       .required('Entrer le numéro moteur')
       .test('Vérification de numéro moteur', 'Cette numéro existe déjà', async (numMoteur) => {
+        if (isEdit) {
+          if (currentProduct.num_moteur === numMoteur) {
+            return true;
+          }
+          await dispatch(checkNumMoteurUnique(numMoteur));
+          return isNumMoteurUnique;
+        }
         await dispatch(checkNumMoteurUnique(numMoteur));
         return isNumMoteurUnique;
       }),
