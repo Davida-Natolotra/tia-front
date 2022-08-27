@@ -66,6 +66,7 @@ export default function AppMotoTable() {
   const [pageSize, setPageSize] = useState(10);
   const [contextMenu, setContextMenu] = useState(null);
   const [selectedRow, setSelectedRow] = useState();
+  const [dataSelected, setDataSelected] = useState(null);
   const display = useSelector((state) => state.motos?.display);
   const loading = useSelector((state) => state.motos?.isLoading);
   const dispatch = useDispatch();
@@ -96,6 +97,15 @@ export default function AppMotoTable() {
   useEffect(() => {
     dispatch(getMotos());
   }, []);
+
+  useEffect(() => {
+    if (selectedRow) {
+      const tempData = motos.filter((item) => Number(item.id) === Number(selectedRow));
+      setDataSelected(tempData[0]);
+      console.log(`selectedRow ${selectedRow}`);
+      console.log(tempData);
+    }
+  }, [selectedRow]);
 
   const columns = [
     {
@@ -185,7 +195,12 @@ export default function AppMotoTable() {
       disableColumnMenu: true,
       flex: 0.5,
       renderCell: (params) => (
-        <MoreMenuButton id={params.id} handleClickOpenDialog={handleClickOpenDialog} user={user} />
+        <MoreMenuButton
+          id={params.id}
+          handleClickOpenDialog={handleClickOpenDialog}
+          user={user}
+          setSelectedRow={setSelectedRow}
+        />
       )
     }
   ];
@@ -311,7 +326,13 @@ export default function AppMotoTable() {
             <>
               <Divider />
 
-              <MenuItem sx={{ color: 'error.main' }} onClick={handleClickOpenDialog}>
+              <MenuItem
+                sx={{ color: 'error.main' }}
+                onClick={() => {
+                  handleClose();
+                  handleClickOpenDialog();
+                }}
+              >
                 <Icon icon={trash2Outline} width={20} height={20} />
                 <Typography variant="body2" sx={{ ml: 2 }}>
                   Supprimer
@@ -329,7 +350,9 @@ export default function AppMotoTable() {
           <DialogTitle id="alert-dialog-title">Confirmer la suppression!</DialogTitle>
           <DialogContent>
             <DialogContentText id="alert-dialog-description">
-              Voulez-vous vraiment supprimer cette enregistrement?
+              <p>Voulez-vous vraiment supprimer cette enregistrement?</p>
+              <p>Nom moto: {JSON.stringify(dataSelected.nom_moto)}</p>
+              <p>Num moteur: {JSON.stringify(dataSelected.num_moteur)}</p>
             </DialogContentText>
           </DialogContent>
           <DialogActions>
@@ -344,7 +367,7 @@ export default function AppMotoTable() {
   );
 }
 
-function MoreMenuButton({ id, handleClickOpenDialog, user }) {
+function MoreMenuButton({ id, handleClickOpenDialog, user, setSelectedRow }) {
   const menuRef = useRef(null);
   const [open, setOpen] = useState(false);
 
@@ -393,6 +416,7 @@ function MoreMenuButton({ id, handleClickOpenDialog, user }) {
             <MenuItem
               sx={{ color: 'error.main' }}
               onClick={() => {
+                setSelectedRow(id);
                 handleClose();
                 handleClickOpenDialog();
               }}

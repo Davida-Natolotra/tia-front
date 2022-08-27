@@ -386,7 +386,7 @@ export function deleteMoto(id) {
           'Content-Type': 'application/json; charset= utf-8'
         }
       });
-      dispatch(slice.actions.getLastResponseMotoSuccess(response.data));
+      dispatch(slice.actions.getProductsSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }
