@@ -352,6 +352,25 @@ export function updateMoto(motoData, id) {
     }
   };
 }
+export function archiveMoto(id) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios({
+        method: 'put',
+        url: `${url}/api/motos/archiveMoto/${id}`,
+        data: { archive: true },
+        responseType: 'stream',
+        headers: {
+          'Content-Type': 'application/json; charset= utf-8'
+        }
+      });
+      dispatch(slice.actions.getProductsSuccess(response.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
 
 export function cancelFacture(motoData, id) {
   return async (dispatch) => {
