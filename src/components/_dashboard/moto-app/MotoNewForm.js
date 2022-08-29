@@ -77,8 +77,8 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
         return isNumMoteurUnique;
       }),
     FRN: Yup.string().required('Entrer le FRN'),
-    PA: Yup.number().required('Entrer le PA'),
-    PV: Yup.number().required(),
+    PA: Yup.number().nullable().notRequired(),
+    PV: Yup.number().nullable().notRequired(),
     localisation: Yup.string().required('Localisation requis'),
     dateArrivee: Yup.date().required("Date d'arrivée requise"),
     volumeMoteur: Yup.string().required('Volume moteur requis'),
@@ -123,8 +123,7 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
         carte_rose: values.carteRose,
         carte_grise: values.carteGrise,
         montant_reparation: values.montantReparation,
-        motif_reparation: values.motifReparation,
-        fournisseur: values.fournisseur
+        motif_reparation: values.motifReparation
       };
 
       if (isEdit) {
