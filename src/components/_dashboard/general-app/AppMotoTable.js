@@ -7,6 +7,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import NotesIcon from '@mui/icons-material/Notes';
 import { useSnackbar } from 'notistack5';
 
 // material
@@ -219,6 +220,7 @@ export default function AppMotoTable() {
           user={user}
           setSelectedRow={setSelectedRow}
           handleClickOpenArchiveDialog={handleClickOpenArchiveDialog}
+          dataSelected={dataSelected}
         />
       )
     }
@@ -335,12 +337,22 @@ export default function AppMotoTable() {
             }
           }}
         >
-          <MenuItem component={RouterLink} to={`${PATH_DASHBOARD.moto.root}/${selectedRow}/edit`}>
-            <Icon icon={pen} width={20} height={20} />
-            <Typography variant="body2" sx={{ ml: 2 }}>
-              {selectedRow?.archive ? 'Détails' : 'Editer'}
-            </Typography>
-          </MenuItem>
+          {!dataSelected?.archive ? (
+            <MenuItem component={RouterLink} to={`${PATH_DASHBOARD.moto.root}/${selectedRow}/edit`}>
+              <Icon icon={pen} width={20} height={20} />
+              <Typography variant="body2" sx={{ ml: 2 }}>
+                Editer
+              </Typography>
+            </MenuItem>
+          ) : (
+            <MenuItem component={RouterLink} to={`${PATH_DASHBOARD.moto.root}/${selectedRow}/details`}>
+              <Icon icon={NotesIcon} width={20} height={20} />
+              <Typography variant="body2" sx={{ ml: 2 }}>
+                Détails
+              </Typography>
+            </MenuItem>
+          )}
+
           {user.role === 'manager' && (
             <>
               <MenuItem
@@ -419,7 +431,14 @@ export default function AppMotoTable() {
   );
 }
 
-function MoreMenuButton({ id, handleClickOpenDialog, user, setSelectedRow, handleClickOpenArchiveDialog }) {
+function MoreMenuButton({
+  id,
+  handleClickOpenDialog,
+  user,
+  setSelectedRow,
+  handleClickOpenArchiveDialog,
+  dataSelected
+}) {
   const menuRef = useRef(null);
   const [open, setOpen] = useState(false);
 
@@ -449,12 +468,22 @@ function MoreMenuButton({ id, handleClickOpenDialog, user, setSelectedRow, handl
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
-        <MenuItem component={RouterLink} to={`${PATH_DASHBOARD.moto.root}/${id}/edit`}>
-          <Icon icon={pen} width={20} height={20} />
-          <Typography variant="body2" sx={{ ml: 2 }}>
-            Editer
-          </Typography>
-        </MenuItem>
+        {!dataSelected?.archive ? (
+          <MenuItem component={RouterLink} to={`${PATH_DASHBOARD.moto.root}/${id}/edit`}>
+            <Icon icon={pen} width={20} height={20} />
+            <Typography variant="body2" sx={{ ml: 2 }}>
+              Editer
+            </Typography>
+          </MenuItem>
+        ) : (
+          <MenuItem component={RouterLink} to={`${PATH_DASHBOARD.moto.root}/${id}/details`}>
+            <Icon icon={NotesIcon} width={20} height={20} />
+            <Typography variant="body2" sx={{ ml: 2 }}>
+              Détails
+            </Typography>
+          </MenuItem>
+        )}
+
         {user.role === 'manager' && (
           <>
             <MenuItem

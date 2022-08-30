@@ -83,7 +83,8 @@ export const PATH_DASHBOARD = {
     root: path(ROOTS_DASHBOARD, '/moto'),
     list: path(ROOTS_DASHBOARD, '/moto/list'),
     newMoto: path(ROOTS_DASHBOARD, '/moto/new'),
-    editById: path(ROOTS_DASHBOARD, '/moto/:idMoto/edit')
+    editById: path(ROOTS_DASHBOARD, '/moto/:idMoto/edit'),
+    details: path(ROOTS_DASHBOARD, '/moto/:idMoto/details')
   },
   caisseMoto: {
     root: path(ROOTS_DASHBOARD, '/caisseMoto')

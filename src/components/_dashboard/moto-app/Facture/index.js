@@ -1,11 +1,12 @@
 import React from 'react';
 import { PDFViewer, Document, Page, StyleSheet, Text, View } from '@react-pdf/renderer';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import moment from 'moment';
+import { getNumberWord } from '../../../../redux/slices/moto';
 import Body from './Body';
 import { fNumber } from '../../../../utils/formatNumber';
 
-export default function FactureMoto({ currentProduct }) {
+export default function FactureMoto({ currentProduct, isEdit }) {
   const [height, setHeight] = React.useState(window.innerHeight);
   const updateWidthAndHeight = () => {
     setHeight(window.innerHeight);
@@ -37,16 +38,25 @@ export default function FactureMoto({ currentProduct }) {
     totalLettre: useSelector((state) => state.motos.numWord),
     ref: currentProduct.Ref
   };
+  const dispatch = useDispatch();
+  React.useEffect(() => {
+    if (!data.totalLettre) {
+      dispatch(getNumberWord(currentProduct.PV));
+    }
+  }, []);
 
   return (
     <PDFViewer width="100%" height={height * 0.7}>
       <Document>
-        <Page style={styles.body} size="A4" orientation="landscape">
-          <Body data={data} />
-          <View style={styles.marg}>
-            <Text> </Text>
-          </View>
-
+        <Page style={styles.body} size={isEdit ? 'A4' : 'A5'} orientation={isEdit ? 'landscape' : 'portrait'}>
+          {isEdit && (
+            <>
+              <Body data={data} />
+              <View style={styles.marg}>
+                <Text> </Text>
+              </View>
+            </>
+          )}
           <Body data={data} />
         </Page>
       </Document>

@@ -132,6 +132,7 @@ export default function Router() {
           children: [
             { path: '/', element: <Navigate to="/dashboard/app" replace /> },
             { path: ':id/edit', element: <MotoCreate /> },
+            { path: ':id/details', element: <MotoDetails /> },
             { path: 'new', element: <MotoCreate /> }
           ]
         },
@@ -255,6 +256,7 @@ const Calendar = Loadable(lazy(() => import('../pages/dashboard/Calendar')));
 const Kanban = Loadable(lazy(() => import('../pages/dashboard/Kanban')));
 
 const MotoCreate = Loadable(lazy(() => import('../pages/dashboard/MotoCreate')));
+const MotoDetails = Loadable(lazy(() => import('../pages/dashboard/MotoDetails')));
 // Main
 const LandingPage = Loadable(lazy(() => import('../pages/LandingPage')));
 const About = Loadable(lazy(() => import('../pages/About')));

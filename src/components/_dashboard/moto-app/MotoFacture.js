@@ -46,7 +46,7 @@ import CarouselProductDetails from '../../carousel/CarouselProductDetails';
 
 // ----------------------------------------------------------------------
 
-ProductNewForm.propTypes = {
+MotoFacture.propTypes = {
   isEdit: PropTypes.bool,
   currentProduct: PropTypes.object
 };
@@ -59,7 +59,7 @@ function padLeadingZeros(num, size) {
 
 const urlBlank = 'https://placehold.jp/24/cccccc/525252/500x500.png?text=Aucune%20photo';
 
-export default function ProductNewForm({ currentProduct }) {
+export default function MotoFacture({ currentProduct, isEdit }) {
   const linkRecto = () => {
     let link;
     if (currentProduct.PJ_CIN_Client_2_recto) {
@@ -512,7 +512,7 @@ export default function ProductNewForm({ currentProduct }) {
         </FormikProvider>
       </Grid>
       <Grid item xs={12} md={6}>
-        <FacturePreview currentProduct={currentProduct} />
+        <FacturePreview currentProduct={currentProduct} isEdit={isEdit} />
       </Grid>
     </Grid>
   );
