@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 // utils
 import axios from 'axios';
-
+import { createOrUpdateFromMoto } from './caisse';
 // Endpoint
 // export const url = 'http://localhost:8000';
 export const url = 'https://tiamoto.com/backend';
@@ -347,6 +347,7 @@ export function updateMoto(motoData, id) {
         }
       });
       dispatch(slice.actions.getLastResponseMotoSuccess(response.data));
+      dispatch(createOrUpdateFromMoto(response.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }
