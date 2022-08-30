@@ -25,19 +25,19 @@ export default function MotoCaisseSolde() {
   useEffect(() => {
     dispatch(getSolde());
     console.log('Will be start check moto vente');
-    // motosVente.forEach((el) =>
-    //   dispatch(
-    //     createOrUpdateFromMoto({
-    //       libellee: `Vente du moto ${el.nom_moto}-${el.num_moteur}`,
-    //       date: moment(el.date_vente).format('YYYY-MM-DD'),
-    //       recette: Number(el.PV),
-    //       depense: 0,
-    //       is_depense: false,
-    //       is_moto: true,
-    //       id_moto: Number(el.ID_Moto)
-    //     })
-    //   )
-    // );
+    motosVente.forEach((el) =>
+      dispatch(
+        createOrUpdateFromMoto({
+          libellee: `Vente du moto ${el.nom_moto}-${el.num_moteur}`,
+          date: moment(el.date_vente).format('YYYY-MM-DD'),
+          recette: Number(el.PV),
+          depense: 0,
+          is_depense: false,
+          is_moto: true,
+          id_moto: Number(el.ID_Moto)
+        })
+      )
+    );
   }, []);
 
   const updateSoldeFrom = () => {
