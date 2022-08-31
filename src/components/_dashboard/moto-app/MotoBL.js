@@ -22,6 +22,8 @@ import useAuth from '../../../hooks/useAuth';
 
 import BLPreview from './BL';
 import { getLastID, updateMoto, getMotos, getLastBL } from '../../../redux/slices/moto';
+import { createOrUpdateFromMoto } from '../../../redux/slices/caisse';
+
 // routes
 // ----------------------------------------------------------------------
 
@@ -47,6 +49,8 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
 
   const lastID = useSelector((state) => state.motos.lastID);
   const lastBL = useSelector((state) => state.motos.lastBL);
+  const motos = useSelector((state) => state.motos.products);
+  const motosVente = motos.filter((moto) => moto.PV !== 0 && moto.date_vente !== null && moto.date_vente !== '');
 
   const NewProductSchema = Yup.object({
     ID_Moto: Yup.number(),
@@ -89,6 +93,19 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
           variant: 'success'
         });
         await dispatch(getMotos());
+        await motosVente.forEach((el) =>
+          dispatch(
+            createOrUpdateFromMoto({
+              libellee: `Vente du moto ${el.nom_moto}-${el.num_moteur}`,
+              date: moment(el.date_vente).format('YYYY-MM-DD'),
+              recette: Number(el.PV),
+              depense: 0,
+              is_depense: false,
+              is_moto: true,
+              id_moto: Number(el.ID_Moto)
+            })
+          )
+        );
       } catch (error) {
         console.error(error);
         setSubmitting(false);
