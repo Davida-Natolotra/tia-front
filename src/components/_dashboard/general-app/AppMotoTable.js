@@ -67,7 +67,7 @@ export default function AppMotoTable() {
   const [pageSize, setPageSize] = useState(10);
   const [contextMenu, setContextMenu] = useState(null);
   const [selectedRow, setSelectedRow] = useState(null);
-  const [dataSelected, setDataSelected] = useState(null);
+  const [dataSelected, setDataSelected] = useState({ archive: false });
   const display = useSelector((state) => state.motos?.display);
   const loading = useSelector((state) => state.motos?.isLoading);
   const dispatch = useDispatch();
@@ -220,7 +220,7 @@ export default function AppMotoTable() {
           user={user}
           setSelectedRow={setSelectedRow}
           handleClickOpenArchiveDialog={handleClickOpenArchiveDialog}
-          dataSelected={dataSelected}
+          dataSelected={params.row}
         />
       )
     }
@@ -288,9 +288,9 @@ export default function AppMotoTable() {
           },
 
           '& .super--Archived': {
-            bgcolor: (theme) => getBackgroundColor('#bdbdbd', theme.palette.mode),
+            bgcolor: (theme) => getBackgroundColor(theme.palette.success.main, theme.palette.mode),
             '&:hover': {
-              bgcolor: (theme) => getHoverBackgroundColor('#bdbdbd', theme.palette.mode)
+              bgcolor: (theme) => getHoverBackgroundColor(theme.palette.success.lighter, theme.palette.mode)
             }
           }
         }}
@@ -337,7 +337,7 @@ export default function AppMotoTable() {
             }
           }}
         >
-          {!dataSelected?.archive ? (
+          {!dataSelected.archive ? (
             <MenuItem component={RouterLink} to={`${PATH_DASHBOARD.moto.root}/${selectedRow}/edit`}>
               <Icon icon={pen} width={20} height={20} />
               <Typography variant="body2" sx={{ ml: 2 }}>
@@ -468,7 +468,7 @@ function MoreMenuButton({
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
-        {!dataSelected?.archive ? (
+        {!dataSelected.archive ? (
           <MenuItem component={RouterLink} to={`${PATH_DASHBOARD.moto.root}/${id}/edit`}>
             <Icon icon={pen} width={20} height={20} />
             <Typography variant="body2" sx={{ ml: 2 }}>
