@@ -195,7 +195,7 @@ export default function CollapsibleTable() {
             </TableHead>
             <TableBody>
               {rows.map((row) => (
-                <Row key={row.name} row={row} />
+                <Row key={uuidv4()} row={row} />
               ))}
             </TableBody>
           </Table>

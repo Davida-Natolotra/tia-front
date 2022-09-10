@@ -72,11 +72,7 @@ export default function MotoDashboardChartHebdo() {
       <CardHeader
         title="Vente hebdomadaire"
         subheader={`Total: ${total.toString()} vendus`}
-        action={
-          <Stack spacing={1} direction="row" alignItems="center">
-            <JournPick select="Hebdomadaire" />
-          </Stack>
-        }
+        action={<JournPick select="Hebdomadaire" />}
       />
       <Box sx={{ mt: 3, mx: 3 }} dir="ltr">
         <ReactApexChart type="bar" series={dataSeries} options={chartOptions} height={364} />

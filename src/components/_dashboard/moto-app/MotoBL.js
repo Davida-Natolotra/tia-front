@@ -71,7 +71,8 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
     numMoteur: Yup.string().required('Num moteurs requis'),
     nomClient: Yup.string().required('Nom client requis'),
     contactClient: Yup.string().required('Contact client requis'),
-    PV: Yup.number().required('Le prix de vente est requis')
+    PV: Yup.number().required('Le prix de vente est requis'),
+    commercial: Yup.string().required('Le commercial est requis')
   });
 
   const formik = useFormik({
@@ -84,7 +85,8 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
       numMoteur: currentProduct?.num_moteur || '',
       nomClient: currentProduct?.nom_client_1 || '',
       contactClient: currentProduct?.tel_client_1 || '',
-      PV: currentProduct?.PV || null
+      PV: currentProduct?.PV || null,
+      commercial: currentProduct?.commercial || ''
     },
     validationSchema: NewProductSchema,
     onSubmit: async (values, { setSubmitting, resetForm, setErrors }) => {
@@ -94,6 +96,7 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
       dataSubmit.append('nom_client_1', values.nomClient);
       dataSubmit.append('tel_client_1', values.contactClient);
       dataSubmit.append('PV', parseInt(values.PV, 10));
+      dataSubmit.append('commercial', values.commercial);
       if (values.dateBL) {
         dataSubmit.append('date_vente', moment(values.dateBL).format('YYYY-MM-DD'));
       }
@@ -300,6 +303,15 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
                       error={Boolean(touched.PV && errors.PV)}
                       helperText={touched.PV && errors.PV}
                       disabled={user.role === 'commercial' && currentProduct.PV}
+                    />
+                    <TextField
+                      fullWidth
+                      label="Commercial"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      {...getFieldProps('commercial')}
+                      error={Boolean(touched.commercial && errors.commercial)}
+                      helperText={touched.commercial && errors.commercial}
                     />
                   </Stack>
                 </AccordionDetails>

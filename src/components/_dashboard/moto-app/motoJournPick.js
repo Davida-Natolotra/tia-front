@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { styled } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
@@ -134,16 +134,8 @@ export default function CustomDay({ select }) {
   return (
     <div>
       <Tooltip title="Calendrier">
-        <IconButton>
-          <IconButton
-            aria-describedby={id}
-            variant="contained"
-            onClick={handleClick}
-            size="small"
-            tooltips="Calendrier"
-          >
-            <DateRangeIcon />
-          </IconButton>
+        <IconButton aria-describedby={id} variant="contained" onClick={handleClick} size="small" tooltips="Calendrier">
+          <DateRangeIcon />
         </IconButton>
       </Tooltip>
 

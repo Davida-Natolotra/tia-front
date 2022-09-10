@@ -51,7 +51,6 @@ export default function GeneralApp() {
           </Grid>
 
           <Grid item xs={12} md={6}>
-            {/* <MotoChartHebdo /> */}
             <MotoChartHebdo2 />
           </Grid>
           <Grid item xs={12} md={6}>
