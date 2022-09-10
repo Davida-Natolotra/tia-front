@@ -8,7 +8,17 @@ import CurrencyTextField from '@unicef/material-ui-currency-textfield';
 // material
 import { LoadingButton } from '@material-ui/lab';
 import { Box, Grid, Stack, Button, TextField } from '@material-ui/core';
-import { Typography, Accordion, AccordionSummary, AccordionDetails } from '@mui/material';
+import {
+  Typography,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  Dialog,
+  DialogTitle,
+  DialogActions,
+  DialogContent,
+  DialogContentText
+} from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 // utils
 //
@@ -21,7 +31,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import useAuth from '../../../hooks/useAuth';
 
 import BLPreview from './BL';
-import { getLastID, updateMoto, getMotos, getLastBL } from '../../../redux/slices/moto';
+import { getLastID, updateMoto, getMotos, getLastBL, cancelFacture } from '../../../redux/slices/moto';
+import { createOrUpdateFromMoto } from '../../../redux/slices/caisse';
+
 // routes
 // ----------------------------------------------------------------------
 
@@ -43,10 +55,13 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
 
   const [errorClientCase, setErrorClientCase] = useState(false);
   const [errorBLCase, setErrorBLCase] = useState(false);
+  const [open, setOpen] = useState(false);
   const { user } = useAuth();
 
   const lastID = useSelector((state) => state.motos.lastID);
   const lastBL = useSelector((state) => state.motos.lastBL);
+  const motos = useSelector((state) => state.motos.products);
+  const motosVente = motos.filter((moto) => moto.PV !== 0 && moto.date_vente !== null && moto.date_vente !== '');
 
   const NewProductSchema = Yup.object({
     ID_Moto: Yup.number(),
@@ -89,6 +104,19 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
           variant: 'success'
         });
         await dispatch(getMotos());
+        await motosVente.forEach((el) =>
+          dispatch(
+            createOrUpdateFromMoto({
+              libellee: `Vente du moto ${el.nom_moto}-${el.num_moteur}`,
+              date: moment(el.date_vente).format('YYYY-MM-DD'),
+              recette: Number(el.PV),
+              depense: 0,
+              is_depense: false,
+              is_moto: true,
+              id_moto: Number(el.ID_Moto)
+            })
+          )
+        );
       } catch (error) {
         console.error(error);
         setSubmitting(false);
@@ -136,6 +164,43 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
     const errorPV = Boolean(touched.PV && errors.PV);
     setErrorBLCase(errorDateBL || errorPV);
   }, [touched, errors]);
+
+  const resetBL = async () => {
+    const dataReset = new FormData();
+
+    dataReset.append('num_BL', '');
+    dataReset.append('date_BL', '');
+    dataReset.append('date_vente', '');
+    dataReset.append('nom_client_1', '');
+    dataReset.append('CIN_Num_Client_1', '');
+    dataReset.append('adresse_client_1', '');
+    dataReset.append('tel_client_1', '');
+    dataReset.append('PV', '');
+    dataReset.append('commercial', '');
+
+    try {
+      console.log(dataReset);
+      await dispatch(cancelFacture(dataReset, currentProduct.id));
+      handleClose();
+      enqueueSnackbar('Annulation de BL terminé', {
+        variant: 'success'
+      });
+      await dispatch(getMotos());
+      resetForm(true);
+    } catch (error) {
+      console.error(error);
+
+      enqueueSnackbar("Erreur d'enregistrement", { variant: 'danger' });
+    }
+  };
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   return (
     <FormikProvider value={formik}>
@@ -248,7 +313,35 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
                 <Button type="button" fullWidth variant="outlined" onClick={() => resetForm()}>
                   Réinitialiser
                 </Button>
+                <Button
+                  type="button"
+                  fullWidth
+                  variant="outlined"
+                  onClick={handleClickOpen}
+                  sx={{ textTransform: 'none' }}
+                >
+                  Annuler cette BL
+                </Button>
               </Stack>
+              <Dialog
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+              >
+                <DialogTitle id="alert-dialog-title">Confirmer l'annulation de cette BL</DialogTitle>
+                <DialogContent>
+                  <DialogContentText id="alert-dialog-description">
+                    Voulez-vous vraiment annuler cette BL?
+                  </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={() => resetBL()}>Oui</Button>
+                  <Button onClick={handleClose} autoFocus>
+                    Non
+                  </Button>
+                </DialogActions>
+              </Dialog>
             </Box>
           </Grid>
           <Grid item xs={12} md={6}>

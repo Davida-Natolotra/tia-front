@@ -7,6 +7,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import NotesIcon from '@mui/icons-material/Notes';
 import { useSnackbar } from 'notistack5';
 
 // material
@@ -48,7 +49,7 @@ import archiveFill from '@iconify/icons-eva/archive-fill';
 import trash2Outline from '@iconify/icons-eva/trash-2-outline';
 import pen from '@iconify/icons-eva/edit-2-outline';
 import useAuth from '../../../hooks/useAuth';
-import { deleteMoto, filterDisplay, getMotos, getMotosByDate } from '../../../redux/slices/moto';
+import { deleteMoto, filterDisplay, getMotos, getMotosByDate, archiveMoto } from '../../../redux/slices/moto';
 import useCheckMobile from '../../../hooks/useCheckMobile';
 
 import { MIconButton } from '../../@material-extend';
@@ -65,12 +66,14 @@ export default function AppMotoTable() {
   const motos = useSelector((state) => state.motos?.products);
   const [pageSize, setPageSize] = useState(10);
   const [contextMenu, setContextMenu] = useState(null);
-  const [selectedRow, setSelectedRow] = useState();
+  const [selectedRow, setSelectedRow] = useState(null);
+  const [dataSelected, setDataSelected] = useState({ archive: false });
   const display = useSelector((state) => state.motos?.display);
   const loading = useSelector((state) => state.motos?.isLoading);
   const dispatch = useDispatch();
   const isMobile = useCheckMobile();
   const [openDialog, setOpenDialog] = useState(false);
+  const [openArchiveDialog, setArchiveDialog] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
   const { user } = useAuth();
 
@@ -82,13 +85,30 @@ export default function AppMotoTable() {
     setOpenDialog(false);
   };
 
+  const handleClickOpenArchiveDialog = () => {
+    setArchiveDialog(true);
+  };
+
+  const handleCloseArchiveDialog = () => {
+    setArchiveDialog(false);
+  };
+
   async function deleteMotoFunc() {
     handleClose();
     dispatch(deleteMoto(selectedRow));
-    dispatch(getMotos());
     setOpenDialog(false);
     handleCloseDialog();
-    await enqueueSnackbar("L'enregistrement a été supprimer avec succès", {
+    await enqueueSnackbar("L'enregistrement a été supprimé avec succès", {
+      variant: 'success'
+    });
+  }
+
+  async function archiveMotoFunc() {
+    handleClose();
+    dispatch(archiveMoto(selectedRow));
+    setOpenDialog(false);
+    handleCloseArchiveDialog();
+    await enqueueSnackbar("L'enregistrement a été archivé avec succès", {
       variant: 'success'
     });
   }
@@ -96,6 +116,15 @@ export default function AppMotoTable() {
   useEffect(() => {
     dispatch(getMotos());
   }, []);
+
+  useEffect(() => {
+    if (selectedRow) {
+      const tempData = motos.filter((item) => Number(item.id) === Number(selectedRow));
+      setDataSelected(tempData[0]);
+      console.log(`selectedRow ${selectedRow}`);
+      console.log(dataSelected);
+    }
+  }, [selectedRow]);
 
   const columns = [
     {
@@ -185,7 +214,14 @@ export default function AppMotoTable() {
       disableColumnMenu: true,
       flex: 0.5,
       renderCell: (params) => (
-        <MoreMenuButton id={params.id} handleClickOpenDialog={handleClickOpenDialog} user={user} />
+        <MoreMenuButton
+          id={params.id}
+          handleClickOpenDialog={handleClickOpenDialog}
+          user={user}
+          setSelectedRow={setSelectedRow}
+          handleClickOpenArchiveDialog={handleClickOpenArchiveDialog}
+          dataSelected={params.row}
+        />
       )
     }
   ];
@@ -249,6 +285,13 @@ export default function AppMotoTable() {
             '&:hover': {
               bgcolor: (theme) => getHoverBackgroundColor(theme.palette.warning.lighter, theme.palette.mode)
             }
+          },
+
+          '& .super--Archived': {
+            bgcolor: (theme) => getBackgroundColor(theme.palette.success.main, theme.palette.mode),
+            '&:hover': {
+              bgcolor: (theme) => getHoverBackgroundColor(theme.palette.success.lighter, theme.palette.mode)
+            }
           }
         }}
       >
@@ -294,24 +337,45 @@ export default function AppMotoTable() {
             }
           }}
         >
-          <MenuItem component={RouterLink} to={`${PATH_DASHBOARD.moto.root}/${selectedRow}/edit`}>
-            <Icon icon={pen} width={20} height={20} />
-            <Typography variant="body2" sx={{ ml: 2 }}>
-              Editer
-            </Typography>
-          </MenuItem>
+          {!dataSelected.archive ? (
+            <MenuItem component={RouterLink} to={`${PATH_DASHBOARD.moto.root}/${selectedRow}/edit`}>
+              <Icon icon={pen} width={20} height={20} />
+              <Typography variant="body2" sx={{ ml: 2 }}>
+                Editer
+              </Typography>
+            </MenuItem>
+          ) : (
+            <MenuItem component={RouterLink} to={`${PATH_DASHBOARD.moto.root}/${selectedRow}/details`}>
+              <Icon icon={NotesIcon} width={20} height={20} />
+              <Typography variant="body2" sx={{ ml: 2 }}>
+                Détails
+              </Typography>
+            </MenuItem>
+          )}
 
-          <MenuItem>
-            <Icon icon={archiveFill} width={20} height={20} />
-            <Typography variant="body2" sx={{ ml: 2 }}>
-              Archiver
-            </Typography>
-          </MenuItem>
           {user.role === 'manager' && (
             <>
+              <MenuItem
+                onClick={() => {
+                  handleClose();
+                  handleClickOpenArchiveDialog();
+                }}
+              >
+                <Icon icon={archiveFill} width={20} height={20} />
+                <Typography variant="body2" sx={{ ml: 2 }}>
+                  Archiver
+                </Typography>
+              </MenuItem>
+
               <Divider />
 
-              <MenuItem sx={{ color: 'error.main' }} onClick={handleClickOpenDialog}>
+              <MenuItem
+                sx={{ color: 'error.main' }}
+                onClick={() => {
+                  handleClose();
+                  handleClickOpenDialog();
+                }}
+              >
                 <Icon icon={trash2Outline} width={20} height={20} />
                 <Typography variant="body2" sx={{ ml: 2 }}>
                   Supprimer
@@ -329,7 +393,9 @@ export default function AppMotoTable() {
           <DialogTitle id="alert-dialog-title">Confirmer la suppression!</DialogTitle>
           <DialogContent>
             <DialogContentText id="alert-dialog-description">
-              Voulez-vous vraiment supprimer cette enregistrement?
+              <p>Voulez-vous vraiment supprimer cette enregistrement?</p>
+              <p>Nom moto: {JSON.stringify(dataSelected?.nom_moto)}</p>
+              <p>Num moteur: {JSON.stringify(dataSelected?.num_moteur)}</p>
             </DialogContentText>
           </DialogContent>
           <DialogActions>
@@ -339,12 +405,40 @@ export default function AppMotoTable() {
             </Button>
           </DialogActions>
         </Dialog>
+        <Dialog
+          open={openArchiveDialog}
+          onClose={handleCloseArchiveDialog}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">Confirmer l'archivage!</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              <p>Voulez-vous vraiment archiver cette enregistrement?</p>
+              <p>Nom moto: {JSON.stringify(dataSelected?.nom_moto)}</p>
+              <p>Num moteur: {JSON.stringify(dataSelected?.num_moteur)}</p>
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => archiveMotoFunc()}>Oui</Button>
+            <Button onClick={handleCloseArchiveDialog} autoFocus>
+              Non
+            </Button>
+          </DialogActions>
+        </Dialog>
       </Box>
     </Card>
   );
 }
 
-function MoreMenuButton({ id, handleClickOpenDialog, user }) {
+function MoreMenuButton({
+  id,
+  handleClickOpenDialog,
+  user,
+  setSelectedRow,
+  handleClickOpenArchiveDialog,
+  dataSelected
+}) {
   const menuRef = useRef(null);
   const [open, setOpen] = useState(false);
 
@@ -374,25 +468,42 @@ function MoreMenuButton({ id, handleClickOpenDialog, user }) {
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
-        <MenuItem component={RouterLink} to={`${PATH_DASHBOARD.moto.root}/${id}/edit`}>
-          <Icon icon={pen} width={20} height={20} />
-          <Typography variant="body2" sx={{ ml: 2 }}>
-            Editer
-          </Typography>
-        </MenuItem>
+        {!dataSelected.archive ? (
+          <MenuItem component={RouterLink} to={`${PATH_DASHBOARD.moto.root}/${id}/edit`}>
+            <Icon icon={pen} width={20} height={20} />
+            <Typography variant="body2" sx={{ ml: 2 }}>
+              Editer
+            </Typography>
+          </MenuItem>
+        ) : (
+          <MenuItem component={RouterLink} to={`${PATH_DASHBOARD.moto.root}/${id}/details`}>
+            <Icon icon={NotesIcon} width={20} height={20} />
+            <Typography variant="body2" sx={{ ml: 2 }}>
+              Détails
+            </Typography>
+          </MenuItem>
+        )}
 
-        <MenuItem>
-          <Icon icon={archiveFill} width={20} height={20} />
-          <Typography variant="body2" sx={{ ml: 2 }}>
-            Archiver
-          </Typography>
-        </MenuItem>
         {user.role === 'manager' && (
           <>
+            <MenuItem
+              onClick={() => {
+                setSelectedRow(id);
+                handleClose();
+                handleClickOpenArchiveDialog();
+              }}
+            >
+              <Icon icon={archiveFill} width={20} height={20} />
+              <Typography variant="body2" sx={{ ml: 2 }}>
+                Archiver
+              </Typography>
+            </MenuItem>
+
             <Divider />
             <MenuItem
               sx={{ color: 'error.main' }}
               onClick={() => {
+                setSelectedRow(id);
                 handleClose();
                 handleClickOpenDialog();
               }}
@@ -411,10 +522,12 @@ function MoreMenuButton({ id, handleClickOpenDialog, user }) {
 
 function setColor(params) {
   let a;
-  if (params.row.num_sur_facture !== null) {
+  if (params.row.num_sur_facture !== null && params.row.archive === false) {
     a = 'super--Invoice';
-  } else if (params.row.num_sur_facture === null && params.row.num_BL !== null) {
+  } else if (params.row.num_sur_facture === null && params.row.num_BL !== null && params.row.archive === false) {
     a = 'super--BL';
+  } else if (params.row.archive) {
+    a = 'super--Archived';
   }
   return a;
 }

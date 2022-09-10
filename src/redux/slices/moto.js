@@ -1,10 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
 // utils
 import axios from 'axios';
-
+import { createOrUpdateFromMoto } from './caisse';
 // Endpoint
-// export const url = 'http://localhost:8000';
-export const url = 'https://tiamoto.com/backend';
+export const url = 'http://localhost:8000';
+// export const url = 'https://tiamoto.com/backend';
 // ----------------------------------------------------------------------
 
 const initialState = {
@@ -347,6 +347,26 @@ export function updateMoto(motoData, id) {
         }
       });
       dispatch(slice.actions.getLastResponseMotoSuccess(response.data));
+      dispatch(createOrUpdateFromMoto(response.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+export function archiveMoto(id) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios({
+        method: 'put',
+        url: `${url}/api/motos/archiveMoto/${id}`,
+        data: { archive: true },
+        responseType: 'stream',
+        headers: {
+          'Content-Type': 'application/json; charset= utf-8'
+        }
+      });
+      dispatch(slice.actions.getProductsSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }
@@ -386,7 +406,7 @@ export function deleteMoto(id) {
           'Content-Type': 'application/json; charset= utf-8'
         }
       });
-      dispatch(slice.actions.getLastResponseMotoSuccess(response.data));
+      dispatch(slice.actions.getProductsSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }

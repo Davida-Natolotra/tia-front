@@ -36,6 +36,8 @@ import {
   url,
   cancelFacture
 } from '../../../redux/slices/moto';
+import { createOrUpdateFromMoto } from '../../../redux/slices/caisse';
+
 import FacturePreview from './Facture';
 import { fileChangedHandler } from '../../../utils/imageCompress';
 
@@ -46,7 +48,7 @@ import CarouselProductDetails from '../../carousel/CarouselProductDetails';
 
 // ----------------------------------------------------------------------
 
-ProductNewForm.propTypes = {
+MotoFacture.propTypes = {
   isEdit: PropTypes.bool,
   currentProduct: PropTypes.object
 };
@@ -59,7 +61,10 @@ function padLeadingZeros(num, size) {
 
 const urlBlank = 'https://placehold.jp/24/cccccc/525252/500x500.png?text=Aucune%20photo';
 
-export default function ProductNewForm({ currentProduct }) {
+export default function MotoFacture({ currentProduct, isEdit }) {
+  const motos = useSelector((state) => state.motos.products);
+  const motosVente = motos.filter((moto) => moto.PV !== 0 && moto.date_vente !== null && moto.date_vente !== '');
+
   const linkRecto = () => {
     let link;
     if (currentProduct.PJ_CIN_Client_2_recto) {
@@ -171,6 +176,19 @@ export default function ProductNewForm({ currentProduct }) {
           variant: 'success'
         });
         await dispatch(getMotos());
+        await motosVente.forEach((el) =>
+          dispatch(
+            createOrUpdateFromMoto({
+              libellee: `Vente du moto ${el.nom_moto}-${el.num_moteur}`,
+              date: moment(el.date_vente).format('YYYY-MM-DD'),
+              recette: Number(el.PV),
+              depense: 0,
+              is_depense: false,
+              is_moto: true,
+              id_moto: Number(el.ID_Moto)
+            })
+          )
+        );
         resetForm(true);
       } catch (error) {
         console.error(error);
@@ -512,7 +530,7 @@ export default function ProductNewForm({ currentProduct }) {
         </FormikProvider>
       </Grid>
       <Grid item xs={12} md={6}>
-        <FacturePreview currentProduct={currentProduct} />
+        <FacturePreview currentProduct={currentProduct} isEdit={isEdit} />
       </Grid>
     </Grid>
   );

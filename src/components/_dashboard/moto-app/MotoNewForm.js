@@ -66,20 +66,26 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
     numMoteur: Yup.string()
       .required('Entrer le numéro moteur')
       .test('Vérification de numéro moteur', 'Cette numéro existe déjà', async (numMoteur) => {
+        if (isEdit) {
+          if (currentProduct.num_moteur === numMoteur) {
+            return true;
+          }
+          await dispatch(checkNumMoteurUnique(numMoteur));
+          return isNumMoteurUnique;
+        }
         await dispatch(checkNumMoteurUnique(numMoteur));
         return isNumMoteurUnique;
       }),
     FRN: Yup.string().required('Entrer le FRN'),
-    PA: Yup.number().required('Entrer le PA'),
-    PV: Yup.number().required(),
+    PA: Yup.number().nullable().notRequired(),
+    PV: Yup.number().nullable().notRequired(),
     localisation: Yup.string().required('Localisation requis'),
     dateArrivee: Yup.date().required("Date d'arrivée requise"),
     volumeMoteur: Yup.string().required('Volume moteur requis'),
     carteRose: Yup.string().nullable().notRequired(),
     carteGrise: Yup.string().nullable().notRequired(),
     montantReparation: Yup.number().nullable().notRequired(),
-    motifReparation: Yup.string().nullable().notRequired(),
-    fournisseur: Yup.string().nullable().notRequired()
+    motifReparation: Yup.string().nullable().notRequired()
     // commercial: Yup.string()
   });
 
@@ -99,8 +105,7 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
       carteRose: currentProduct?.carte_rose || '',
       carteGrise: currentProduct?.carte_grise || '',
       montantReparation: currentProduct?.montant_reparation || 0,
-      motifReparation: currentProduct?.motif_reparation || '',
-      fournisseur: currentProduct?.fournisseur || ''
+      motifReparation: currentProduct?.motif_reparation || ''
       // commercial: currentProduct?.commercial || ''
     },
     validationSchema: NewProductSchema,
@@ -118,8 +123,7 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
         carte_rose: values.carteRose,
         carte_grise: values.carteGrise,
         montant_reparation: values.montantReparation,
-        motif_reparation: values.motifReparation,
-        fournisseur: values.fournisseur
+        motif_reparation: values.motifReparation
       };
 
       if (isEdit) {
@@ -228,7 +232,7 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
                 />
                 <TextField
                   fullWidth
-                  label="FRN"
+                  label="Fournisseur"
                   onChange={handleChange}
                   onBlur={handleBlur}
                   {...getFieldProps('FRN')}
@@ -319,16 +323,6 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
                       })
                     : 'invendue'}
                 </Typography>
-
-                <TextField
-                  fullWidth
-                  label="Fournisseur"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  {...getFieldProps('fournisseur')}
-                  error={Boolean(touched.fournisseur && errors.fournisseur)}
-                  helperText={touched.fournisseur && errors.fournisseur}
-                />
 
                 <TextField
                   fullWidth

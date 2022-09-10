@@ -13,8 +13,6 @@ import { fNumber } from '../../../utils/formatNumber';
 export default function MotoCaisseSolde() {
   const soldes = useSelector((state) => state.caisseMoto.solde);
   const caisses = useSelector((state) => state.caisseMoto.caisses);
-  const motos = useSelector((state) => state.motos.products);
-  const motosVente = motos.filter((moto) => moto.PV !== 0 && moto.date_vente !== null && moto.date_vente !== '');
   const isLoading = useSelector((state) => state.caisseMoto.isLoading);
   const { enqueueSnackbar } = useSnackbar();
   const soldeInitial = soldes.solde_initial;
@@ -25,19 +23,6 @@ export default function MotoCaisseSolde() {
   useEffect(() => {
     dispatch(getSolde());
     console.log('Will be start check moto vente');
-    motosVente.forEach((el) =>
-      dispatch(
-        createOrUpdateFromMoto({
-          libellee: `Vente du moto ${el.nom_moto}-${el.num_moteur}`,
-          date: moment(el.date_vente).format('YYYY-MM-DD'),
-          recette: Number(el.PV),
-          depense: 0,
-          is_depense: false,
-          is_moto: true,
-          id_moto: Number(el.ID_Moto)
-        })
-      )
-    );
   }, []);
 
   const updateSoldeFrom = () => {
