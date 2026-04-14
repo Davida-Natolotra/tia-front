@@ -1,10 +1,11 @@
 import React from 'react';
 import { Text, View, StyleSheet, Font } from '@react-pdf/renderer';
+import RobotoBold from './fonts/Roboto-Bold.ttf';
 
 const borderColor = 'black';
 Font.register({
-  family: 'Noto-Sans',
-  src: 'https://fonts.gstatic.com/s/notosans/v42/o-0mIpQlx3QUlC5A4PNB6Ryti20_6n1iPHjcz6L1SoM-jCpoiyD9A99d.ttf'
+  family: 'Roboto-Bold',
+  src: RobotoBold
 });
 
 const styles = StyleSheet.create({
@@ -14,7 +15,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: 24,
     textAlign: 'center',
-    fontFamily: 'Noto-Sans',
+    fontFamily: 'Roboto-Bold',
     flexGrow: 1,
     fontSize: 9
   },

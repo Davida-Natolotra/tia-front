@@ -1,10 +1,12 @@
 import React, { Fragment } from 'react';
 import { Text, View, StyleSheet, Font } from '@react-pdf/renderer';
+import RobotoBold from './fonts/Roboto-Bold.ttf';
 
 const borderColor = 'black';
+
 Font.register({
-  family: 'Noto-Sans',
-  src: 'https://fonts.gstatic.com/s/notosans/v42/o-0mIpQlx3QUlC5A4PNB6Ryti20_6n1iPHjcz6L1SoM-jCpoiyD9A99d.ttf'
+  family: 'Roboto-Bold',
+  src: RobotoBold
 });
 
 const InvoiceTableRow = ({ items }) => {
@@ -31,7 +33,7 @@ const InvoiceTableRow = ({ items }) => {
       alignItems: 'center',
       height: 16,
       fontSize: 9,
-      fontFamily: 'Noto-Sans',
+      fontFamily: 'Roboto-Bold',
       padding: 0,
       margin: 0
     },

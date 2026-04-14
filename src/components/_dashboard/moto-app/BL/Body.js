@@ -3,6 +3,8 @@ import React from 'react';
 
 import Signature from './signature';
 import Footer from './footer';
+import NotoSansBold from './fonts/NotoSans-Bold.ttf';
+import RobotoBold from './fonts/Roboto-Bold.ttf';
 
 export default function FactureMoto({ data }) {
   const dateBL = new Date(data.dateBL).toLocaleDateString('fr-fr', {
@@ -46,12 +48,12 @@ export default function FactureMoto({ data }) {
         </Text>
       </View>
 
-      <View style={styles.signature}>
+      {/* <View style={styles.signature}>
         <Signature />
       </View>
       <View style={styles.footer}>
         <Footer />
-      </View>
+      </View> */}
     </View>
   );
 }
@@ -74,7 +76,7 @@ Font.register({
 });
 Font.register({
   family: 'Noto-Sans',
-  src: 'https://fontsfree.net//wp-content/fonts/basic/sans-serif/FontsFree-Net-NotoSans-Bold.ttf'
+  src: 'https://fonts.gstatic.com/s/notosans/v42/o-0mIpQlx3QUlC5A4PNB6Ryti20_6n1iPHjcz6L1SoM-jCpoiyD9A99d.ttf'
 });
 Font.register({
   family: 'Glober-Semi',
@@ -82,7 +84,12 @@ Font.register({
 });
 Font.register({
   family: 'Noto-Sans-Bold',
-  src: 'https://fontsfree.net//wp-content/fonts/basic/sans-serif/FontsFree-Net-NotoSans-Bold.ttf'
+  src: NotoSansBold
+});
+
+Font.register({
+  family: 'Roboto-Bold',
+  src: RobotoBold
 });
 
 const styles = StyleSheet.create({
@@ -94,7 +101,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     textAlign: 'center',
-    fontFamily: 'Noto-Sans-Bold'
+    fontFamily: 'Glober-Semi'
   },
   heading: {
     fontSize: 8,
@@ -123,7 +130,6 @@ const styles = StyleSheet.create({
   },
   info: {
     fontSize: 8,
-    letterSpacing: 0,
     lineHeight: 1.5
   },
   text: {
@@ -196,21 +202,18 @@ const styles = StyleSheet.create({
 
   titleLeft: {
     flexDirection: 'column',
+    alignItems: 'flex-start',
     justifyContent: 'flex-start',
-
     textAlign: 'left',
-    fontStyle: 'bold',
     flexGrow: 1,
-    fontSize: 10,
-    letterSpacing: 3
+    fontSize: 10
   },
   titleRight: {
     flexDirection: 'column',
     alignItems: 'flex-end',
     justifyContent: 'flex-start',
     flexGrow: 1,
-    fontSize: 10,
-    letterSpacing: 1
+    fontSize: 10
   },
 
   signature: {
@@ -229,7 +232,7 @@ const styles = StyleSheet.create({
     letterSpacing: 1
   },
   boldUnderlineText: {
-    fontFamily: 'Noto-Sans-Bold',
+    fontFamily: 'Roboto-Bold',
     textDecoration: 'underline'
   }
 });
