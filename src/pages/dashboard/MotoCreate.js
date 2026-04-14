@@ -1,15 +1,14 @@
-import { useEffect, useState, useRef } from 'react';
-import { paramCase } from 'change-case';
-import { useParams, useLocation, useNavigate } from 'react-router-dom';
+import { useEffect, useRef, useState } from 'react';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 // material
-import { Container, Box, Typography } from '@material-ui/core';
+import { Box, Container, Typography } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-import { getMoto, getMotos } from '../../redux/slices/moto';
+import { getMotos } from '../../redux/slices/moto';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // hooks
@@ -20,6 +19,7 @@ import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 import MotoNewForm from '../../components/_dashboard/moto-app/MotoNewForm';
 import MotoFacture from '../../components/_dashboard/moto-app/MotoFacture';
 import MotoBL from '../../components/_dashboard/moto-app/MotoBL';
+
 // ----------------------------------------------------------------------
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -78,7 +78,7 @@ export default function MotoCreate() {
     } else if (!currentProduct && isEdit && !isNew) {
       navigate(`${PATH_DASHBOARD.moto.root}`);
     }
-  }, [currentProduct, product]);
+  }, [currentProduct, isEdit, isNew, navigate, product]);
 
   const [value, setValue] = useState(0);
 

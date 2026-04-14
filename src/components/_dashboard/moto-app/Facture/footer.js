@@ -2,8 +2,8 @@ import React from 'react';
 import { View, Text, StyleSheet, Font } from '@react-pdf/renderer';
 
 Font.register({
-  family: 'Noto-Sans-Bold',
-  src: 'https://fontsfree.net//wp-content/fonts/basic/sans-serif/FontsFree-Net-NotoSans-Bold.ttf'
+  family: 'Noto-Sans',
+  src: 'https://fonts.gstatic.com/s/notosans/v42/o-0mIpQlx3QUlC5A4PNB6Ryti20_6n1iPHjcz6L1SoM-jCpoiyD9A99d.ttf'
 });
 
 const styles = StyleSheet.create({
@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: 24,
     fontSize: 9,
-    fontFamily: 'Noto-Sans-Bold',
+    fontFamily: 'Noto-Sans',
     color: '#929292',
     bottom: 10
   },

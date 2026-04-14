@@ -1,6 +1,6 @@
 import React from 'react';
-import { PDFViewer, Document, Page, StyleSheet, Text, View } from '@react-pdf/renderer';
-import { useSelector, useDispatch } from 'react-redux';
+import { Document, Page, PDFViewer, StyleSheet, Text, View } from '@react-pdf/renderer';
+import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
 import { getNumberWord } from '../../../../redux/slices/moto';
 import Body from './Body';
@@ -63,6 +63,12 @@ export default function FactureMoto({ currentProduct, isEdit }) {
     </PDFViewer>
   );
 }
+
+export const FootRow = ({ totalLettre }) => (
+  <View style={styles.row}>
+    <Text style={styles.chiffre}>{totalLettre ? totalLettre.toUpperCase() : ''} ARIARY</Text>
+  </View>
+);
 
 const styles = StyleSheet.create({
   body: {

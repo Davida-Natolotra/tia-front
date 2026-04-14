@@ -1,13 +1,12 @@
-import { useEffect, useState, useRef } from 'react';
-import { paramCase } from 'change-case';
-import { useParams, useLocation, useNavigate } from 'react-router-dom';
+import { useEffect, useRef } from 'react';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 // material
-import { Container, Box, Typography, Grid, Card, CardHeader, CardContent, Divider, Stack } from '@material-ui/core';
+import { Box, Card, CardContent, CardHeader, Container, Divider, Grid, Stack, Typography } from '@material-ui/core';
 import PropTypes from 'prop-types';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-import { getMoto, getMotos } from '../../redux/slices/moto';
+import { getMotos } from '../../redux/slices/moto';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // hooks
@@ -17,7 +16,8 @@ import Page from '../../components/Page';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 import { fNumber } from '../../utils/formatNumber';
 import CarouselProductDetails from '../../components/carousel/CarouselProductDetails';
-import FacturePreview from '../../components/_dashboard/moto-app/Facture';
+import FacturePreview from '../../components/_dashboard/moto-app/Facture/index';
+
 // ----------------------------------------------------------------------
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -52,7 +52,7 @@ function a11yProps(index) {
   };
 }
 
-const url = 'https://tiamoto.com/backend';
+const url = process.env.REACT_APP_BACKEND_URL;
 const urlBlank = 'https://placehold.jp/24/cccccc/525252/500x500.png?text=Aucune%20photo';
 
 // Main

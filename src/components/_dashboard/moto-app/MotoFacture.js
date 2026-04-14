@@ -2,13 +2,13 @@ import * as Yup from 'yup';
 import PropTypes from 'prop-types';
 import { useSnackbar } from 'notistack5';
 import moment from 'moment';
-import { useState, useEffect, useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Form, FormikProvider, useFormik } from 'formik';
 import CurrencyTextField from '@unicef/material-ui-currency-textfield';
 // material
 import { LoadingButton } from '@material-ui/lab';
-import { Grid, Stack, Button, Box, TextField } from '@material-ui/core';
-import { Typography, Divider, Accordion, AccordionSummary, AccordionDetails } from '@mui/material';
+import { Box, Button, Grid, Stack, TextField } from '@material-ui/core';
+import { Accordion, AccordionDetails, AccordionSummary, Divider, Typography } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
 import Dialog from '@mui/material/Dialog';
@@ -17,7 +17,6 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 // utils
-
 //
 import frLocale from 'date-fns/locale/fr';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -26,19 +25,18 @@ import { frFR as calFR } from '@mui/x-date-pickers';
 import { useDispatch, useSelector } from 'react-redux';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 import useAuth from '../../../hooks/useAuth';
-import useCheckMobile from '../../../hooks/useCheckMobile';
 import {
+  cancelFacture,
+  getLastFacture,
   getLastID,
+  getMotos,
   getNumberWord,
   updateMoto,
-  getMotos,
-  getLastFacture,
-  url,
-  cancelFacture
+  url
 } from '../../../redux/slices/moto';
 import { createOrUpdateFromMoto } from '../../../redux/slices/caisse';
 
-import FacturePreview from './Facture';
+import FacturePreview from './Facture/index';
 import { fileChangedHandler } from '../../../utils/imageCompress';
 
 import { fNumber } from '../../../utils/formatNumber';
@@ -176,7 +174,7 @@ export default function MotoFacture({ currentProduct, isEdit }) {
           variant: 'success'
         });
         await dispatch(getMotos());
-        await motosVente.forEach((el) =>
+        motosVente.forEach((el) =>
           dispatch(
             createOrUpdateFromMoto({
               libellee: `Vente du moto ${el.nom_moto}-${el.num_moteur}`,

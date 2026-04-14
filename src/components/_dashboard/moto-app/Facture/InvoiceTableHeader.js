@@ -3,9 +3,10 @@ import { Text, View, StyleSheet, Font } from '@react-pdf/renderer';
 
 const borderColor = 'black';
 Font.register({
-  family: 'Noto-Sans-Bold',
-  src: 'https://fontsfree.net//wp-content/fonts/basic/sans-serif/FontsFree-Net-NotoSans-Bold.ttf'
+  family: 'Noto-Sans',
+  src: 'https://fonts.gstatic.com/s/notosans/v42/o-0mIpQlx3QUlC5A4PNB6Ryti20_6n1iPHjcz6L1SoM-jCpoiyD9A99d.ttf'
 });
+
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
@@ -13,7 +14,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: 24,
     textAlign: 'center',
-    fontFamily: 'Noto-Sans-Bold',
+    fontFamily: 'Noto-Sans',
     flexGrow: 1,
     fontSize: 9
   },
