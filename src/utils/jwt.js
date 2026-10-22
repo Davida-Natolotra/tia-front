@@ -1,6 +1,7 @@
 import jwtDecode from 'jwt-decode';
 import { verify, sign } from 'jsonwebtoken';
 //
+import baseAxios from 'axios';
 import axios from './axios';
 
 // ----------------------------------------------------------------------
@@ -33,12 +34,15 @@ const setSession = (accessToken) => {
   if (accessToken) {
     localStorage.setItem('accessToken', accessToken);
     axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
+    // The moto and caisse slices use the default axios, so it needs the token too
+    baseAxios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
     // This function below will handle when token is expired
     // const { exp } = jwtDecode(accessToken);
     // handleTokenExpired(exp);
   } else {
     localStorage.removeItem('accessToken');
     delete axios.defaults.headers.common.Authorization;
+    delete baseAxios.defaults.headers.common.Authorization;
   }
 };
 

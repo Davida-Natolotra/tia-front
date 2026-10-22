@@ -105,7 +105,12 @@ export default function CollapsibleTable() {
   }, []);
 
   const venteToday = useSelector((state) => state.motos.venteToday);
-  const rows = date.map((di, index) => createData(di, nb[index], data[index]));
+  // Lists are empty until the API responds, so never assume an item exists
+  date = date || [];
+  nb = nb || [];
+  data = data || [];
+  const rows = date.map((di, index) => createData(di, nb[index], data[index] || []));
+  const monthLabel = date[0]?.split(' ')[1] || new Date().toLocaleDateString('fr-fr', { month: 'short' });
   const rowsToday = venteToday?.data || [];
 
   const handleChangeSeriesData = (event) => {
@@ -181,7 +186,7 @@ export default function CollapsibleTable() {
                   month: 'long',
                   day: 'numeric'
                 })
-              : date[0].split(' ')[1]}
+              : monthLabel}
           </Typography>
         </Box>
         <TableContainer component={Paper} sx={{ maxHeight: '60vh' }}>
