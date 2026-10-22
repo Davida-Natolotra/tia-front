@@ -11,6 +11,9 @@ const initialState = {
   caisse: { libellee: null, date: null, depense: 0, recette: 0, PJ: null, id: null, is_depense: false, is_moto: false },
   caisses: [],
   solde: { solde_initial: 0, solde_actuel: 0 },
+  // Set once the server answered, so the balance is never saved from empty defaults
+  isCaissesLoaded: false,
+  isSoldeLoaded: false,
   isEdit: false,
   show: false
 };
@@ -34,6 +37,7 @@ const slice = createSlice({
     getCaisseSuccess(state, action) {
       state.isLoading = false;
       state.caisses = action.payload;
+      state.isCaissesLoaded = true;
     },
     // SET CAISSE
     setCaisse(state, action) {
@@ -62,6 +66,7 @@ const slice = createSlice({
     getSoldeSuccess(state, action) {
       state.isLoading = false;
       state.solde = action.payload;
+      state.isSoldeLoaded = true;
     },
     // SET EDIT
     setEdit(state, action) {
