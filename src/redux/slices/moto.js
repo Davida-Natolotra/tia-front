@@ -1,10 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 // utils
-import axios from 'axios';
-
-// Endpoint
-// const url = 'http://localhost:8080';
-const url = 'https://tiamoto.com/backend';
+import apiClient from '../../utils/apiClient';
 // ----------------------------------------------------------------------
 
 const initialState = {
@@ -126,7 +122,7 @@ export function getMotos() {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${url}/api/`);
+      const response = await apiClient.get('/api/');
       dispatch(slice.actions.getProductsSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
@@ -137,9 +133,9 @@ export function getMotosByDate(newDateDebut, newDateFin) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios({
+      const response = await apiClient({
         method: 'get',
-        url: `${url}/api/motos`,
+        url: '/api/motos/',
         responseType: 'stream',
         params: {
           dateEntree: newDateDebut,
@@ -159,10 +155,8 @@ export function getMoto(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${url}/api/`, {
-        params: { id }
-      });
-      dispatch(slice.actions.getProductSuccess(response.data.product));
+      const response = await apiClient.get(`/api/motos/${id}`);
+      dispatch(slice.actions.getProductSuccess(response.data));
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error));
@@ -174,9 +168,9 @@ export function getMotosHebdo(newDateDebut, newDateFin) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios({
+      const response = await apiClient({
         method: 'get',
-        url: `${url}/api/motos/chart_hebdo_api`,
+        url: '/api/motos/chart_hebdo_api',
         responseType: 'stream',
         params: {
           dateEntree: newDateDebut,
@@ -193,9 +187,9 @@ export function getMotosMonthly(date) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios({
+      const response = await apiClient({
         method: 'get',
-        url: `${url}/api/motos/chart_monthly_api`,
+        url: '/api/motos/chart_monthly_api',
         responseType: 'stream',
         params: {
           month: date
@@ -211,9 +205,9 @@ export function getStock() {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios({
+      const response = await apiClient({
         method: 'get',
-        url: `${url}/api/motos/stock_level_api`,
+        url: '/api/motos/stock_level_api',
         responseType: 'stream'
       });
       dispatch(slice.actions.getStockSuccess(response.data));
@@ -226,9 +220,9 @@ export function getVenteToday() {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios({
+      const response = await apiClient({
         method: 'get',
-        url: `${url}/api/motos/venteToday_API`,
+        url: '/api/motos/venteToday_API',
         responseType: 'stream'
       });
       dispatch(slice.actions.getVenteTodaySuccess(response.data));
@@ -241,9 +235,9 @@ export function getLastFacture() {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios({
+      const response = await apiClient({
         method: 'get',
-        url: `${url}/api/motos/last_facture_api`,
+        url: '/api/motos/last_facture_api',
         responseType: 'stream'
       });
       dispatch(slice.actions.getLastFactureSuccess(response.data));
@@ -256,9 +250,9 @@ export function getLastBL() {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios({
+      const response = await apiClient({
         method: 'get',
-        url: `${url}/api/motos/last_BL_api`,
+        url: '/api/motos/last_BL_api',
         responseType: 'stream'
       });
       dispatch(slice.actions.getLastBLSuccess(response.data));
@@ -271,9 +265,9 @@ export function getLastID() {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios({
+      const response = await apiClient({
         method: 'get',
-        url: `${url}/api/motos/ID_Last_API`,
+        url: '/api/motos/ID_Last_API',
         responseType: 'stream'
       });
       dispatch(slice.actions.getLastIDSuccess(response.data));
@@ -286,9 +280,9 @@ export function getNumberWord(number) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios({
+      const response = await apiClient({
         method: 'get',
-        url: `${url}/api/motos/total2word_API`,
+        url: '/api/motos/total2word_API',
         responseType: 'stream',
         params: {
           number
@@ -305,9 +299,9 @@ export function addMoto(motoData) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios({
+      const response = await apiClient({
         method: 'post',
-        url: `${url}/api/motos/createMoto`,
+        url: '/api/motos/createMoto',
         data: motoData,
         responseType: 'stream',
         headers: {
@@ -325,9 +319,9 @@ export function updateMoto(motoData, id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios({
+      const response = await apiClient({
         method: 'put',
-        url: `${url}/api/motos/updateMoto/${id}`,
+        url: `/api/motos/updateMoto/${id}`,
         data: motoData,
         responseType: 'stream',
         headers: {
@@ -345,9 +339,9 @@ export function deleteMoto(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios({
+      const response = await apiClient({
         method: 'delete',
-        url: `${url}/api/motos/deleteMoto/${id}`,
+        url: `/api/motos/deleteMoto/${id}`,
 
         responseType: 'stream',
         headers: {

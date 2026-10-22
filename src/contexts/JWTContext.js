@@ -1,10 +1,13 @@
 import { createContext, useEffect, useReducer } from 'react';
 import PropTypes from 'prop-types';
 // utils
-import axios from '../utils/axios';
-import { isValidToken, setSession } from '../utils/jwt';
+import apiClient, { clearTokens, getTokens, setSessionExpiredHandler, setTokens } from '../utils/apiClient';
 
 // ----------------------------------------------------------------------
+// Auth against the Django backend (simplejwt):
+//   POST /api/token/          { username, password } -> { access, refresh }
+//   POST /api/token/refresh/  handled by apiClient
+//   GET  /api/user/           -> { displayName, id, email, role }
 
 const initialState = {
   isAuthenticated: false,
@@ -35,16 +38,7 @@ const handlers = {
     ...state,
     isAuthenticated: false,
     user: null
-  }),
-  REGISTER: (state, action) => {
-    const { user } = action.payload;
-
-    return {
-      ...state,
-      isAuthenticated: true,
-      user
-    };
-  }
+  })
 };
 
 const reducer = (state, action) => (handlers[action.type] ? handlers[action.type](state, action) : state);
@@ -53,9 +47,13 @@ const AuthContext = createContext({
   ...initialState,
   method: 'jwt',
   login: () => Promise.resolve(),
-  logout: () => Promise.resolve(),
-  register: () => Promise.resolve()
+  logout: () => Promise.resolve()
 });
+
+const fetchUser = async () => {
+  const response = await apiClient.get('/api/user/');
+  return response.data;
+};
 
 AuthProvider.propTypes = {
   children: PropTypes.node
@@ -65,83 +63,45 @@ function AuthProvider({ children }) {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
+    // apiClient calls this when a token refresh fails (session expired or revoked).
+    setSessionExpiredHandler(() => dispatch({ type: 'LOGOUT' }));
+
     const initialize = async () => {
       try {
-        const accessToken = window.localStorage.getItem('accessToken');
-
-        if (accessToken && isValidToken(accessToken)) {
-          setSession(accessToken);
-
-          const response = await axios.get('/api/account/my-account');
-          const { user } = response.data;
-
-          dispatch({
-            type: 'INITIALIZE',
-            payload: {
-              isAuthenticated: true,
-              user
-            }
-          });
+        if (getTokens().refresh) {
+          // apiClient refreshes the access token first if it has expired.
+          const user = await fetchUser();
+          dispatch({ type: 'INITIALIZE', payload: { isAuthenticated: true, user } });
         } else {
-          dispatch({
-            type: 'INITIALIZE',
-            payload: {
-              isAuthenticated: false,
-              user: null
-            }
-          });
+          dispatch({ type: 'INITIALIZE', payload: { isAuthenticated: false, user: null } });
         }
       } catch (err) {
         console.error(err);
-        dispatch({
-          type: 'INITIALIZE',
-          payload: {
-            isAuthenticated: false,
-            user: null
-          }
-        });
+        clearTokens();
+        dispatch({ type: 'INITIALIZE', payload: { isAuthenticated: false, user: null } });
       }
     };
 
     initialize();
+    return () => setSessionExpiredHandler(null);
   }, []);
 
-  const login = async (email, password) => {
-    const response = await axios.post('/api/account/login', {
-      email,
-      password
-    });
-    const { accessToken, user } = response.data;
-
-    setSession(accessToken);
-    dispatch({
-      type: 'LOGIN',
-      payload: {
-        user
+  const login = async (username, password) => {
+    try {
+      const response = await apiClient.post('/api/token/', { username, password });
+      setTokens(response.data);
+    } catch (error) {
+      if (error.response?.status === 401) {
+        throw new Error("Nom d'utilisateur ou mot de passe incorrect");
       }
-    });
-  };
-
-  const register = async (email, password, firstName, lastName) => {
-    const response = await axios.post('/api/account/register', {
-      email,
-      password,
-      firstName,
-      lastName
-    });
-    const { accessToken, user } = response.data;
-
-    window.localStorage.setItem('accessToken', accessToken);
-    dispatch({
-      type: 'REGISTER',
-      payload: {
-        user
-      }
-    });
+      throw new Error(error.response?.data?.detail || 'Connexion au serveur impossible');
+    }
+    const user = await fetchUser();
+    dispatch({ type: 'LOGIN', payload: { user } });
   };
 
   const logout = async () => {
-    setSession(null);
+    clearTokens();
     dispatch({ type: 'LOGOUT' });
   };
 
@@ -156,7 +116,6 @@ function AuthProvider({ children }) {
         method: 'jwt',
         login,
         logout,
-        register,
         resetPassword,
         updateProfile
       }}
