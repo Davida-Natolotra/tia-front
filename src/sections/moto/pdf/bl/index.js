@@ -31,7 +31,11 @@ export default function FactureMoto({ currentProduct }) {
     nomMoto: currentProduct.nom_moto,
     numMoteur: currentProduct.num_moteur,
     volumeMoteur: currentProduct.volume_moteur,
-    numBL: `${padLeadingZeros(currentProduct.num_BL, 3)}/${moment(new Date()).format('MM-YYYY')}`,
+    // Blank until the BL is numbered
+    numBL:
+      currentProduct.num_BL == null || currentProduct.num_BL === ''
+        ? ''
+        : `${padLeadingZeros(currentProduct.num_BL, 3)}/${moment(new Date()).format('MM-YYYY')}`,
     dateBL: currentProduct.date_BL,
     total: fNumber(currentProduct.PV)
   };

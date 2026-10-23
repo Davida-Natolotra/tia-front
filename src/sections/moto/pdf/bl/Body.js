@@ -8,11 +8,14 @@ import NotoSansBold from './fonts/NotoSans-Bold.ttf';
 import RobotoBold from './fonts/Roboto-Bold.ttf';
 
 export default function FactureMoto({ data }) {
-  const dateBL = new Date(data.dateBL).toLocaleDateString('fr-fr', {
-    year: 'numeric',
-    month: 'numeric',
-    day: 'numeric'
-  });
+  // Blank until the BL has a date (new Date(null) would print 01/01/1970)
+  const dateBL = data.dateBL
+    ? new Date(data.dateBL).toLocaleDateString('fr-fr', {
+        year: 'numeric',
+        month: 'numeric',
+        day: 'numeric'
+      })
+    : '';
   return (
     <View style={styles.page}>
       <Image style={styles.logo} src={Logo} fixed />
@@ -109,13 +112,13 @@ const styles = StyleSheet.create({
     fontSize: 8,
     marginLeft: 110,
     fontFamily: 'Noto-Sans',
-    textAlign: 'right'
+    textAlign: 'left'
   },
   headingTitle: {
     fontSize: 12,
     marginLeft: 110,
     fontFamily: 'Noto-Sans',
-    textAlign: 'right'
+    textAlign: 'left'
   },
 
   subtitle: {
@@ -179,6 +182,7 @@ const styles = StyleSheet.create({
   },
   page: {
     fontSize: 9,
+    flex: 1,
     paddingTop: 20,
     paddingLeft: 30,
     paddingRight: 30,

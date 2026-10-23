@@ -30,7 +30,11 @@ export default function FactureMoto({ currentProduct, isEdit }) {
     nomMoto: currentProduct.nom_moto,
     numMoteur: currentProduct.num_moteur,
     volumeMoteur: currentProduct.volume_moteur,
-    numFacture: `${padLeadingZeros(currentProduct.num_sur_facture, 3)}/${moment(new Date()).format('MM-YYYY')}`,
+    // Blank until the invoice is numbered
+    numFacture:
+      currentProduct.num_sur_facture == null || currentProduct.num_sur_facture === ''
+        ? ''
+        : `${padLeadingZeros(currentProduct.num_sur_facture, 3)}/${moment(new Date()).format('MM-YYYY')}`,
     dateFacture: currentProduct.date_facture,
     PUHT: fNumber(currentProduct.PU_HT),
     TVA: fNumber(currentProduct.TVA),

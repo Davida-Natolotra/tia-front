@@ -25,11 +25,14 @@ export default function FactureMoto({ data }) {
     { sno: 2, ref: ' ', desc: data.numMoteur, PU: ' ', TVA: ' ' },
     { sno: 3, ref: ' ', desc: data.volumeMoteur, PU: ' ', TVA: ' ' }
   ];
-  const dateFacture = new Date(data.dateFacture).toLocaleDateString('fr-fr', {
-    year: 'numeric',
-    month: 'numeric',
-    day: 'numeric'
-  });
+  // Blank until the invoice has a date (new Date(null) would print 01/01/1970)
+  const dateFacture = data.dateFacture
+    ? new Date(data.dateFacture).toLocaleDateString('fr-fr', {
+        year: 'numeric',
+        month: 'numeric',
+        day: 'numeric'
+      })
+    : '';
   return (
     <View style={styles.page}>
       <Image style={styles.logo} src={Logo} fixed />
