@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 // material
@@ -15,6 +15,7 @@ import { PATH_DASHBOARD } from '../../routes/paths';
 import useSettings from '../../hooks/useSettings';
 // components
 import Page from '../../components/Page';
+import LoadingScreen from '../../components/LoadingScreen';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 import MotoForm from '../../sections/moto/MotoForm';
 import MotoFacture from '../../sections/moto/MotoFacture';
@@ -61,30 +62,40 @@ export default function MotoCreate() {
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const { id } = useParams();
-  const init = useRef();
-  const { products, product, currentData } = useSelector((state) => state.motos);
+  const { products, currentData } = useSelector((state) => state.motos);
   const isEdit = pathname.includes('edit');
-  const isNew = pathname.includes('new');
-  const currentProduct = products?.find((product) => product.id === parseInt(id, 10)) || currentData.id;
-  console.log(`currentProduct: ${currentProduct}, type: ${typeof currentProduct}, not:${!currentProduct}`);
+  // True once the list has been fetched on this page, so a reload can tell "loading" from "not found"
+  const [isListLoaded, setListLoaded] = useState(false);
+
+  // Right after creating a moto, the list may not have it yet: use the saved moto from the store
+  const currentProduct =
+    products?.find((moto) => moto.id === Number(id)) || (currentData?.id === Number(id) ? currentData : undefined);
 
   useEffect(() => {
-    dispatch(getMotos());
+    let active = true;
+    dispatch(getMotos()).then(() => {
+      if (active) setListLoaded(true);
+    });
+    return () => {
+      active = false;
+    };
   }, [dispatch]);
 
   useEffect(() => {
-    if (init.current) {
-      init.current = false;
-    } else if (!currentProduct && isEdit && !isNew) {
-      navigate(`${PATH_DASHBOARD.moto.root}`);
+    if (isEdit && isListLoaded && !currentProduct) {
+      navigate(PATH_DASHBOARD.moto.root, { replace: true });
     }
-  }, [currentProduct, isEdit, isNew, navigate, product]);
+  }, [isEdit, isListLoaded, currentProduct, navigate]);
 
   const [value, setValue] = useState(0);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+
+  if (isEdit && !currentProduct) {
+    return <LoadingScreen />;
+  }
 
   return (
     <Page title="Edition">
