@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 // hooks
 import useAuth from '../hooks/useAuth';
 // pages
-import Login from '../pages/authentication/Login';
+import Login from '../pages/auth/Login';
 
 // ----------------------------------------------------------------------
 

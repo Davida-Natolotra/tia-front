@@ -1,24 +1,11 @@
-// mock api
-import './_apis_';
-
 // i18n
 import './locales/i18n';
-
-// highlight
-import './utils/highlight';
 
 // scroll bar
 import 'simplebar/src/simplebar.css';
 
-// map
-import 'mapbox-gl/dist/mapbox-gl.css';
-
 // lightbox
 import 'react-image-lightbox/style.css';
-
-// editor
-import 'react-quill/dist/quill.snow.css';
-import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
 // slick-carousel
 import 'slick-carousel/slick/slick.css';
@@ -47,9 +34,6 @@ import { CollapseDrawerProvider } from './contexts/CollapseDrawerContext';
 import LoadingScreen from './components/LoadingScreen';
 
 import { AuthProvider } from './contexts/JWTContext';
-// import { AuthProvider } from './contexts/FirebaseContext';
-// import { AuthProvider } from './contexts/AwsCognitoContext';
-// import { AuthProvider } from './contexts/Auth0Context';
 
 //
 import App from './App';

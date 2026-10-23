@@ -9,7 +9,6 @@ import Logo from '../../components/Logo';
 import Label from '../../components/Label';
 import { MHidden } from '../../components/@material-extend';
 //
-import MenuDesktop from './MenuDesktop';
 import MenuMobile from './MenuMobile';
 import navConfig from './MenuConfig';
 

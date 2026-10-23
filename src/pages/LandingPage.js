@@ -2,7 +2,7 @@
 import { styled } from '@material-ui/core/styles';
 // components
 import Page from '../components/Page';
-import { LandingHero, LandingDarkMode, LandingThemeColor } from '../components/_external-pages/landing';
+import { LandingHero, LandingDarkMode, LandingThemeColor } from '../sections/landing';
 
 // ----------------------------------------------------------------------
 

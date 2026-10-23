@@ -1,9 +1,8 @@
-import { useEffect, useRef } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 
 // material
-import { Box, Card, CardContent, CardHeader, Container, Divider, Grid, Stack, Typography } from '@material-ui/core';
-import PropTypes from 'prop-types';
+import { Card, CardContent, CardHeader, Container, Divider, Grid, Stack, Typography } from '@material-ui/core';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 import { getMotos } from '../../redux/slices/moto';
@@ -13,44 +12,13 @@ import { PATH_DASHBOARD } from '../../routes/paths';
 import useSettings from '../../hooks/useSettings';
 // components
 import Page from '../../components/Page';
+import LoadingScreen from '../../components/LoadingScreen';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 import { fNumber } from '../../utils/formatNumber';
 import CarouselProductDetails from '../../components/carousel/CarouselProductDetails';
-import FacturePreview from '../../components/_dashboard/moto-app/Facture/index';
+import FacturePreview from '../../sections/moto/pdf/facture';
 
 // ----------------------------------------------------------------------
-function TabPanel(props) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
-      {...other}
-    >
-      {value === index && (
-        <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
-    </div>
-  );
-}
-
-TabPanel.propTypes = {
-  children: PropTypes.node,
-  index: PropTypes.number.isRequired,
-  value: PropTypes.number.isRequired
-};
-
-function a11yProps(index) {
-  return {
-    id: `simple-tab-${index}`,
-    'aria-controls': `simple-tabpanel-${index}`
-  };
-}
 
 const url = process.env.REACT_APP_BACKEND_URL;
 const urlBlank = 'https://placehold.jp/24/cccccc/525252/500x500.png?text=Aucune%20photo';
@@ -59,26 +27,29 @@ const urlBlank = 'https://placehold.jp/24/cccccc/525252/500x500.png?text=Aucune%
 export default function MotoDetails() {
   const { themeStretch } = useSettings();
   const dispatch = useDispatch();
-  const { pathname } = useLocation();
   const navigate = useNavigate();
   const { id } = useParams();
-  const init = useRef();
-  const { products, product, currentData } = useSelector((state) => state.motos);
+  const { products } = useSelector((state) => state.motos);
+  // True once the list has been fetched on this page, so a reload can tell "loading" from "not found"
+  const [isListLoaded, setListLoaded] = useState(false);
 
-  const currentProduct = products?.find((product) => product.id === parseInt(id, 10)) || currentData.id;
-  console.log(`currentProduct: ${currentProduct}, type: ${typeof currentProduct}, not:${!currentProduct}`);
+  const currentProduct = products?.find((moto) => moto.id === Number(id));
 
   useEffect(() => {
-    dispatch(getMotos());
+    let active = true;
+    dispatch(getMotos()).then(() => {
+      if (active) setListLoaded(true);
+    });
+    return () => {
+      active = false;
+    };
   }, [dispatch]);
 
   useEffect(() => {
-    if (init.current) {
-      init.current = false;
-    } else if (!currentProduct) {
-      navigate(`${PATH_DASHBOARD.moto.root}`);
+    if (isListLoaded && !currentProduct) {
+      navigate(PATH_DASHBOARD.moto.root, { replace: true });
     }
-  }, [currentProduct, product]);
+  }, [isListLoaded, currentProduct, navigate]);
 
   const linkPJ = (linkPJ) => {
     let link;
@@ -93,6 +64,11 @@ export default function MotoDetails() {
     }
     return link;
   };
+
+  if (!currentProduct) {
+    return <LoadingScreen />;
+  }
+
   return (
     <Page title="Détails">
       <Container maxWidth={themeStretch ? false : 'lg'}>
