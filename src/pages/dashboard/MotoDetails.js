@@ -15,13 +15,11 @@ import Page from '../../components/Page';
 import LoadingScreen from '../../components/LoadingScreen';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 import { fNumber } from '../../utils/formatNumber';
+import { mediaUrl } from '../../utils/mediaUrl';
 import CarouselProductDetails from '../../components/carousel/CarouselProductDetails';
 import FacturePreview from '../../sections/moto/pdf/facture';
 
 // ----------------------------------------------------------------------
-
-const url = process.env.REACT_APP_BACKEND_URL;
-const urlBlank = 'https://placehold.jp/24/cccccc/525252/500x500.png?text=Aucune%20photo';
 
 // Main
 export default function MotoDetails() {
@@ -50,20 +48,6 @@ export default function MotoDetails() {
       navigate(PATH_DASHBOARD.moto.root, { replace: true });
     }
   }, [isListLoaded, currentProduct, navigate]);
-
-  const linkPJ = (linkPJ) => {
-    let link;
-    if (linkPJ) {
-      if (linkPJ.includes('media')) {
-        link = url + linkPJ;
-      } else {
-        link = `${url}/media/${linkPJ}`;
-      }
-    } else {
-      link = urlBlank;
-    }
-    return link;
-  };
 
   if (!currentProduct) {
     return <LoadingScreen />;
@@ -174,8 +158,8 @@ export default function MotoDetails() {
 
                   <CarouselProductDetails
                     images={[
-                      linkPJ(currentProduct.PJ_CIN_Client_2_recto),
-                      linkPJ(currentProduct.PJ_CIN_Client_2_verso)
+                      mediaUrl(currentProduct.PJ_CIN_Client_2_recto),
+                      mediaUrl(currentProduct.PJ_CIN_Client_2_verso)
                     ]}
                   />
 

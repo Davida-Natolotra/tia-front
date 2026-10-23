@@ -31,10 +31,11 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { frFR as calFR } from '@mui/x-date-pickers';
 import { useDispatch, useSelector } from 'react-redux';
-import { url, updateCaisseMoto, addCaisseMoto, setEdit, resetCaisse, setShow } from '../../redux/slices/caisse';
+import { updateCaisseMoto, addCaisseMoto, setEdit, resetCaisse, setShow } from '../../redux/slices/caisse';
 // routes
 import CarouselProductDetails from '../../components/carousel/CarouselProductDetails';
 import { fileChangedHandler } from '../../utils/imageCompress';
+import { mediaUrl } from '../../utils/mediaUrl';
 
 // ----------------------------------------------------------------------
 
@@ -44,25 +45,12 @@ ProductNewForm.propTypes = {
   isEdit: PropTypes.bool,
   currentProduct: PropTypes.object
 };
-const urlBlank = 'https://placehold.jp/24/cccccc/525252/500x500.png?text=Aucune%20photo';
 
 function ProductNewForm() {
   const currentProduct = useSelector((state) => state.caisseMoto.caisse);
   const { isEdit } = useSelector((state) => state.caisseMoto);
   const [isChanged, setIsChanged] = useState(false);
-  const linkPJ = () => {
-    let link;
-    if (currentProduct.PJ) {
-      if (currentProduct.PJ.includes('media')) {
-        link = `${url}${currentProduct.PJ}`;
-      } else {
-        link = `${url}/media/${currentProduct.PJ}`;
-      }
-    } else {
-      link = urlBlank;
-    }
-    return link;
-  };
+  const linkPJ = () => mediaUrl(currentProduct.PJ);
   const [PJ, setPJ] = useState(linkPJ());
   const [PJFile, setPJFile] = useState(null);
   const [PJURI, setPJURI] = useState(null);
@@ -101,7 +89,6 @@ function ProductNewForm() {
         dataSubmit.id = currentProduct.id;
       }
       try {
-        console.log(dataSubmit);
         if (isEdit) {
           await dispatch(updateCaisseMoto(dataSubmit, currentProduct.id));
         } else {

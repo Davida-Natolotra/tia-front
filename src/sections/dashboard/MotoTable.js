@@ -121,8 +121,6 @@ export default function MotoTable() {
     if (selectedRow) {
       const tempData = motos.filter((item) => Number(item.id) === Number(selectedRow));
       setDataSelected(tempData[0]);
-      console.log(`selectedRow ${selectedRow}`);
-      console.log(dataSelected);
     }
   }, [selectedRow]);
 

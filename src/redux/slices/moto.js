@@ -155,7 +155,6 @@ export function getMotosByDate(newDateDebut, newDateFin) {
       const response = await axios({
         method: 'get',
         url: `${url}/api/motos`,
-        responseType: 'stream',
         params: {
           dateEntree: newDateDebut,
           dateFin: newDateFin
@@ -190,7 +189,6 @@ export function getMotosHebdo(newDateDebut, newDateFin) {
       const response = await axios({
         method: 'get',
         url: `${url}/api/motos/chart_hebdo_api`,
-        responseType: 'stream',
         params: {
           dateEntree: newDateDebut,
           dateFin: newDateFin
@@ -209,7 +207,6 @@ export function getMotosMonthly(date) {
       const response = await axios({
         method: 'get',
         url: `${url}/api/motos/chart_monthly_api`,
-        responseType: 'stream',
         params: {
           month: date
         }
@@ -226,8 +223,7 @@ export function getStock() {
     try {
       const response = await axios({
         method: 'get',
-        url: `${url}/api/motos/stock_level_api`,
-        responseType: 'stream'
+        url: `${url}/api/motos/stock_level_api`
       });
       dispatch(slice.actions.getStockSuccess(response.data));
     } catch (error) {
@@ -241,8 +237,7 @@ export function getVenteToday() {
     try {
       const response = await axios({
         method: 'get',
-        url: `${url}/api/motos/venteToday_API`,
-        responseType: 'stream'
+        url: `${url}/api/motos/venteToday_API`
       });
       dispatch(slice.actions.getVenteTodaySuccess(response.data));
     } catch (error) {
@@ -256,8 +251,7 @@ export function getLastFacture() {
     try {
       const response = await axios({
         method: 'get',
-        url: `${url}/api/motos/last_facture_api`,
-        responseType: 'stream'
+        url: `${url}/api/motos/last_facture_api`
       });
       dispatch(slice.actions.getLastFactureSuccess(response.data));
     } catch (error) {
@@ -271,8 +265,7 @@ export function getLastBL() {
     try {
       const response = await axios({
         method: 'get',
-        url: `${url}/api/motos/last_BL_api`,
-        responseType: 'stream'
+        url: `${url}/api/motos/last_BL_api`
       });
       dispatch(slice.actions.getLastBLSuccess(response.data));
     } catch (error) {
@@ -286,8 +279,7 @@ export function getLastID() {
     try {
       const response = await axios({
         method: 'get',
-        url: `${url}/api/motos/ID_Last_API`,
-        responseType: 'stream'
+        url: `${url}/api/motos/ID_Last_API`
       });
       dispatch(slice.actions.getLastIDSuccess(response.data));
     } catch (error) {
@@ -302,7 +294,6 @@ export function getNumberWord(number) {
       const response = await axios({
         method: 'get',
         url: `${url}/api/motos/total2word_API`,
-        responseType: 'stream',
         params: {
           number
         }
@@ -322,7 +313,6 @@ export function addMoto(motoData) {
         method: 'post',
         url: `${url}/api/motos/createMoto`,
         data: motoData,
-        responseType: 'stream',
         headers: {
           'Content-Type': 'application/json; charset= utf-8'
         }
@@ -342,7 +332,6 @@ export function updateMoto(motoData, id) {
         method: 'put',
         url: `${url}/api/motos/updateMoto/${id}`,
         data: motoData,
-        responseType: 'stream',
         headers: {
           'Content-Type': 'application/json; charset= utf-8'
         }
@@ -362,7 +351,6 @@ export function archiveMoto(id) {
         method: 'put',
         url: `${url}/api/motos/archiveMoto/${id}`,
         data: { archive: true },
-        responseType: 'stream',
         headers: {
           'Content-Type': 'application/json; charset= utf-8'
         }
@@ -382,7 +370,6 @@ export function cancelFacture(motoData, id) {
         method: 'put',
         url: `${url}/api/motos/cancelFacture/${id}`,
         data: motoData,
-        responseType: 'stream',
         headers: {
           'Content-Type': 'application/json; charset= utf-8'
         }
@@ -402,7 +389,6 @@ export function deleteMoto(id) {
         method: 'delete',
         url: `${url}/api/motos/deleteMoto/${id}`,
 
-        responseType: 'stream',
         headers: {
           'Content-Type': 'application/json; charset= utf-8'
         }
@@ -420,8 +406,7 @@ export function getVentes() {
     try {
       const response = await axios({
         method: 'get',
-        url: `${url}/api/motos/ventes/`,
-        responseType: 'stream'
+        url: `${url}/api/motos/ventes/`
       });
       dispatch(slice.actions.getVentesSuccess(response.data));
     } catch (error) {
@@ -436,8 +421,7 @@ export function checkNumMoteurUnique(numMoteur) {
     try {
       const response = await axios({
         method: 'get',
-        url: `${url}/api/motos/check_num_moteur_unique/${numMoteur}`,
-        responseType: 'stream'
+        url: `${url}/api/motos/check_num_moteur_unique/${numMoteur}`
       });
       dispatch(slice.actions.setResCheckNumMoteur(response.data));
     } catch (error) {

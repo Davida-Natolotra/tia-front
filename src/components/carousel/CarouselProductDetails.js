@@ -9,6 +9,7 @@ import { Box } from '@material-ui/core';
 //
 import LightboxModal from '../LightboxModal';
 import { CarouselControlsArrowsIndex } from './controls';
+import { NO_PHOTO_URL } from '../../utils/mediaUrl';
 
 // ----------------------------------------------------------------------
 
@@ -46,6 +47,11 @@ const ThumbWrapperStyle = styled('div')(({ theme }) => ({
   }
 }));
 
+// Show the placeholder instead of a broken image when a file can't be loaded
+const showPlaceholder = (event) => {
+  if (event.currentTarget.src !== NO_PHOTO_URL) event.currentTarget.src = NO_PHOTO_URL;
+};
+
 const LargeImgStyle = styled('img')({
   top: 0,
   width: '100%',
@@ -70,7 +76,7 @@ LargeItem.propTypes = {
 function LargeItem({ item, onOpenLightbox }) {
   return (
     <Box sx={{ cursor: 'zoom-in', paddingTop: '100%', position: 'relative' }}>
-      <LargeImgStyle alt="large image" src={item} onClick={() => onOpenLightbox(item)} />
+      <LargeImgStyle alt="large image" src={item} onError={showPlaceholder} onClick={() => onOpenLightbox(item)} />
     </Box>
   );
 }
@@ -83,7 +89,7 @@ function ThumbnailItem({ item }) {
   return (
     <ThumbWrapperStyle>
       <Box className="isActive" />
-      <ThumbImgStyle alt="thumb image" src={item} />
+      <ThumbImgStyle alt="thumb image" src={item} onError={showPlaceholder} />
     </ThumbWrapperStyle>
   );
 }

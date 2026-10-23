@@ -130,7 +130,6 @@ export default function MotoForm({ isEdit, currentProduct }) {
         dataSubmit.id = currentProduct.id;
       }
       try {
-        console.log(dataSubmit);
         if (isEdit) {
           await dispatch(updateMoto(dataSubmit, currentProduct.id));
         } else {

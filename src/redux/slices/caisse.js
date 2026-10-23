@@ -87,8 +87,7 @@ export function getCaisseListe() {
     try {
       const response = await axios({
         method: 'get',
-        url: `${url}/api/caisseMotos`,
-        responseType: 'stream'
+        url: `${url}/api/caisseMotos`
       });
       dispatch(slice.actions.getCaisseSuccess(response.data));
     } catch (error) {
@@ -105,7 +104,6 @@ export function addCaisseMoto(caisseData) {
         method: 'post',
         url: `${url}/api/caisseMotos/add`,
         data: caisseData,
-        responseType: 'stream',
         headers: {
           'Content-Type': 'application/json; charset= utf-8'
         }
@@ -125,7 +123,6 @@ export function updateCaisseMoto(caisseData, id) {
         method: 'put',
         url: `${url}/api/caisseMotos/update/${id}`,
         data: caisseData,
-        responseType: 'stream',
         headers: {
           'Content-Type': 'application/json; charset= utf-8'
         }
@@ -143,8 +140,7 @@ export function getCaisse(id) {
     try {
       const response = await axios({
         method: 'get',
-        url: `${url}/api/caisseMotos/get/${id}`,
-        responseType: 'stream'
+        url: `${url}/api/caisseMotos/get/${id}`
       });
       dispatch(slice.actions.setCaisse(response.data));
     } catch (error) {
@@ -161,7 +157,6 @@ export function deleteCaisse(id) {
         method: 'delete',
         url: `${url}/api/caisseMotos/delete/${id}`,
 
-        responseType: 'stream',
         headers: {
           'Content-Type': 'application/json; charset= utf-8'
         }
@@ -179,8 +174,7 @@ export function getSolde() {
     try {
       const response = await axios({
         method: 'get',
-        url: `${url}/api/soldes/`,
-        responseType: 'stream'
+        url: `${url}/api/soldes/`
       });
       dispatch(slice.actions.getSoldeSuccess(response.data));
     } catch (error) {
@@ -197,7 +191,6 @@ export function updateSolde(dataUpdate) {
         method: 'put',
         url: `${url}/api/soldes/update`,
         data: dataUpdate,
-        responseType: 'stream',
         headers: {
           'Content-Type': 'application/json; charset= utf-8'
         }
@@ -217,7 +210,6 @@ export function createOrUpdateFromMoto(dataUpload) {
         method: 'post',
         url: `${url}/api/caisseMotos/add_or_update`,
         data: dataUpload,
-        responseType: 'stream',
         headers: {
           'Content-Type': 'application/json; charset= utf-8'
         }

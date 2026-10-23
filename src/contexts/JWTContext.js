@@ -7,7 +7,6 @@ import { isValidToken, setSession } from '../utils/jwt';
 // ----------------------------------------------------------------------
 
 export const url = process.env.REACT_APP_BACKEND_URL;
-console.log('url', url);
 // export const url = 'https://tiamoto.com/backend';
 
 const initialState = {
@@ -94,7 +93,6 @@ function AuthProvider({ children }) {
             }
           });
           const user = await dataUser.data;
-          console.log(dataUser);
 
           dispatch({
             type: 'INITIALIZE',
@@ -125,7 +123,6 @@ function AuthProvider({ children }) {
             }
           });
           const user = await dataUser.data;
-          console.log(dataUser);
 
           dispatch({
             type: 'INITIALIZE',

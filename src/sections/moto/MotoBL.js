@@ -182,7 +182,6 @@ export default function MotoBL({ isEdit, currentProduct }) {
     dataReset.append('commercial', '');
 
     try {
-      console.log(dataReset);
       await dispatch(cancelFacture(dataReset, currentProduct.id));
       handleClose();
       enqueueSnackbar('Annulation de BL terminé', {

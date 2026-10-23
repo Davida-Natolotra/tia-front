@@ -25,19 +25,12 @@ import { frFR as calFR } from '@mui/x-date-pickers';
 import { useDispatch, useSelector } from 'react-redux';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 import useAuth from '../../hooks/useAuth';
-import {
-  cancelFacture,
-  getLastFacture,
-  getLastID,
-  getMotos,
-  getNumberWord,
-  updateMoto,
-  url
-} from '../../redux/slices/moto';
+import { cancelFacture, getLastFacture, getLastID, getMotos, getNumberWord, updateMoto } from '../../redux/slices/moto';
 import { createOrUpdateFromMoto } from '../../redux/slices/caisse';
 
 import FacturePreview from './pdf/facture/index';
 import { fileChangedHandler } from '../../utils/imageCompress';
+import { mediaUrl } from '../../utils/mediaUrl';
 
 import { fNumber } from '../../utils/formatNumber';
 // routes
@@ -57,38 +50,12 @@ function padLeadingZeros(num, size) {
   return s;
 }
 
-const urlBlank = 'https://placehold.jp/24/cccccc/525252/500x500.png?text=Aucune%20photo';
-
 export default function MotoFacture({ currentProduct, isEdit }) {
   const motos = useSelector((state) => state.motos.products);
   const motosVente = motos.filter((moto) => moto.PV !== 0 && moto.date_vente !== null && moto.date_vente !== '');
 
-  const linkRecto = () => {
-    let link;
-    if (currentProduct.PJ_CIN_Client_2_recto) {
-      if (currentProduct.PJ_CIN_Client_2_recto.includes('media')) {
-        link = `${url}${currentProduct.PJ_CIN_Client_2_recto}`;
-      } else {
-        link = `${url}/media/${currentProduct.PJ_CIN_Client_2_recto}`;
-      }
-    } else {
-      link = urlBlank;
-    }
-    return link;
-  };
-  const linkVerso = () => {
-    let link;
-    if (currentProduct.PJ_CIN_Client_2_verso) {
-      if (currentProduct.PJ_CIN_Client_2_verso.includes('media')) {
-        link = `${url}${currentProduct.PJ_CIN_Client_2_verso}`;
-      } else {
-        link = `${url}/media/${currentProduct.PJ_CIN_Client_2_verso}`;
-      }
-    } else {
-      link = urlBlank;
-    }
-    return link;
-  };
+  const linkRecto = () => mediaUrl(currentProduct.PJ_CIN_Client_2_recto);
+  const linkVerso = () => mediaUrl(currentProduct.PJ_CIN_Client_2_verso);
   const { enqueueSnackbar } = useSnackbar();
   const [CINRecto, setCINRecto] = useState(linkRecto());
   const [CINVerso, setCINVerso] = useState(linkVerso());
@@ -167,7 +134,6 @@ export default function MotoFacture({ currentProduct, isEdit }) {
       }
 
       try {
-        console.log(dataUpload);
         await dispatch(updateMoto(dataUpload, currentProduct.id));
         setSubmitting(false);
         enqueueSnackbar('Update success', {
@@ -224,7 +190,6 @@ export default function MotoFacture({ currentProduct, isEdit }) {
     dataReset.append('PJ_CIN_Client_2_verso', '');
 
     try {
-      console.log(dataReset);
       await dispatch(cancelFacture(dataReset, currentProduct.id));
       handleClose();
       enqueueSnackbar('Annulation de facture terminé', {

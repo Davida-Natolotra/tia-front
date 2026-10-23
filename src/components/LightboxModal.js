@@ -122,6 +122,9 @@ export default function LightboxModal({ images, photoIndex, setPhotoIndex, isOpe
           onMoveNextRequest={() => setPhotoIndex((photoIndex + 1) % images.length)}
           toolbarButtons={toolbarButtons}
           reactModalStyle={customStyles}
+          // Hide the app root (not <body>) from screen readers while open;
+          // browsers block aria-hidden on <body>.
+          reactModalProps={{ appElement: document.getElementById('root') }}
           wrapperClassName={classes.root}
           {...other}
         />
