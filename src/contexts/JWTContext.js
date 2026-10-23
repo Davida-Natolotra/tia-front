@@ -183,7 +183,7 @@ function AuthProvider({ children }) {
 
   const logout = async () => {
     setSession(null);
-    window.localStorage.setItem('refreshToken', null);
+    window.localStorage.removeItem('refreshToken');
     dispatch({ type: 'LOGOUT' });
   };
 

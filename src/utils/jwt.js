@@ -11,10 +11,13 @@ const isValidToken = (accessToken) => {
     return false;
   }
 
-  const decoded = jwtDecode(accessToken);
-  const currentTime = Date.now() / 1000;
-
-  return decoded.exp > currentTime;
+  // A malformed value (e.g. the text "null" or "undefined" left in localStorage) is not a token.
+  try {
+    const decoded = jwtDecode(accessToken);
+    return decoded.exp > Date.now() / 1000;
+  } catch (err) {
+    return false;
+  }
 };
 
 //  const handleTokenExpired = (exp) => {
