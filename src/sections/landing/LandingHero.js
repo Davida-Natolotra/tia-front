@@ -77,7 +77,7 @@ export default function LandingHero() {
           <ContentStyle>
             <motion.div variants={varFadeInRight}>
               <Typography variant="h1" sx={{ color: 'common.white' }}>
-                Tia Moto <br />
+                Leader Scoot <br />
                 <Typography component="span" variant="h1" sx={{ color: 'primary.main' }}>
                   &nbsp;Digital Solution
                 </Typography>

@@ -13,6 +13,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: 24,
     fontSize: 9,
+    lineHeight: 1.2,
     fontFamily: 'Noto-Sans',
     color: '#929292',
     bottom: 10

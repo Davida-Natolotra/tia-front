@@ -25,7 +25,7 @@ const RootStyle = styled(Page)(({ theme }) => ({
 
 export default function VerifyCode() {
   return (
-    <RootStyle title="Verify | Tia Moto">
+    <RootStyle title="Verify | Leader Scoot">
       <LogoOnlyLayout />
 
       <Container>

@@ -1,6 +1,6 @@
-# Tia Moto – front
+# Leader Scoot – front
 
-React (Create React App 4) front end for Tia Moto: motorbike stock, sales, invoices (Facture / BL) and cash register (Caisse).
+React (Create React App 4) front end for Leader Scoot: motorbike stock, sales, invoices (Facture / BL) and cash register (Caisse).
 
 ## Requirements
 

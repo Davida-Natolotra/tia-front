@@ -16,7 +16,7 @@ const ICONS = {
 
 const sidebarConfig = [
   {
-    subheader: 'Tia moto',
+    subheader: 'Leader Scoot',
     items: [
       { title: 'Dashboard', path: PATH_DASHBOARD.general.app, icon: ICONS.dashboard },
       { title: 'Caisse', path: PATH_DASHBOARD.general.caisseMoto, icon: ICONS.banking }

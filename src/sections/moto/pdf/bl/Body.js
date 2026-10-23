@@ -1,5 +1,6 @@
-import { Text, StyleSheet, Font, View } from '@react-pdf/renderer';
+import { Image, Text, StyleSheet, Font, View } from '@react-pdf/renderer';
 import React from 'react';
+import Logo from '../LogoLeaderScoot.jpg';
 
 import Signature from './signature';
 import Footer from './footer';
@@ -14,7 +15,8 @@ export default function FactureMoto({ data }) {
   });
   return (
     <View style={styles.page}>
-      <Text style={styles.headingTitle}>TIA MOTO SARLU</Text>
+      <Image style={styles.logo} src={Logo} fixed />
+      <Text style={styles.headingTitle}>LEADER SCOOT SARLU</Text>
       <Text style={styles.heading}>Ny Tsara Indrindra hAtrany</Text>
       <Text style={styles.heading}>Siège social: Lot IVX 72B Bis Ankazomanga</Text>
       <Text style={styles.heading}>Vente de scooter occasion et accessoires</Text>
@@ -105,13 +107,13 @@ const styles = StyleSheet.create({
   },
   heading: {
     fontSize: 8,
-
+    marginLeft: 110,
     fontFamily: 'Noto-Sans',
     textAlign: 'right'
   },
   headingTitle: {
     fontSize: 12,
-
+    marginLeft: 110,
     fontFamily: 'Noto-Sans',
     textAlign: 'right'
   },
@@ -144,10 +146,9 @@ const styles = StyleSheet.create({
     marginHorizontal: 100
   },
   logo: {
-    left: 20,
+    left: 30,
     top: 20,
-    // transformOrigin: "60% 60% 0px",
-    width: '105px',
+    width: '100px',
     height: '100px',
     position: 'absolute',
     marginRight: 20

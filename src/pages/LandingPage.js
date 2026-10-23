@@ -20,7 +20,7 @@ const ContentStyle = styled('div')(({ theme }) => ({
 
 export default function LandingPage() {
   return (
-    <RootStyle title="Tia Moto" id="move_top">
+    <RootStyle title="Leader Scoot" id="move_top">
       <LandingHero />
       <ContentStyle>
         <LandingDarkMode />

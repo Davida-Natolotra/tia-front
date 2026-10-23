@@ -8,34 +8,43 @@ Font.register({
   src: RobotoBold
 });
 
+// Column widths and borders match InvoiceTableRow and InvoiceTableFooter.
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    borderWidth: 1,
-    alignItems: 'center',
+    alignItems: 'stretch',
+    borderColor,
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
     height: 24,
     textAlign: 'center',
     fontFamily: 'Roboto-Bold',
-    flexGrow: 1,
     fontSize: 9
-  },
-  description: {
-    width: '40%',
-    borderRightColor: borderColor,
-    borderRightWidth: 1
   },
   qty: {
     width: '10%',
-    borderRightColor: borderColor,
+    paddingTop: 4,
+    borderColor,
+    borderLeftWidth: 1,
+    borderRightWidth: 1
+  },
+  description: {
+    width: '40%',
+    paddingTop: 4,
+    borderColor,
     borderRightWidth: 1
   },
   rate: {
     width: '25%',
-    borderRightColor: borderColor,
+    paddingTop: 4,
+    borderColor,
     borderRightWidth: 1
   },
   amount: {
-    width: '25%'
+    width: '25%',
+    paddingTop: 4,
+    borderColor,
+    borderRightWidth: 1
   }
 });
 

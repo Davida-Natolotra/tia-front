@@ -1,6 +1,6 @@
 import { Font, Image, StyleSheet, Text, View } from '@react-pdf/renderer';
 import React from 'react';
-import Logo from './LogoTIA.jpeg';
+import Logo from '../LogoLeaderScoot.jpg';
 import InvoiceTableHeader from './InvoiceTableHeader';
 import InvoiceTableRow from './InvoiceTableRow';
 import InvoiceTableFooter from './InvoiceTableFooter';
@@ -33,7 +33,7 @@ export default function FactureMoto({ data }) {
   return (
     <View style={styles.page}>
       <Image style={styles.logo} src={Logo} fixed />
-      <Text style={styles.headingTitle}>TIA MOTO SARLU</Text>
+      <Text style={styles.headingTitle}>LEADER SCOOT SARLU</Text>
       <Text style={styles.heading}>Ny Tsara Indrindra hAtrany</Text>
       <Text style={styles.heading}>Siège social: Lot IVX 72B Bis Ankazomanga</Text>
       <Text style={styles.heading}>Vente de scooter occasion et accessoires</Text>
@@ -127,13 +127,13 @@ const styles = StyleSheet.create({
     fontSize: 8,
     marginLeft: 110,
     fontFamily: 'Noto-Sans',
-    textAlign: 'right'
+    textAlign: 'left'
   },
   headingTitle: {
     fontSize: 12,
     marginLeft: 110,
     fontFamily: 'Noto-Sans',
-    textAlign: 'right'
+    textAlign: 'left'
   },
 
   subtitle: {
@@ -164,7 +164,7 @@ const styles = StyleSheet.create({
   logo: {
     left: 30,
     top: 20,
-    width: '105px',
+    width: '100px',
     height: '100px',
     position: 'absolute',
     marginRight: 20
@@ -195,6 +195,7 @@ const styles = StyleSheet.create({
   },
   page: {
     fontSize: 9,
+    flex: 1,
     paddingTop: 20,
     paddingLeft: 30,
     paddingRight: 30,
@@ -243,6 +244,6 @@ const styles = StyleSheet.create({
   },
   footer: {
     flexDirection: 'column',
-    marginTop: 45
+    marginTop: 25
   }
 });

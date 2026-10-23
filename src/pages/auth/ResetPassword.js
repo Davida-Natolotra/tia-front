@@ -30,7 +30,7 @@ export default function ResetPassword() {
   const [sent, setSent] = useState(false);
 
   return (
-    <RootStyle title="Reset Password | Tia Moto">
+    <RootStyle title="Reset Password | Leader Scoot">
       <LogoOnlyLayout />
 
       <Container>

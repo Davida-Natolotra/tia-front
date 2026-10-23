@@ -2,51 +2,41 @@ import React from 'react';
 import { Text, View, StyleSheet } from '@react-pdf/renderer';
 
 const borderColor = 'black';
+// Column widths match InvoiceTableHeader and InvoiceTableRow. The TOTAL box
+// hangs under the PU HT and TVA columns; its left edge is the Désignation
+// column border, so it lines up with the table above.
 const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
-
-    borderWidth: 1,
-    borderTopColor: borderColor,
-    borderBottomColor: 'white',
-    borderLeftColor: 'white',
-    borderRightColor: 'white',
-    alignItems: 'center',
+    alignItems: 'stretch',
     height: 24,
-    fontStyle: 'bold',
-    fontSize: 9,
-    padding: 0,
-    margin: 0
+    fontSize: 9
+  },
+  qty: {
+    width: '10%'
   },
   description: {
     width: '40%',
-    textAlign: 'left',
-    borderColor: 'white',
-    paddingLeft: 8,
-    borderLeftColor: 'white',
-    borderRightColor: 'white'
-  },
-  qty: {
-    width: '10%',
-    borderRightColor: 'white',
-    textAlign: 'right',
-    paddingRight: 8
+    borderColor,
+    borderRightWidth: 1
   },
   rate: {
     width: '25%',
     borderColor,
     borderRightWidth: 1,
     borderBottomWidth: 1,
-    borderLeftWidth: 1,
     textAlign: 'right',
+    paddingTop: 4,
     paddingRight: 8
   },
   amount: {
     width: '25%',
-    textAlign: 'right',
-    paddingRight: 8,
+    borderColor,
+    borderRightWidth: 1,
     borderBottomWidth: 1,
-    borderRightWidth: 1
+    textAlign: 'right',
+    paddingTop: 4,
+    paddingRight: 8
   }
 });
 

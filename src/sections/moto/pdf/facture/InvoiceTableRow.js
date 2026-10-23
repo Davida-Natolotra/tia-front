@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import { Text, View, StyleSheet, Font } from '@react-pdf/renderer';
 import RobotoBold from './fonts/Roboto-Bold.ttf';
 
@@ -9,77 +9,74 @@ Font.register({
   src: RobotoBold
 });
 
+// The item is one table row: each cell stacks the item's lines (name, engine
+// number, volume), so every column border is drawn once, top to bottom.
+// Column widths and borders match InvoiceTableHeader and InvoiceTableFooter.
+const styles = StyleSheet.create({
+  row: {
+    flexDirection: 'row',
+    alignItems: 'stretch',
+    borderColor,
+    borderBottomWidth: 1,
+    fontSize: 9
+  },
+  qty: {
+    width: '10%',
+    borderColor,
+    borderLeftWidth: 1,
+    borderRightWidth: 1,
+    textAlign: 'right',
+    paddingRight: 8
+  },
+  description: {
+    width: '40%',
+    borderColor,
+    borderRightWidth: 1,
+    textAlign: 'left',
+    paddingLeft: 8
+  },
+  rate: {
+    width: '25%',
+    borderColor,
+    borderRightWidth: 1,
+    textAlign: 'right',
+    paddingRight: 8
+  },
+  amount: {
+    width: '25%',
+    borderColor,
+    borderRightWidth: 1,
+    textAlign: 'right',
+    paddingRight: 8
+  },
+  line: {
+    minHeight: 16
+  },
+  lineBold: {
+    minHeight: 16,
+    fontFamily: 'Roboto-Bold'
+  }
+});
+
 const InvoiceTableRow = ({ items }) => {
-  const styles = StyleSheet.create({
-    row: {
-      flexDirection: 'row',
-      borderColor,
-      borderWidth: 1,
-      borderTopColor: 'white',
-      borderBottomColor: 'white',
-      alignItems: 'center',
-      height: 16,
-      fontStyle: 'bold',
-      fontSize: 9,
-      padding: 0,
-      margin: 0
-    },
-    rowBold: {
-      flexDirection: 'row',
-      borderColor,
-      borderWidth: 1,
-      borderTopColor: 'white',
-      borderBottomColor: 'white',
-      alignItems: 'center',
-      height: 16,
-      fontSize: 9,
-      fontFamily: 'Roboto-Bold',
-      padding: 0,
-      margin: 0
-    },
-    description: {
-      width: '40%',
-      textAlign: 'left',
-      borderRightColor: borderColor,
-      borderRightWidth: 1,
-      paddingLeft: 8
-    },
-    description2: {
-      width: '40%',
-      textAlign: 'left',
-      borderRightColor: borderColor,
-      borderRightWidth: 1,
-      paddingLeft: 8
-    },
-    qty: {
-      width: '10%',
-      borderRightColor: borderColor,
-      borderRightWidth: 1,
-      textAlign: 'right',
-      paddingRight: 8
-    },
-    rate: {
-      width: '25%',
-      borderRightColor: borderColor,
-      borderRightWidth: 1,
-      textAlign: 'right',
-      paddingRight: 8
-    },
-    amount: {
-      width: '25%',
-      textAlign: 'right',
-      paddingRight: 8
-    }
-  });
-  const rows = items.map((item) => (
-    <View style={item.sno === 3 ? styles.rowBold : styles.row} key={item.sno}>
-      <Text style={styles.qty}>{item.ref}</Text>
-      <Text style={styles.description2}>{item.desc}</Text>
-      <Text style={styles.rate}>{item.PU}</Text>
-      <Text style={styles.amount}>{item.TVA}</Text>
+  const column = (style, field) => (
+    <View style={style}>
+      {items.map((item) => (
+        <Text key={item.sno} style={item.sno === 3 ? styles.lineBold : styles.line}>
+          {item[field]}
+        </Text>
+      ))}
     </View>
-  ));
-  return <>{rows}</>;
+  );
+
+  return (
+    <View style={styles.row}>
+      {column(styles.qty, 'ref')}
+      {column(styles.description, 'desc')}
+      {column(styles.rate, 'PU')}
+      {column(styles.amount, 'TVA')}
+    </View>
+  );
 };
 
 export default InvoiceTableRow;

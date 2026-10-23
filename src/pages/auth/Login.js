@@ -37,7 +37,7 @@ const ContentStyle = styled('div')(({ theme }) => ({
 
 export default function Login() {
   return (
-    <RootStyle title="Login | Tia Moto">
+    <RootStyle title="Login | Leader Scoot">
       <MHidden width="mdDown">
         <SectionStyle>
           <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
@@ -52,7 +52,7 @@ export default function Login() {
           <Stack direction="row" alignItems="center" sx={{ mb: 5 }}>
             <Box sx={{ flexGrow: 1 }}>
               <Typography variant="h4" gutterBottom>
-                Connecter à Tia Moto
+                Connecter à Leader Scoot
               </Typography>
               <Typography sx={{ color: 'text.secondary' }}>Veuillez vous authentifier.</Typography>
             </Box>

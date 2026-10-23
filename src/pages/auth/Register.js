@@ -47,7 +47,7 @@ export default function Register() {
   const { method } = useAuth();
 
   return (
-    <RootStyle title="Register | Tia Moto">
+    <RootStyle title="Register | Leader Scoot">
       <AuthLayout>
         Already have an account? &nbsp;
         <Link underline="none" variant="subtitle2" component={RouterLink} to={PATH_AUTH.login}>
@@ -58,7 +58,7 @@ export default function Register() {
       <MHidden width="mdDown">
         <SectionStyle>
           <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
-            Gérez votre activité avec Tia Moto
+            Gérez votre activité avec Leader Scoot
           </Typography>
           <img alt="register" src="/static/illustrations/illustration_register.png" />
         </SectionStyle>
@@ -81,7 +81,7 @@ export default function Register() {
           <RegisterForm />
 
           <Typography variant="body2" align="center" sx={{ color: 'text.secondary', mt: 3 }}>
-            By registering, I agree to Tia Moto&nbsp;
+            By registering, I agree to Leader Scoot&nbsp;
             <Link underline="always" color="text.primary" href="#">
               Terms of Service
             </Link>
