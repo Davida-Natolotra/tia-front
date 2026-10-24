@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 // utils
 import axios from 'axios';
-import { createOrUpdateFromMoto } from './caisse';
+import { caisseEntryFromMoto, createOrUpdateFromMoto } from './caisse';
 // Endpoint
 
 export const url = process.env.REACT_APP_BACKEND_URL;
@@ -337,9 +337,14 @@ export function updateMoto(motoData, id) {
         }
       });
       dispatch(slice.actions.getLastResponseMotoSuccess(response.data));
-      dispatch(createOrUpdateFromMoto(response.data));
+      // Keep the cash book in step with the saved sale
+      if (response.data.date_vente) {
+        dispatch(createOrUpdateFromMoto(caisseEntryFromMoto(response.data)));
+      }
     } catch (error) {
       dispatch(slice.actions.hasError(error));
+      // Let the form know the save failed
+      throw error;
     }
   };
 }

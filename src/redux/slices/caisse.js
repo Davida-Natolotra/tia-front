@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 // utils
 import axios from 'axios';
+import moment from 'moment';
 // Endpoint
 export const url = process.env.REACT_APP_BACKEND_URL;
 // export const url = 'https://tiamoto.com/backend';
@@ -199,6 +200,19 @@ export function updateSolde(dataUpdate) {
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }
+  };
+}
+
+// Cash book entry for a sold moto, in the shape /caisseMotos/add_or_update expects
+export function caisseEntryFromMoto(moto) {
+  return {
+    libellee: `Vente du moto ${moto.nom_moto}-${moto.num_moteur}`,
+    date: moment(moto.date_vente).format('YYYY-MM-DD'),
+    recette: Number(moto.PV),
+    depense: 0,
+    is_depense: false,
+    is_moto: true,
+    id_moto: Number(moto.ID_Moto)
   };
 }
 

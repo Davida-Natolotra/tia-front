@@ -26,7 +26,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 import useAuth from '../../hooks/useAuth';
 import { cancelFacture, getLastFacture, getLastID, getMotos, getNumberWord, updateMoto } from '../../redux/slices/moto';
-import { createOrUpdateFromMoto } from '../../redux/slices/caisse';
+import { caisseEntryFromMoto, createOrUpdateFromMoto } from '../../redux/slices/caisse';
 
 import FacturePreview from './pdf/facture/index';
 import { fileChangedHandler } from '../../utils/imageCompress';
@@ -107,7 +107,7 @@ export default function MotoFacture({ currentProduct, isEdit }) {
       commercial: currentProduct?.commercial || ''
     },
     validationSchema: NewProductSchema,
-    onSubmit: async (values, { setSubmitting, resetForm, setErrors }) => {
+    onSubmit: async (values, { setSubmitting, resetForm }) => {
       const dataUpload = new FormData();
       dataUpload.append('num_sur_facture', values.numFacture);
       dataUpload.append('date_facture', moment(values.dateFacture).format('YYYY-MM-DD'));
@@ -140,25 +140,15 @@ export default function MotoFacture({ currentProduct, isEdit }) {
           variant: 'success'
         });
         await dispatch(getMotos());
-        motosVente.forEach((el) =>
-          dispatch(
-            createOrUpdateFromMoto({
-              libellee: `Vente du moto ${el.nom_moto}-${el.num_moteur}`,
-              date: moment(el.date_vente).format('YYYY-MM-DD'),
-              recette: Number(el.PV),
-              depense: 0,
-              is_depense: false,
-              is_moto: true,
-              id_moto: Number(el.ID_Moto)
-            })
-          )
-        );
+        // updateMoto already synced this moto with its new values; motosVente holds the old ones
+        motosVente
+          .filter((el) => el.id !== currentProduct.id)
+          .forEach((el) => dispatch(createOrUpdateFromMoto(caisseEntryFromMoto(el))));
         resetForm(true);
       } catch (error) {
         console.error(error);
         setSubmitting(false);
-        setErrors(error);
-        enqueueSnackbar("Erreur d'enregistrement", { variant: 'danger' });
+        enqueueSnackbar("Erreur d'enregistrement", { variant: 'error' });
       }
     }
   });

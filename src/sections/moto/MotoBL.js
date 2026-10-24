@@ -32,7 +32,7 @@ import useAuth from '../../hooks/useAuth';
 
 import BLPreview from './pdf/bl';
 import { getLastID, updateMoto, getMotos, getLastBL, cancelFacture } from '../../redux/slices/moto';
-import { createOrUpdateFromMoto } from '../../redux/slices/caisse';
+import { caisseEntryFromMoto, createOrUpdateFromMoto } from '../../redux/slices/caisse';
 
 // routes
 // ----------------------------------------------------------------------
@@ -89,7 +89,7 @@ export default function MotoBL({ isEdit, currentProduct }) {
       commercial: currentProduct?.commercial || ''
     },
     validationSchema: NewProductSchema,
-    onSubmit: async (values, { setSubmitting, resetForm, setErrors }) => {
+    onSubmit: async (values, { setSubmitting, resetForm }) => {
       const dataSubmit = new FormData();
       dataSubmit.append('num_BL', values.numBL);
       dataSubmit.append('date_BL', moment(values.dateBL).format('YYYY-MM-DD'));
@@ -107,23 +107,14 @@ export default function MotoBL({ isEdit, currentProduct }) {
           variant: 'success'
         });
         await dispatch(getMotos());
-        await motosVente.forEach((el) =>
-          dispatch(
-            createOrUpdateFromMoto({
-              libellee: `Vente du moto ${el.nom_moto}-${el.num_moteur}`,
-              date: moment(el.date_vente).format('YYYY-MM-DD'),
-              recette: Number(el.PV),
-              depense: 0,
-              is_depense: false,
-              is_moto: true,
-              id_moto: Number(el.ID_Moto)
-            })
-          )
-        );
+        // updateMoto already synced this moto with its new values; motosVente holds the old ones
+        motosVente
+          .filter((el) => el.id !== currentProduct.id)
+          .forEach((el) => dispatch(createOrUpdateFromMoto(caisseEntryFromMoto(el))));
       } catch (error) {
         console.error(error);
         setSubmitting(false);
-        setErrors(error);
+        enqueueSnackbar("Erreur d'enregistrement", { variant: 'error' });
       }
     }
   });

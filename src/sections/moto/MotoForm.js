@@ -109,7 +109,7 @@ export default function MotoForm({ isEdit, currentProduct }) {
       // commercial: currentProduct?.commercial || ''
     },
     validationSchema: NewProductSchema,
-    onSubmit: async (values, { setSubmitting, setErrors }) => {
+    onSubmit: async (values, { setSubmitting }) => {
       const dataSubmit = {
         ID_Moto: values.ID_Moto,
         nom_moto: values.name,
@@ -143,7 +143,7 @@ export default function MotoForm({ isEdit, currentProduct }) {
       } catch (error) {
         console.error(error);
         setSubmitting(false);
-        setErrors(error);
+        enqueueSnackbar("Erreur d'enregistrement", { variant: 'error' });
       }
     }
   });
