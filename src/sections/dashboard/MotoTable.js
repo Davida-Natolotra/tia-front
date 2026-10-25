@@ -272,9 +272,9 @@ export default function MotoTable() {
           width: '100%',
           flexGrow: 1,
           '& .super--Invoice': {
-            bgcolor: (theme) => getBackgroundColor(theme.palette.info.main, theme.palette.mode),
+            bgcolor: (theme) => getBackgroundColor(theme.palette.success.main, theme.palette.mode),
             '&:hover': {
-              bgcolor: (theme) => getHoverBackgroundColor(theme.palette.info.lighter, theme.palette.mode)
+              bgcolor: (theme) => getHoverBackgroundColor(theme.palette.success.lighter, theme.palette.mode)
             }
           },
 
