@@ -286,9 +286,9 @@ export default function MotoTable() {
           },
 
           '& .super--Archived': {
-            bgcolor: (theme) => getBackgroundColor(theme.palette.success.main, theme.palette.mode),
+            bgcolor: (theme) => getBackgroundColor(theme.palette.info.main, theme.palette.mode),
             '&:hover': {
-              bgcolor: (theme) => getHoverBackgroundColor(theme.palette.success.lighter, theme.palette.mode)
+              bgcolor: (theme) => getHoverBackgroundColor(theme.palette.info.lighter, theme.palette.mode)
             }
           }
         }}
