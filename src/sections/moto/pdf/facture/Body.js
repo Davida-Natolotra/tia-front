@@ -58,6 +58,8 @@ export default function FactureMoto({ data }) {
         <View style={styles.titleRight}>
           <Text style={styles.info}>FACTURE N° :{data.numFacture}</Text>
           <Text style={styles.info}>DATE {dateFacture}</Text>
+          {/* Links to the invoice's public page; shown once the invoice is saved */}
+          {data.qrCode && <Image style={styles.qrCode} src={data.qrCode} />}
         </View>
       </View>
       <View style={styles.subContainer2}>
@@ -209,11 +211,12 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 10
+    // Space between the company header (and its logo) and the FACTURE title
+    marginTop: 24
   },
   subContainer: {
+    // No flexGrow: the table follows right after the client details and QR code
     flexDirection: 'row',
-    flexGrow: 1,
     position: 'relative',
     marginTop: 5
   },
@@ -236,6 +239,11 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     flexGrow: 1,
     fontSize: 10
+  },
+  qrCode: {
+    width: 52,
+    height: 52,
+    marginTop: 4
   },
   chiffre: {
     flexDirection: 'column',

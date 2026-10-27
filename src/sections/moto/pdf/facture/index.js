@@ -2,9 +2,11 @@ import React from 'react';
 import { Document, Page, PDFViewer, StyleSheet, Text, View } from '@react-pdf/renderer';
 import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
+import QRCode from 'qrcode';
 import { getNumberWord } from '../../../../redux/slices/moto';
 import Body from './Body';
 import { fNumber } from '../../../../utils/formatNumber';
+import { factureUrl } from '../../../../utils/factureUrl';
 
 export default function FactureMoto({ currentProduct, isEdit }) {
   const [height, setHeight] = React.useState(window.innerHeight);
@@ -15,6 +17,21 @@ export default function FactureMoto({ currentProduct, isEdit }) {
     window.addEventListener('resize', updateWidthAndHeight);
     return () => window.removeEventListener('resize', updateWidthAndHeight);
   });
+  // QR code to the invoice's public page; the backend gives the token once the invoice is saved
+  const token = currentProduct.facture_token;
+  const [qrCode, setQrCode] = React.useState(null);
+  React.useEffect(() => {
+    let active = true;
+    setQrCode(null);
+    if (token) {
+      QRCode.toDataURL(factureUrl(token), { margin: 0, width: 240, errorCorrectionLevel: 'M' })
+        .then((dataUrl) => active && setQrCode(dataUrl))
+        .catch((error) => console.error(error));
+    }
+    return () => {
+      active = false;
+    };
+  }, [token]);
   // Models
   function padLeadingZeros(num, size) {
     let s = `${num}`;
@@ -40,14 +57,15 @@ export default function FactureMoto({ currentProduct, isEdit }) {
     TVA: fNumber(currentProduct.TVA),
     total: fNumber(currentProduct.PV),
     totalLettre: useSelector((state) => state.motos.numWord),
-    ref: currentProduct.Ref
+    ref: currentProduct.Ref,
+    qrCode
   };
   const dispatch = useDispatch();
+  // The words are shared app state: always fetch them for this moto's price, so an
+  // invoice never shows the amount of the moto viewed before it.
   React.useEffect(() => {
-    if (!data.totalLettre) {
-      dispatch(getNumberWord(currentProduct.PV));
-    }
-  }, []);
+    dispatch(getNumberWord(currentProduct.PV));
+  }, [dispatch, currentProduct.PV]);
 
   return (
     <PDFViewer width="100%" height={height * 0.7}>
@@ -78,7 +96,8 @@ const styles = StyleSheet.create({
   body: {
     flexDirection: 'row',
     paddingTop: 20,
-    paddingBottom: 65,
+    // Small bottom margin: the invoice (with its QR code) must fit on a single page
+    paddingBottom: 20,
     paddingHorizontal: 20
   },
   element: {

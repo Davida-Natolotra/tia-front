@@ -13,6 +13,10 @@ Create a `.env` file with the backend URL:
 
 ```sh
 REACT_APP_BACKEND_URL=http://localhost:8000
+# Optional: site address encoded in the QR code printed on each invoice.
+# Set it for production builds (e.g. https://leaderscoot.mg) so QR codes always
+# point there. Left out, they use the address the invoice is printed from.
+REACT_APP_SITE_URL=
 ```
 
 Then:

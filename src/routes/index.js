@@ -88,6 +88,17 @@ export default function Router() {
       ]
     },
 
+    // Invoice page linked from the QR code printed on each invoice (managers only, checked on the page)
+    {
+      path: 'facture',
+      element: (
+        <AuthGuard>
+          <DashboardLayout />
+        </AuthGuard>
+      ),
+      children: [{ path: ':token', element: <Facture /> }]
+    },
+
     // Error pages
     {
       path: '*',
@@ -121,6 +132,7 @@ const Dashboard = Loadable(lazy(() => import('../pages/dashboard/Dashboard')));
 const MotoCreate = Loadable(lazy(() => import('../pages/dashboard/MotoCreate')));
 const MotoDetails = Loadable(lazy(() => import('../pages/dashboard/MotoDetails')));
 const Caisse = Loadable(lazy(() => import('../pages/dashboard/Caisse')));
+const Facture = Loadable(lazy(() => import('../pages/dashboard/Facture')));
 // Public
 const LandingPage = Loadable(lazy(() => import('../pages/LandingPage')));
 const Page500 = Loadable(lazy(() => import('../pages/Page500')));
