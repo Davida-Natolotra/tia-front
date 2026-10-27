@@ -331,10 +331,7 @@ export function updateMoto(motoData, id) {
       const response = await axios({
         method: 'put',
         url: `${url}/api/motos/updateMoto/${id}`,
-        data: motoData,
-        headers: {
-          'Content-Type': 'application/json; charset= utf-8'
-        }
+        data: motoData
       });
       dispatch(slice.actions.getLastResponseMotoSuccess(response.data));
       // Keep the cash book in step with the saved sale
@@ -374,10 +371,7 @@ export function cancelFacture(motoData, id) {
       const response = await axios({
         method: 'put',
         url: `${url}/api/motos/cancelFacture/${id}`,
-        data: motoData,
-        headers: {
-          'Content-Type': 'application/json; charset= utf-8'
-        }
+        data: motoData
       });
       dispatch(slice.actions.getLastResponseMotoSuccess(response.data));
     } catch (error) {

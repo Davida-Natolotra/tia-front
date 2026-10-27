@@ -104,14 +104,13 @@ export function addCaisseMoto(caisseData) {
       const response = await axios({
         method: 'post',
         url: `${url}/api/caisseMotos/add`,
-        data: caisseData,
-        headers: {
-          'Content-Type': 'application/json; charset= utf-8'
-        }
+        data: caisseData
       });
       dispatch(slice.actions.getCaisseSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
+      // Let the form know the save failed
+      throw error;
     }
   };
 }
@@ -123,14 +122,13 @@ export function updateCaisseMoto(caisseData, id) {
       const response = await axios({
         method: 'put',
         url: `${url}/api/caisseMotos/update/${id}`,
-        data: caisseData,
-        headers: {
-          'Content-Type': 'application/json; charset= utf-8'
-        }
+        data: caisseData
       });
       dispatch(slice.actions.getCaisseSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
+      // Let the form know the save failed
+      throw error;
     }
   };
 }

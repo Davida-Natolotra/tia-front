@@ -35,6 +35,7 @@ import { updateCaisseMoto, addCaisseMoto, setEdit, resetCaisse, setShow } from '
 // routes
 import CarouselProductDetails from '../../components/carousel/CarouselProductDetails';
 import { fileChangedHandler } from '../../utils/imageCompress';
+import { saveErrorMessage } from '../../utils/apiErrorMessage';
 import { mediaUrl } from '../../utils/mediaUrl';
 
 // ----------------------------------------------------------------------
@@ -75,13 +76,13 @@ function ProductNewForm() {
       recette: isEdit ? currentProduct.recette : 0
     },
     validationSchema: NewProductSchema,
-    onSubmit: async (values, { setSubmitting, setErrors }) => {
+    onSubmit: async (values, { setSubmitting }) => {
       const dataSubmit = new FormData();
       dataSubmit.append('libellee', values.libellee);
       dataSubmit.append('date', moment(values.date).format('YYYY-MM-DD'));
       dataSubmit.append('depense', values.depense);
       dataSubmit.append('recette', values.recette);
-      if (changedPJ) {
+      if (changedPJ && PJFile) {
         dataSubmit.append('PJ', PJFile);
       }
 
@@ -102,7 +103,7 @@ function ProductNewForm() {
       } catch (error) {
         console.error(error);
         setSubmitting(false);
-        setErrors(error);
+        enqueueSnackbar(saveErrorMessage(error), { variant: 'error' });
       }
     }
   });
@@ -267,7 +268,10 @@ function ProductNewForm() {
                       event,
                       setStateFile: setPJFile,
                       setStateURI: setPJURI,
-                      setChange: setChangedPJ
+                      setChange: setChangedPJ,
+                      // Receipts may be PDFs: the backend stores any file here
+                      allowNonImage: true,
+                      onError: (message) => enqueueSnackbar(message, { variant: 'error' })
                     })
                   }
                 />

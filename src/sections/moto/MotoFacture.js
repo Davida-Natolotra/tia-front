@@ -30,6 +30,7 @@ import { caisseEntryFromMoto, createOrUpdateFromMoto } from '../../redux/slices/
 
 import FacturePreview from './pdf/facture/index';
 import { fileChangedHandler } from '../../utils/imageCompress';
+import { saveErrorMessage } from '../../utils/apiErrorMessage';
 import { mediaUrl } from '../../utils/mediaUrl';
 
 import { fNumber } from '../../utils/formatNumber';
@@ -126,15 +127,21 @@ export default function MotoFacture({ currentProduct, isEdit }) {
         }
       }
 
-      if (changedRecto) {
+      // Only send a photo that was picked and is ready; otherwise keep the saved one
+      if (changedRecto && CINRectoFile) {
         dataUpload.append('PJ_CIN_Client_2_recto', CINRectoFile);
       }
-      if (changedVerso) {
+      if (changedVerso && CINVersoFile) {
         dataUpload.append('PJ_CIN_Client_2_verso', CINVersoFile);
       }
 
       try {
         await dispatch(updateMoto(dataUpload, currentProduct.id));
+        // The photos are saved now: don't upload them again on the next save
+        setChangedRecto(false);
+        setChangedVerso(false);
+        setCINRectoFile(null);
+        setCINVersoFile(null);
         setSubmitting(false);
         enqueueSnackbar('Update success', {
           variant: 'success'
@@ -148,10 +155,12 @@ export default function MotoFacture({ currentProduct, isEdit }) {
       } catch (error) {
         console.error(error);
         setSubmitting(false);
-        enqueueSnackbar("Erreur d'enregistrement", { variant: 'error' });
+        enqueueSnackbar(saveErrorMessage(error), { variant: 'error' });
       }
     }
   });
+
+  const showPhotoError = (message) => enqueueSnackbar(message, { variant: 'error' });
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -343,7 +352,8 @@ export default function MotoFacture({ currentProduct, isEdit }) {
                               event,
                               setStateFile: setCINRectoFile,
                               setStateURI: setCINRectoURI,
-                              setChange: setChangedRecto
+                              setChange: setChangedRecto,
+                              onError: showPhotoError
                             })
                           }
                         />
@@ -356,12 +366,14 @@ export default function MotoFacture({ currentProduct, isEdit }) {
                           type="file"
                           style={{ display: 'none' }}
                           id="CINVerso"
+                          accept="image/*"
                           onChange={(event) =>
                             fileChangedHandler({
                               event,
                               setStateFile: setCINVersoFile,
                               setStateURI: setCINVersoURI,
-                              setChange: setChangedVerso
+                              setChange: setChangedVerso,
+                              onError: showPhotoError
                             })
                           }
                         />
