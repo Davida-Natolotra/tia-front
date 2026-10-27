@@ -14,6 +14,7 @@ const ICONS = {
   dashboard: getIcon('ic_dashboard')
 };
 
+// DashboardSidebar picks one entry by role: [0] for every role except commercial, [1] for commercial.
 const sidebarConfig = [
   {
     subheader: 'Leader Scoot',
@@ -21,6 +22,11 @@ const sidebarConfig = [
       { title: 'Dashboard', path: PATH_DASHBOARD.general.app, icon: ICONS.dashboard },
       { title: 'Caisse', path: PATH_DASHBOARD.general.caisseMoto, icon: ICONS.banking }
     ]
+  },
+  // Commercial: no access to the Caisse
+  {
+    subheader: 'Leader Scoot',
+    items: [{ title: 'Dashboard', path: PATH_DASHBOARD.general.app, icon: ICONS.dashboard }]
   }
 ];
 
